@@ -1,0 +1,40 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-raw-types: true
+    strict-inference: true
+
+linter:
+  rules:
+    prefer_single_quotes: true
+
+    # Async safety
+    unawaited_futures: true
+    discarded_futures: true
+
+    # Const
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+
+    # String building (this tool emits Dart source as strings)
+    use_string_buffers: true
+    prefer_interpolation_to_compose_strings: true
+    unnecessary_string_interpolations: true
+
+    # Correctness
+    avoid_dynamic_calls: true
+    only_throw_errors: true
+    always_declare_return_types: true
+    prefer_final_locals: true
+    prefer_final_in_for_each: true
+
+    # Consistency
+    require_trailing_commas: true
+    directives_ordering: true
+    unnecessary_parenthesis: true
+    avoid_redundant_argument_values: true
+    cascade_invocations: true
