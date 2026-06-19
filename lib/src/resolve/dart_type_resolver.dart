@@ -15,11 +15,18 @@ class DartTypeResolver {
 
     final anyOf = schema['anyOf'];
     if (anyOf is List) {
-      final nonNull = anyOf
-          .cast<Map<String, dynamic>>()
-          .where((s) => s['type'] != 'null')
-          .toList();
-      final hasNull = anyOf.any((s) => (s as Map)['type'] == 'null');
+      var hasNull = false;
+      final nonNull = <Map<String, dynamic>>[];
+      for (final entry in anyOf) {
+        if (entry is Map) {
+          final schema = Map<String, dynamic>.from(entry);
+          if (schema['type'] == 'null') {
+            hasNull = true;
+          } else {
+            nonNull.add(schema);
+          }
+        }
+      }
       if (nonNull.length == 1) {
         final inner = resolve(nonNull.single);
         return DartType(inner.name, isNullable: hasNull || inner.isNullable);

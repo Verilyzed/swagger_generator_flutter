@@ -46,4 +46,15 @@ void main() {
     expect(t.display, 'double?');
     expect(t.isNullable, isTrue);
   });
+
+  test('anyOf with a ref and null becomes a nullable class', () {
+    final t = resolver.resolve({
+      'anyOf': [
+        {r'$ref': '#/components/schemas/FailureReason'},
+        {'type': 'null'},
+      ],
+    });
+    expect(t.display, 'FailureReason?');
+    expect(t.isNullable, isTrue);
+  });
 }
