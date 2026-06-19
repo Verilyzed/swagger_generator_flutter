@@ -7,7 +7,13 @@ class SpecLoader {
   Map<String, dynamic> load(String content, {required String path}) {
     final isYaml = path.endsWith('.yaml') || path.endsWith('.yml');
     final decoded = isYaml ? _normalize(loadYaml(content)) : jsonDecode(content);
-    return (decoded as Map).cast<String, dynamic>();
+    if (decoded is! Map) {
+      throw FormatException(
+        'Expected an OpenAPI document with a top-level object',
+        path,
+      );
+    }
+    return decoded.cast<String, dynamic>();
   }
 
   dynamic _normalize(dynamic node) {
