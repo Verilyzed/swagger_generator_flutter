@@ -100,4 +100,28 @@ void main() {
     expect(op.responseType.name, 'Schedule');
     expect(spec.service.name, 'DemoService');
   });
+
+  test('skips path-level parameters and summary keys', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/tasks': {
+          'summary': 'Task routes',
+          'parameters': [
+            {
+              'in': 'query',
+              'name': 'limit',
+              'schema': {'type': 'integer'},
+            },
+          ],
+          'get': {
+            'operationId': 'list_tasks',
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.methodName, 'listTasks');
+  });
 }

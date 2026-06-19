@@ -3,6 +3,17 @@ import '../ir/dart_type.dart';
 import '../resolve/dart_type_resolver.dart';
 import '../resolve/name_giver.dart';
 
+const _httpMethods = {
+  'get',
+  'put',
+  'post',
+  'delete',
+  'options',
+  'head',
+  'patch',
+  'trace',
+};
+
 /// Turns a loaded OpenAPI map into the [ApiSpec] IR.
 class SpecParser {
   final NameGiver _names;
@@ -86,6 +97,7 @@ class SpecParser {
     for (final pathEntry in paths.entries) {
       final methods = (pathEntry.value as Map).cast<String, dynamic>();
       for (final methodEntry in methods.entries) {
+        if (!_httpMethods.contains(methodEntry.key.toLowerCase())) continue;
         final op = (methodEntry.value as Map).cast<String, dynamic>();
         operations.add(_operation(
           path: pathEntry.key,
@@ -114,7 +126,11 @@ class SpecParser {
       params.add(ParamDef(
         dartName: _names.memberName(p['name'] as String),
         wireName: p['name'] as String,
-        type: _resolver.resolve((p['schema'] as Map).cast<String, dynamic>()),
+        type: _resolver.resolve(
+          p['schema'] is Map
+              ? (p['schema'] as Map).cast<String, dynamic>()
+              : const <String, dynamic>{},
+        ),
         location: location,
       ));
     }
