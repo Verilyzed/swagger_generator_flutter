@@ -4,6 +4,17 @@ import 'package:swagger_generator_flutter/src/builder/swagger_builder.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('outputAssetPath replaces the full .openapi.json suffix', () {
+    expect(
+      outputAssetPath('lib/resource_scheduler.openapi.json', '.enums.dart'),
+      'lib/resource_scheduler.enums.dart',
+    );
+    expect(
+      outputAssetPath('lib/api/demo.openapi.json', '.models.dart'),
+      'lib/api/demo.models.dart',
+    );
+  });
+
   test('generateSources produces the five output files', () {
     final content = jsonEncode({
       'components': {

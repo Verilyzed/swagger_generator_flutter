@@ -39,12 +39,20 @@ class SwaggerBuilder implements Builder {
 
     for (final entry in sources.entries) {
       await buildStep.writeAsString(
-        input.changeExtension(entry.key),
+        AssetId(input.package, outputAssetPath(input.path, entry.key)),
         entry.value,
       );
     }
   }
 }
+
+/// Maps a `*.openapi.json` input path to an output path for the given
+/// extension. The full `.openapi.json` suffix is replaced so that multi-dot
+/// inputs (e.g. `foo.openapi.json`) yield `foo.enums.dart`, matching what
+/// build_runner derives from [SwaggerBuilder.buildExtensions]. Using
+/// `AssetId.changeExtension` here would only strip the trailing `.json`.
+String outputAssetPath(String inputPath, String outputExtension) =>
+    inputPath.replaceFirst('.openapi.json', outputExtension);
 
 /// Runs the full pipeline and returns output extension -> file content.
 Map<String, String> generateSources(
