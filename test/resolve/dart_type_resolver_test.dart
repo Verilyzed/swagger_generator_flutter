@@ -57,4 +57,17 @@ void main() {
     expect(t.display, 'FailureReason?');
     expect(t.isNullable, isTrue);
   });
+
+  test('object with additionalProperties maps to a typed Map', () {
+    expect(
+      resolver
+          .resolve({'type': 'object', 'additionalProperties': {'type': 'string'}})
+          .display,
+      'Map<String, String>',
+    );
+  });
+
+  test('bare object maps to Map<String, dynamic>', () {
+    expect(resolver.resolve({'type': 'object'}).display, 'Map<String, dynamic>');
+  });
 }

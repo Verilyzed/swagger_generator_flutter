@@ -28,7 +28,8 @@ class SwaggerBuilder implements Builder {
   Future<void> build(BuildStep buildStep) async {
     final input = buildStep.inputId;
     final content = await buildStep.readAsString(input);
-    final baseName = input.pathSegments.last.replaceAll('.openapi.json', '');
+    final baseName =
+        input.pathSegments.last.replaceAll(RegExp(r'\.openapi\.json$'), '');
 
     final sources = generateSources(
       content,

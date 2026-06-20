@@ -43,8 +43,8 @@ class ModelEmitter {
       ..writeln()
       ..writeln('  ${model.name}({');
     for (final field in model.fields) {
-      final makeRequired =
-          field.isRequired || (!field.type.isNullable && field.defaultValue == null);
+      final makeRequired = field.defaultValue == null &&
+          (field.isRequired || !field.type.isNullable);
       final prefix = makeRequired ? 'required ' : '';
       final suffix = field.defaultValue != null ? ' = ${field.defaultValue}' : '';
       buffer.writeln('    ${prefix}this.${field.dartName}$suffix,');

@@ -91,4 +91,28 @@ void main() {
     expect(out, contains("this.type = 'COST_OPTIMIZED'"));
     expect(out, isNot(contains('required this.type')));
   });
+
+  test('a required field that also has a default is not emitted as required', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Thing',
+          fields: [
+            FieldDef(
+              dartName: 'mode',
+              jsonKey: 'mode',
+              type: DartType('String'),
+              isRequired: true,
+              defaultValue: "'auto'",
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+    );
+
+    expect(out, contains("this.mode = 'auto'"));
+    expect(out, isNot(contains('required this.mode')));
+  });
 }

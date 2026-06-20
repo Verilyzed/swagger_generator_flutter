@@ -52,6 +52,13 @@ class DartTypeResolver {
             ? resolve(items)
             : const DartType('dynamic');
         return DartType('List<${inner.display}>');
+      case 'object':
+        final additional = schema['additionalProperties'];
+        if (additional is Map) {
+          final value = resolve(Map<String, dynamic>.from(additional));
+          return DartType('Map<String, ${value.display}>');
+        }
+        return const DartType('Map<String, dynamic>');
       default:
         return const DartType('dynamic');
     }
