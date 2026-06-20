@@ -101,6 +101,52 @@ void main() {
     expect(spec.service.name, 'DemoService');
   });
 
+  test('enum-typed field with string default yields enum-member default', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'ErrorCode': {
+            'type': 'string',
+            'enum': ['NOT_ALLOWED', 'RESOURCE_NOT_FOUND'],
+          },
+          'NotAllowedResponse': {
+            'type': 'object',
+            'properties': {
+              'error_code': {
+                r'$ref': '#/components/schemas/ErrorCode',
+                'default': 'NOT_ALLOWED',
+              },
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    final model = spec.models.single;
+    final field = model.fields.single;
+    expect(field.defaultValue, 'ErrorCode.notAllowed');
+  });
+
+  test('plain string field default yields quoted literal', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Task': {
+            'type': 'object',
+            'properties': {
+              'label': {'type': 'string', 'default': 'hi'},
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    final field = spec.models.single.fields.single;
+    expect(field.defaultValue, "'hi'");
+  });
+
   test('skips path-level parameters and summary keys', () {
     final spec = _parser().parse({
       'components': {'schemas': <String, dynamic>{}},

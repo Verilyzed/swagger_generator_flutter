@@ -26,13 +26,22 @@ class SpecParser {
     final enums = <EnumDef>[];
     final models = <ModelDef>[];
 
+    // Collect enum Dart names first so model field defaults can reference them.
+    final enumNames = <String>{};
+    for (final entry in schemas.entries) {
+      final schema = entry.value;
+      if (schema is Map<String, dynamic> && schema['enum'] is List) {
+        enumNames.add(_names.className(entry.key));
+      }
+    }
+
     for (final entry in schemas.entries) {
       final schema = entry.value;
       if (schema is! Map<String, dynamic>) continue;
       if (schema['enum'] is List) {
         enums.add(_enum(entry.key, schema));
       } else if (schema['type'] == 'object' || schema['properties'] is Map) {
-        models.add(_model(entry.key, schema));
+        models.add(_model(entry.key, schema, enumNames: enumNames));
       }
     }
 
@@ -63,7 +72,11 @@ class SpecParser {
     return EnumDef(name: _names.className(rawName), values: values);
   }
 
-  ModelDef _model(String rawName, Map<String, dynamic> schema) {
+  ModelDef _model(
+    String rawName,
+    Map<String, dynamic> schema, {
+    Set<String> enumNames = const {},
+  }) {
     final required = (schema['required'] as List?)?.cast<String>() ?? const [];
     final properties =
         (schema['properties'] as Map?)?.cast<String, dynamic>() ?? const {};
@@ -77,15 +90,28 @@ class SpecParser {
         jsonKey: entry.key,
         type: type,
         isRequired: required.contains(entry.key),
-        defaultValue: _defaultLiteral(propSchema['default']),
+        defaultValue: _defaultLiteral(
+          propSchema['default'],
+          typeName: type.name,
+          enumNames: enumNames,
+        ),
       ));
     }
 
     return ModelDef(name: _names.className(rawName), fields: fields);
   }
 
-  String? _defaultLiteral(dynamic value) {
-    if (value is String) return "'$value'";
+  String? _defaultLiteral(
+    dynamic value, {
+    String? typeName,
+    Set<String> enumNames = const {},
+  }) {
+    if (value is String) {
+      if (typeName != null && enumNames.contains(typeName)) {
+        return '$typeName.${_names.enumValueName(value)}';
+      }
+      return "'$value'";
+    }
     if (value is num || value is bool) return value.toString();
     return null;
   }

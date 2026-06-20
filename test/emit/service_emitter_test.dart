@@ -34,7 +34,7 @@ void main() {
     expect(out, contains("part 'demo.service.chopper.dart';"));
     expect(out, contains("@ChopperApi(baseUrl: '')"));
     expect(out, contains('abstract class DemoService extends ChopperService {'));
-    expect(out, contains("@Get(path: '/assets/{asset_id}/schedule')"));
+    expect(out, contains("@GET(path: '/assets/{asset_id}/schedule')"));
     expect(out, contains('Future<Response<Schedule>> getScheduleForAsset('));
     expect(out, contains("@Path('asset_id') String assetId"));
     expect(out, contains('static DemoService create([ChopperClient? client]) =>'));

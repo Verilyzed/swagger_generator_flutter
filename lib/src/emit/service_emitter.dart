@@ -65,17 +65,21 @@ class ServiceEmitter {
   String _verb(String httpMethod) {
     switch (httpMethod) {
       case 'GET':
-        return 'Get';
+        return 'GET';
       case 'POST':
-        return 'Post';
+        return 'POST';
       case 'PUT':
-        return 'Put';
+        return 'PUT';
       case 'PATCH':
-        return 'Patch';
+        return 'PATCH';
       case 'DELETE':
-        return 'Delete';
+        return 'DELETE';
+      case 'HEAD':
+        return 'HEAD';
+      case 'OPTIONS':
+        return 'OPTIONS';
       default:
-        return 'Get';
+        return 'GET';
     }
   }
 }
