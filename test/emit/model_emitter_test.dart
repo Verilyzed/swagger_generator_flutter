@@ -45,4 +45,50 @@ void main() {
     expect(out, contains('factory Task.fromJson(Map<String, dynamic> json) =>'));
     expect(out, contains('Map<String, dynamic> toJson() => _\$TaskToJson(this);'));
   });
+
+  test('non-nullable non-required field without default becomes required', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Thing',
+          fields: [
+            FieldDef(
+              dartName: 'title',
+              jsonKey: 'title',
+              type: DartType('String'),
+              isRequired: false,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+    );
+
+    expect(out, contains('required this.title'));
+  });
+
+  test('field with a default value stays optional with the default', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Thing',
+          fields: [
+            FieldDef(
+              dartName: 'type',
+              jsonKey: 'type',
+              type: DartType('String'),
+              isRequired: false,
+              defaultValue: "'COST_OPTIMIZED'",
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+    );
+
+    expect(out, contains("this.type = 'COST_OPTIMIZED'"));
+    expect(out, isNot(contains('required this.type')));
+  });
 }
