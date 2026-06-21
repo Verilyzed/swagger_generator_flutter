@@ -5,10 +5,16 @@ from pathlib import Path
 try:
     from app.main import app
 except ModuleNotFoundError as error:
-    sys.stderr.write(
-        f"Failed to import the FastAPI app: {error}\n"
-        "Install dependencies first: pip install -r requirements.txt\n",
-    )
+    if error.name in ("app", "app.main"):
+        sys.stderr.write(
+            "Could not import the app. Run this script from the backend/ "
+            "directory: python export_openapi.py\n",
+        )
+    else:
+        sys.stderr.write(
+            f"Failed to import the FastAPI app: {error}\n"
+            "Install dependencies first: pip install -r requirements.txt\n",
+        )
     sys.exit(1)
 
 OUTPUT = Path(__file__).parent / "test_api.openapi.json"

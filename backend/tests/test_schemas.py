@@ -15,7 +15,12 @@ def _widget_schema() -> dict:
 
 def test_widget_has_string_enum_field():
     props = _widget_schema()
-    assert "status" in props
+    assert props["status"] == {"$ref": "#/components/schemas/StatusEnum"}
+
+
+def test_extra_is_untyped_map():
+    props = _widget_schema()
+    assert props["extra"]["additionalProperties"] is True
 
 
 def test_priority_field_has_enum_default():
