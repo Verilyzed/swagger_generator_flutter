@@ -42,3 +42,24 @@ class Widget(BaseModel):
     extra: dict[str, Any] = {}
     html_url: Optional[str] = None
     default_value: int = Field(0, alias="default")
+
+
+class WidgetCreate(BaseModel):
+    asset_id: str
+    name: str
+    status: StatusEnum
+    priority: PriorityEnum = PriorityEnum.low
+    description: Optional[str] = None
+    tags: list[str] = []
+
+
+class WidgetContainer(BaseModel):
+    id: str
+    primary: Widget
+    widgets: list[Widget]
+    widget_map: dict[str, Widget]
+
+
+class ErrorResponse(BaseModel):
+    error_code: ErrorCodeEnum = ErrorCodeEnum.unknown
+    detail: str
