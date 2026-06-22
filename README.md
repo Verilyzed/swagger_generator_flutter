@@ -56,6 +56,12 @@ targets:
 `output_folder` must be under `lib/`. If `output_folder` is omitted it defaults
 to `input_folder` (co-located).
 
+If `input_folder` is omitted, specs are matched anywhere under the package
+sources and output is co-located. When you set `output_folder`, also set
+`input_folder` so the spec's directory prefix is stripped; otherwise the
+generated files nest under the captured path (for example
+`lib/generated/lib/...`).
+
 ## Contributing
 
 Contributions are welcome. Open an issue to discuss larger changes before

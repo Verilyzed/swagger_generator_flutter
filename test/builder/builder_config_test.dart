@@ -89,4 +89,19 @@ void main() {
     );
     expect(config.baseNameFor('api_specs/demo.openapi.json'), 'demo');
   });
+
+  test('captureStem preserves subdirectories under the input folder', () {
+    final config = BuilderConfig.fromOptions(
+      const BuilderOptions({
+        'input_folder': 'api_specs',
+        'output_folder': 'lib/generated',
+      }),
+    );
+    expect(config.captureStem('api_specs/v1/demo.openapi.json'), 'v1/demo');
+    expect(config.baseNameFor('api_specs/v1/demo.openapi.json'), 'demo');
+    expect(
+      config.outputPathFor('api_specs/v1/demo.openapi.json', '.models.dart'),
+      'lib/generated/v1/demo.models.dart',
+    );
+  });
 }

@@ -15,6 +15,9 @@ class BuilderConfig {
     final rawOutput = _normalize(options.config['output_folder']);
     final outputExplicit = rawOutput.isNotEmpty;
     final output = outputExplicit ? rawOutput : input;
+    // Only validate when output_folder was explicitly provided; a blank or
+    // whitespace value normalizes to empty and is treated as unset (defaults
+    // to input_folder).
     if (outputExplicit && output != 'lib' && !output.startsWith('lib/')) {
       throw ArgumentError.value(
         output,
@@ -45,7 +48,16 @@ class BuilderConfig {
 
   /// The portion of [inputPath] captured by `{{}}`: the input prefix and the
   /// `.openapi.json` suffix removed, any subdirectories preserved.
+  ///
+  /// Precondition: [inputPath] must be under [inputFolder] when [inputFolder]
+  /// is non-empty. build_runner only invokes the builder for inputs that match
+  /// the pattern in [buildExtensions], so this is always satisfied in normal
+  /// use.
   String captureStem(String inputPath) {
+    assert(
+      _inputPrefix.isEmpty || inputPath.startsWith(_inputPrefix),
+      'inputPath "$inputPath" is not under input_folder "$inputFolder"',
+    );
     var path = inputPath;
     if (_inputPrefix.isNotEmpty && path.startsWith(_inputPrefix)) {
       path = path.substring(_inputPrefix.length);

@@ -2,6 +2,9 @@ builders:
   swagger_generator:
     import: "package:swagger_generator_flutter/swagger_generator_flutter.dart"
     builder_factories: ["swaggerBuilder"]
+    # Default (no-options) extensions. The .models.g.dart and
+    # .service.chopper.dart files are produced by json_serializable and
+    # chopper_generator (see runs_before), not by this builder.
     build_extensions:
       "{{}}.openapi.json":
         - "{{}}.enums.dart"
