@@ -6,17 +6,17 @@ from fastapi import FastAPI
 from app.schemas import (
     ErrorResponse,
     StatusEnum,
-    Widget,
-    WidgetContainer,
-    WidgetCreate,
+    Gadget,
+    GadgetContainer,
+    GadgetCreate,
 )
 
 app = FastAPI(title="Edge Case Test API", version="1.0.0")
 
 
-def _sample_widget(widget_id: str = "w1") -> Widget:
-    return Widget(
-        id=widget_id,
+def _sample_gadget(gadget_id: str = "w1") -> Gadget:
+    return Gadget(
+        id=gadget_id,
         asset_id="a1",
         name="Sample",
         status=StatusEnum.active,
@@ -25,56 +25,56 @@ def _sample_widget(widget_id: str = "w1") -> Widget:
     )
 
 
-@app.get("/widgets", response_model=list[Widget], tags=["widgets"])
-def list_widgets(
+@app.get("/gadgets", response_model=list[Gadget], tags=["gadgets"])
+def list_gadgets(
     status: Optional[StatusEnum] = None,
     limit: int = 50,
     offset: int = 0,
 ):
-    return [_sample_widget()]
+    return [_sample_gadget()]
 
 
 @app.get(
-    "/widgets/{widget_id}",
-    response_model=Widget,
+    "/gadgets/{gadget_id}",
+    response_model=Gadget,
     responses={404: {"model": ErrorResponse}},
-    tags=["widgets"],
+    tags=["gadgets"],
 )
-def get_widget(widget_id: str):
-    return _sample_widget(widget_id)
+def get_gadget(gadget_id: str):
+    return _sample_gadget(gadget_id)
 
 
-@app.post("/widgets", response_model=Widget, tags=["widgets"])
-def create_widget(body: WidgetCreate):
-    return _sample_widget()
+@app.post("/gadgets", response_model=Gadget, tags=["gadgets"])
+def create_gadget(body: GadgetCreate):
+    return _sample_gadget()
 
 
-@app.put("/widgets/{widget_id}", response_model=Widget, tags=["widgets"])
-def replace_widget(widget_id: str, body: WidgetCreate):
-    return _sample_widget(widget_id)
+@app.put("/gadgets/{gadget_id}", response_model=Gadget, tags=["gadgets"])
+def replace_gadget(gadget_id: str, body: GadgetCreate):
+    return _sample_gadget(gadget_id)
 
 
-@app.patch("/widgets/{widget_id}", response_model=Widget, tags=["widgets"])
-def update_widget(widget_id: str, body: WidgetCreate):
-    return _sample_widget(widget_id)
+@app.patch("/gadgets/{gadget_id}", response_model=Gadget, tags=["gadgets"])
+def update_gadget(gadget_id: str, body: GadgetCreate):
+    return _sample_gadget(gadget_id)
 
 
-@app.delete("/widgets/{widget_id}", tags=["widgets"])
-def delete_widget(widget_id: str):
-    return {"deleted": widget_id}
+@app.delete("/gadgets/{gadget_id}", tags=["gadgets"])
+def delete_gadget(gadget_id: str):
+    return {"deleted": gadget_id}
 
 
 @app.get(
     "/containers/{container_id}",
-    response_model=WidgetContainer,
+    response_model=GadgetContainer,
     responses={404: {"model": ErrorResponse}},
     tags=["containers"],
 )
 def get_container(container_id: str):
-    widget = _sample_widget()
-    return WidgetContainer(
+    gadget = _sample_gadget()
+    return GadgetContainer(
         id=container_id,
-        primary=widget,
-        widgets=[widget],
-        widget_map={"k": widget},
+        primary=gadget,
+        gadgets=[gadget],
+        gadget_map={"k": gadget},
     )

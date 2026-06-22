@@ -12,5 +12,5 @@ def test_export_writes_valid_openapi(tmp_path, monkeypatch):
 
     spec = json.loads(target.read_text())
     assert spec["openapi"].startswith("3.1")
-    assert "Widget" in spec["components"]["schemas"]
-    assert "/widgets" in spec["paths"]
+    assert "Gadget" in spec["components"]["schemas"]
+    assert "/gadgets" in spec["paths"]

@@ -5,13 +5,13 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/widgets": {
+    "/gadgets": {
       "get": {
         "tags": [
-          "widgets"
+          "gadgets"
         ],
-        "summary": "List Widgets",
-        "operationId": "list_widgets_widgets_get",
+        "summary": "List Gadgets",
+        "operationId": "list_gadgets_gadgets_get",
         "parameters": [
           {
             "name": "status",
@@ -58,9 +58,9 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Widget"
+                    "$ref": "#/components/schemas/Gadget"
                   },
-                  "title": "Response List Widgets Widgets Get"
+                  "title": "Response List Gadgets Gadgets Get"
                 }
               }
             }
@@ -79,16 +79,16 @@
       },
       "post": {
         "tags": [
-          "widgets"
+          "gadgets"
         ],
-        "summary": "Create Widget",
-        "operationId": "create_widget_widgets_post",
+        "summary": "Create Gadget",
+        "operationId": "create_gadget_gadgets_post",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WidgetCreate"
+                "$ref": "#/components/schemas/GadgetCreate"
               }
             }
           }
@@ -99,7 +99,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Widget"
+                  "$ref": "#/components/schemas/Gadget"
                 }
               }
             }
@@ -117,21 +117,21 @@
         }
       }
     },
-    "/widgets/{widget_id}": {
+    "/gadgets/{gadget_id}": {
       "get": {
         "tags": [
-          "widgets"
+          "gadgets"
         ],
-        "summary": "Get Widget",
-        "operationId": "get_widget_widgets__widget_id__get",
+        "summary": "Get Gadget",
+        "operationId": "get_gadget_gadgets__gadget_id__get",
         "parameters": [
           {
-            "name": "widget_id",
+            "name": "gadget_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Widget Id"
+              "title": "Gadget Id"
             }
           }
         ],
@@ -141,7 +141,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Widget"
+                  "$ref": "#/components/schemas/Gadget"
                 }
               }
             }
@@ -170,18 +170,18 @@
       },
       "put": {
         "tags": [
-          "widgets"
+          "gadgets"
         ],
-        "summary": "Replace Widget",
-        "operationId": "replace_widget_widgets__widget_id__put",
+        "summary": "Replace Gadget",
+        "operationId": "replace_gadget_gadgets__gadget_id__put",
         "parameters": [
           {
-            "name": "widget_id",
+            "name": "gadget_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Widget Id"
+              "title": "Gadget Id"
             }
           }
         ],
@@ -190,7 +190,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WidgetCreate"
+                "$ref": "#/components/schemas/GadgetCreate"
               }
             }
           }
@@ -201,7 +201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Widget"
+                  "$ref": "#/components/schemas/Gadget"
                 }
               }
             }
@@ -220,18 +220,18 @@
       },
       "patch": {
         "tags": [
-          "widgets"
+          "gadgets"
         ],
-        "summary": "Update Widget",
-        "operationId": "update_widget_widgets__widget_id__patch",
+        "summary": "Update Gadget",
+        "operationId": "update_gadget_gadgets__gadget_id__patch",
         "parameters": [
           {
-            "name": "widget_id",
+            "name": "gadget_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Widget Id"
+              "title": "Gadget Id"
             }
           }
         ],
@@ -240,7 +240,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WidgetCreate"
+                "$ref": "#/components/schemas/GadgetCreate"
               }
             }
           }
@@ -251,7 +251,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Widget"
+                  "$ref": "#/components/schemas/Gadget"
                 }
               }
             }
@@ -270,18 +270,18 @@
       },
       "delete": {
         "tags": [
-          "widgets"
+          "gadgets"
         ],
-        "summary": "Delete Widget",
-        "operationId": "delete_widget_widgets__widget_id__delete",
+        "summary": "Delete Gadget",
+        "operationId": "delete_gadget_gadgets__gadget_id__delete",
         "parameters": [
           {
-            "name": "widget_id",
+            "name": "gadget_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Widget Id"
+              "title": "Gadget Id"
             }
           }
         ],
@@ -331,7 +331,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WidgetContainer"
+                  "$ref": "#/components/schemas/GadgetContainer"
                 }
               }
             }
@@ -388,78 +388,7 @@
         ],
         "title": "ErrorResponse"
       },
-      "HTTPValidationError": {
-        "properties": {
-          "detail": {
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
-            "type": "array",
-            "title": "Detail"
-          }
-        },
-        "type": "object",
-        "title": "HTTPValidationError"
-      },
-      "PriorityEnum": {
-        "type": "string",
-        "enum": [
-          "low",
-          "medium",
-          "high"
-        ],
-        "title": "PriorityEnum"
-      },
-      "StatusEnum": {
-        "type": "string",
-        "enum": [
-          "active",
-          "inactive",
-          "archived"
-        ],
-        "title": "StatusEnum"
-      },
-      "ValidationError": {
-        "properties": {
-          "loc": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "integer"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Location"
-          },
-          "msg": {
-            "type": "string",
-            "title": "Message"
-          },
-          "type": {
-            "type": "string",
-            "title": "Error Type"
-          },
-          "input": {
-            "title": "Input"
-          },
-          "ctx": {
-            "type": "object",
-            "title": "Context"
-          }
-        },
-        "type": "object",
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
-        "title": "ValidationError"
-      },
-      "Widget": {
+      "Gadget": {
         "properties": {
           "id": {
             "type": "string",
@@ -570,42 +499,42 @@
           "ratio",
           "created_at"
         ],
-        "title": "Widget"
+        "title": "Gadget"
       },
-      "WidgetContainer": {
+      "GadgetContainer": {
         "properties": {
           "id": {
             "type": "string",
             "title": "Id"
           },
           "primary": {
-            "$ref": "#/components/schemas/Widget"
+            "$ref": "#/components/schemas/Gadget"
           },
-          "widgets": {
+          "gadgets": {
             "items": {
-              "$ref": "#/components/schemas/Widget"
+              "$ref": "#/components/schemas/Gadget"
             },
             "type": "array",
-            "title": "Widgets"
+            "title": "Gadgets"
           },
-          "widget_map": {
+          "gadget_map": {
             "additionalProperties": {
-              "$ref": "#/components/schemas/Widget"
+              "$ref": "#/components/schemas/Gadget"
             },
             "type": "object",
-            "title": "Widget Map"
+            "title": "Gadget Map"
           }
         },
         "type": "object",
         "required": [
           "id",
           "primary",
-          "widgets",
-          "widget_map"
+          "gadgets",
+          "gadget_map"
         ],
-        "title": "WidgetContainer"
+        "title": "GadgetContainer"
       },
-      "WidgetCreate": {
+      "GadgetCreate": {
         "properties": {
           "asset_id": {
             "type": "string",
@@ -648,7 +577,78 @@
           "name",
           "status"
         ],
-        "title": "WidgetCreate"
+        "title": "GadgetCreate"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "PriorityEnum": {
+        "type": "string",
+        "enum": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "title": "PriorityEnum"
+      },
+      "StatusEnum": {
+        "type": "string",
+        "enum": [
+          "active",
+          "inactive",
+          "archived"
+        ],
+        "title": "StatusEnum"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       }
     }
   }

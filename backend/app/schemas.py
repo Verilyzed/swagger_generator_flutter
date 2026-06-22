@@ -23,7 +23,7 @@ class ErrorCodeEnum(str, Enum):
     invalid = "INVALID"
 
 
-class Widget(BaseModel):
+class Gadget(BaseModel):
     model_config = {"populate_by_name": True}
 
     id: str
@@ -44,7 +44,7 @@ class Widget(BaseModel):
     default_value: int = Field(0, alias="default")
 
 
-class WidgetCreate(BaseModel):
+class GadgetCreate(BaseModel):
     asset_id: str
     name: str
     status: StatusEnum
@@ -53,11 +53,11 @@ class WidgetCreate(BaseModel):
     tags: list[str] = []
 
 
-class WidgetContainer(BaseModel):
+class GadgetContainer(BaseModel):
     id: str
-    primary: Widget
-    widgets: list[Widget]
-    widget_map: dict[str, Widget]
+    primary: Gadget
+    gadgets: list[Gadget]
+    gadget_map: dict[str, Gadget]
 
 
 class ErrorResponse(BaseModel):
