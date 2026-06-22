@@ -5,16 +5,30 @@ import 'package:test/test.dart';
 void main() {
   final emitter = ClientEmitter();
 
-  test('emits a ChopperClient factory with the service', () {
+  test('emits a deserializing converter and registers model factories', () {
     final out = emitter.emitClient(
       const ServiceDef(name: 'DemoService', operations: []),
       serviceImport: 'demo.service.dart',
+      modelsImport: 'demo.models.dart',
+      models: const [
+        ModelDef(name: 'Gadget', fields: []),
+        ModelDef(name: 'GadgetContainer', fields: []),
+      ],
     );
 
-    expect(out, contains("import 'package:chopper/chopper.dart';"));
-    expect(out, contains('ChopperClient createClient('));
-    expect(out, contains('DemoService.create('));
-    expect(out, contains('converter: const JsonConverter()'));
+    expect(out, contains("import 'demo.models.dart';"));
+    expect(
+      out,
+      contains('class JsonSerializableConverter extends JsonConverter {'),
+    );
+    expect(
+      out,
+      contains('Response<ResultType> convertResponse<ResultType, Item>('),
+    );
+    expect(out, contains('converter: const JsonSerializableConverter({'));
+    expect(out, contains('Gadget: Gadget.fromJson,'));
+    expect(out, contains('GadgetContainer: GadgetContainer.fromJson,'));
+    expect(out, contains('services: [DemoService.create()],'));
   });
 
   test('emits a barrel of exports', () {

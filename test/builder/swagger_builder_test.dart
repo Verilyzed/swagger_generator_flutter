@@ -67,6 +67,8 @@ void main() {
     expect(sources['.service.dart'], contains('class DemoService extends ChopperService {'));
     expect(sources['.service.dart'], contains('listTasks('));
     expect(sources['.client.dart'], contains('ChopperClient createClient('));
+    expect(sources['.client.dart'], contains('JsonSerializableConverter'));
+    expect(sources['.client.dart'], contains('Task: Task.fromJson,'));
     expect(sources['.api.dart'], contains("export 'demo.enums.dart';"));
   });
 }

@@ -77,6 +77,8 @@ Map<String, String> generateSources(
     '.client.dart': emitter.emitClient(
       spec.service,
       serviceImport: serviceFile,
+      modelsImport: modelsFile,
+      models: spec.models,
     ),
     '.api.dart': emitter.emitBarrel(
       enumsImport: enumsFile,
