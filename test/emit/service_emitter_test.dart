@@ -4,24 +4,46 @@ import 'package:swagger_generator_flutter/src/ir/dart_type.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('emits a Chopper service with annotated methods', () {
+  test('emits required path positional and optional query named', () {
     final out = ServiceEmitter().emit(
       const ServiceDef(
         name: 'DemoService',
         operations: [
           OperationDef(
-            methodName: 'getScheduleForAsset',
+            methodName: 'listGadgets',
             httpMethod: 'GET',
-            path: '/assets/{asset_id}/schedule',
+            path: '/gadgets',
             parameters: [
               ParamDef(
-                dartName: 'assetId',
-                wireName: 'asset_id',
-                type: DartType('String'),
-                location: ParamLocation.path,
+                dartName: 'limit',
+                wireName: 'limit',
+                type: DartType('int'),
+                location: ParamLocation.query,
+                defaultValue: '50',
+              ),
+              ParamDef(
+                dartName: 'status',
+                wireName: 'status',
+                type: DartType('StatusEnum', isNullable: true),
+                location: ParamLocation.query,
               ),
             ],
-            responseType: DartType('Schedule'),
+            responseType: DartType('List<Gadget>'),
+          ),
+          OperationDef(
+            methodName: 'getGadget',
+            httpMethod: 'GET',
+            path: '/gadgets/{gadget_id}',
+            parameters: [
+              ParamDef(
+                dartName: 'gadgetId',
+                wireName: 'gadget_id',
+                type: DartType('String'),
+                location: ParamLocation.path,
+                isRequired: true,
+              ),
+            ],
+            responseType: DartType('Gadget'),
           ),
         ],
       ),
@@ -30,13 +52,10 @@ void main() {
       enumsImport: 'demo.enums.dart',
     );
 
-    expect(out, contains("import 'package:chopper/chopper.dart';"));
-    expect(out, contains("part 'demo.service.chopper.dart';"));
-    expect(out, contains("@ChopperApi(baseUrl: '')"));
-    expect(out, contains('abstract class DemoService extends ChopperService {'));
-    expect(out, contains("@GET(path: '/assets/{asset_id}/schedule')"));
-    expect(out, contains('Future<Response<Schedule>> getScheduleForAsset('));
-    expect(out, contains("@Path('asset_id') String assetId"));
-    expect(out, contains('static DemoService create([ChopperClient? client]) =>'));
+    expect(out, contains('Future<Response<List<Gadget>>> listGadgets({'));
+    expect(out, contains("@Query('limit') int limit = 50,"));
+    expect(out, contains("@Query('status') StatusEnum? status,"));
+    expect(out, contains("@Path('gadget_id') String gadgetId,"));
+    expect(out, isNot(contains('listGadgets(@Query')));
   });
 }

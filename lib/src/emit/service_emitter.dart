@@ -37,28 +37,67 @@ class ServiceEmitter {
 
   void _emitMethod(StringBuffer buffer, OperationDef op) {
     final verb = _verb(op.httpMethod);
-    final args = op.parameters.map(_param).join(',\n    ');
+    final positional = op.parameters
+        .where((p) => p.isRequired)
+        .map((p) => '    ${_annotation(p)} ${p.type.display} ${p.dartName},')
+        .toList();
+    final named = op.parameters
+        .where((p) => !p.isRequired)
+        .map((p) => '    ${_namedParam(p)},')
+        .toList();
+
     buffer
       ..writeln("  @$verb(path: '${op.path}')")
-      ..writeln(
+      ..write(
         '  Future<Response<${op.responseType.display}>> ${op.methodName}(',
       );
-    if (args.isNotEmpty) {
-      buffer.writeln('    $args,');
+
+    if (positional.isEmpty && named.isEmpty) {
+      buffer.writeln(');');
+    } else if (named.isEmpty) {
+      buffer.writeln();
+      for (final line in positional) {
+        buffer.writeln(line);
+      }
+      buffer.writeln('  );');
+    } else if (positional.isEmpty) {
+      buffer.writeln('{');
+      for (final line in named) {
+        buffer.writeln(line);
+      }
+      buffer.writeln('  });');
+    } else {
+      buffer.writeln();
+      for (final line in positional) {
+        buffer.writeln(line);
+      }
+      buffer.writeln('    {');
+      for (final line in named) {
+        buffer.writeln(line);
+      }
+      buffer.writeln('  });');
     }
-    buffer
-      ..writeln('  );')
-      ..writeln();
+
+    buffer.writeln();
   }
 
-  String _param(ParamDef p) {
+  String _namedParam(ParamDef p) {
+    final annotation = _annotation(p);
+    if (p.defaultValue != null) {
+      return '$annotation ${p.type.display} ${p.dartName} = ${p.defaultValue}';
+    }
+    final nullable = p.type.isNullable ? p.type.display : '${p.type.name}?';
+    return '$annotation $nullable ${p.dartName}';
+  }
+
+  String _annotation(ParamDef p) {
     switch (p.location) {
       case ParamLocation.path:
-        return "@Path('${p.wireName}') ${p.type.display} ${p.dartName}";
+        return "@Path('${p.wireName}')";
       case ParamLocation.query:
-        return "@Query('${p.wireName}') ${p.type.display} ${p.dartName}";
+        return "@Query('${p.wireName}')";
       case ParamLocation.body:
-        return '@Body() ${p.type.display} ${p.dartName}';
+        return '@Body()';
     }
   }
 
