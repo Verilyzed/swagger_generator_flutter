@@ -37,4 +37,17 @@ void main() {
     expect(spec.models.single.fields.single.dartName, 'id');
     expect(spec.service.name, 'DemoService');
   });
+
+  test('ParamDef carries optionality and default', () {
+    const param = ParamDef(
+      dartName: 'limit',
+      wireName: 'limit',
+      type: DartType('int'),
+      location: ParamLocation.query,
+      isRequired: false,
+      defaultValue: '50',
+    );
+    expect(param.isRequired, isFalse);
+    expect(param.defaultValue, '50');
+  });
 }

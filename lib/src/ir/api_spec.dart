@@ -44,12 +44,16 @@ class ParamDef {
   final String wireName;
   final DartType type;
   final ParamLocation location;
+  final bool isRequired;
+  final String? defaultValue;
 
   const ParamDef({
     required this.dartName,
     required this.wireName,
     required this.type,
     required this.location,
+    this.isRequired = false,
+    this.defaultValue,
   });
 }
 
