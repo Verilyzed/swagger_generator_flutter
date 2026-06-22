@@ -49,7 +49,7 @@ class SpecParser {
       name: name,
       enums: enums,
       models: models,
-      service: _service(spec, name),
+      service: _service(spec, name, enumNames),
     );
   }
 
@@ -116,7 +116,11 @@ class SpecParser {
     return null;
   }
 
-  ServiceDef _service(Map<String, dynamic> spec, String name) {
+  ServiceDef _service(
+    Map<String, dynamic> spec,
+    String name,
+    Set<String> enumNames,
+  ) {
     final paths = (spec['paths'] as Map?)?.cast<String, dynamic>() ?? const {};
     final operations = <OperationDef>[];
 
@@ -129,6 +133,7 @@ class SpecParser {
           path: pathEntry.key,
           httpMethod: methodEntry.key.toUpperCase(),
           op: op,
+          enumNames: enumNames,
         ));
       }
     }
@@ -143,28 +148,34 @@ class SpecParser {
     required String path,
     required String httpMethod,
     required Map<String, dynamic> op,
+    required Set<String> enumNames,
   }) {
     final params = <ParamDef>[];
     for (final raw in (op['parameters'] as List?) ?? const []) {
       final p = (raw as Map).cast<String, dynamic>();
-      final location =
-          p['in'] == 'path' ? ParamLocation.path : ParamLocation.query;
+      final isPath = p['in'] == 'path';
+      final schema = p['schema'] is Map
+          ? (p['schema'] as Map).cast<String, dynamic>()
+          : const <String, dynamic>{};
+      final type = _resolver.resolve(schema);
       params.add(ParamDef(
         dartName: _names.memberName(p['name'] as String),
         wireName: p['name'] as String,
-        type: _resolver.resolve(
-          p['schema'] is Map
-              ? (p['schema'] as Map).cast<String, dynamic>()
-              : const <String, dynamic>{},
+        type: type,
+        location: isPath ? ParamLocation.path : ParamLocation.query,
+        isRequired: isPath || p['required'] == true,
+        defaultValue: _defaultLiteral(
+          schema['default'],
+          typeName: type.name,
+          enumNames: enumNames,
         ),
-        location: location,
       ));
     }
 
     DartType? bodyType;
     final body = op['requestBody'];
-    final bodySchema =
-        _jsonSchema(body is Map ? body.cast<String, dynamic>() : null);
+    final bodyMap = body is Map ? body.cast<String, dynamic>() : null;
+    final bodySchema = _jsonSchema(bodyMap);
     if (bodySchema != null) {
       bodyType = _resolver.resolve(bodySchema);
       params.add(ParamDef(
@@ -172,6 +183,7 @@ class SpecParser {
         wireName: 'body',
         type: bodyType,
         location: ParamLocation.body,
+        isRequired: bodyMap?['required'] == true,
       ));
     }
 

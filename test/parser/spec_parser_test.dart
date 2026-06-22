@@ -170,4 +170,73 @@ void main() {
 
     expect(spec.service.operations.single.methodName, 'listTasks');
   });
+
+  test('parses query param optionality and defaults', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'StatusEnum': {
+            'type': 'string',
+            'enum': ['active', 'inactive'],
+          },
+        },
+      },
+      'paths': {
+        '/gadgets': {
+          'get': {
+            'operationId': 'list_gadgets',
+            'parameters': [
+              {
+                'in': 'query',
+                'name': 'limit',
+                'required': false,
+                'schema': {'type': 'integer', 'default': 50},
+              },
+              {
+                'in': 'query',
+                'name': 'status',
+                'required': false,
+                'schema': {
+                  r'$ref': '#/components/schemas/StatusEnum',
+                  'default': 'active',
+                },
+              },
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    final op = spec.service.operations.single;
+    final limit = op.parameters.firstWhere((p) => p.wireName == 'limit');
+    final status = op.parameters.firstWhere((p) => p.wireName == 'status');
+    expect(limit.isRequired, isFalse);
+    expect(limit.defaultValue, '50');
+    expect(status.defaultValue, 'StatusEnum.active');
+  });
+
+  test('path params are required', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/gadgets/{gadget_id}': {
+          'get': {
+            'operationId': 'get_gadget',
+            'parameters': [
+              {
+                'in': 'path',
+                'name': 'gadget_id',
+                'required': true,
+                'schema': {'type': 'string'},
+              },
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.parameters.single.isRequired, isTrue);
+  });
 }
