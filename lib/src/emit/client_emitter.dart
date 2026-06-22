@@ -42,10 +42,12 @@ class ClientEmitter {
       ..writeln('  }')
       ..writeln()
       ..writeln('  @override')
-      ..writeln('  Response<ResultType> convertResponse<ResultType, Item>(')
+      ..writeln('  Future<Response<ResultType>> convertResponse<ResultType, Item>(')
       ..writeln('    Response response,')
-      ..writeln('  ) {')
-      ..writeln('    final decoded = super.convertResponse(response);')
+      ..writeln('  ) async {')
+      ..writeln(
+        '    final decoded = await super.convertResponse<dynamic, dynamic>(response);',
+      )
       ..writeln('    return decoded.copyWith<ResultType>(')
       ..writeln('      body: _decode<Item>(decoded.body),')
       ..writeln('    );')

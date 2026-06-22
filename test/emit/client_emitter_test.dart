@@ -23,7 +23,7 @@ void main() {
     );
     expect(
       out,
-      contains('Response<ResultType> convertResponse<ResultType, Item>('),
+      contains('Future<Response<ResultType>> convertResponse<ResultType, Item>('),
     );
     expect(out, contains('converter: const JsonSerializableConverter({'));
     expect(out, contains('Gadget: Gadget.fromJson,'));
