@@ -37,6 +37,25 @@ dart analyze
 dart test
 ```
 
+## Configuring input and output folders
+
+By default the generator writes each `<name>.openapi.json` spec's Dart output
+next to the spec. To place specs and generated code in specific folders,
+configure the builder in the consuming project's `build.yaml`:
+
+```yaml
+targets:
+  $default:
+    builders:
+      swagger_generator_flutter|swagger_generator:
+        options:
+          input_folder: lib
+          output_folder: lib/generated
+```
+
+`output_folder` must be under `lib/`. If `output_folder` is omitted it defaults
+to `input_folder` (co-located).
+
 ## Contributing
 
 Contributions are welcome. Open an issue to discuss larger changes before
