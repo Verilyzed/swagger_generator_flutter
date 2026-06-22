@@ -1,0 +1,71 @@
+import 'package:build/build.dart';
+
+/// Resolved input/output folder configuration for the builder.
+///
+/// Folders are normalized to have no surrounding slashes; an empty string
+/// means "the package root" (co-located with the input).
+class BuilderConfig {
+  final String inputFolder;
+  final String outputFolder;
+
+  const BuilderConfig({required this.inputFolder, required this.outputFolder});
+
+  factory BuilderConfig.fromOptions(BuilderOptions options) {
+    final input = _normalize(options.config['input_folder']);
+    final rawOutput = _normalize(options.config['output_folder']);
+    final outputExplicit = rawOutput.isNotEmpty;
+    final output = outputExplicit ? rawOutput : input;
+    if (outputExplicit && output != 'lib' && !output.startsWith('lib/')) {
+      throw ArgumentError.value(
+        output,
+        'output_folder',
+        'output_folder must be under lib/ '
+            '(build_runner only writes generated source there)',
+      );
+    }
+    return BuilderConfig(inputFolder: input, outputFolder: output);
+  }
+
+  static const _extensions = [
+    '.enums.dart',
+    '.models.dart',
+    '.service.dart',
+    '.client.dart',
+    '.api.dart',
+  ];
+
+  String get _inputPrefix => inputFolder.isEmpty ? '' : '$inputFolder/';
+  String get _outputPrefix => outputFolder.isEmpty ? '' : '$outputFolder/';
+
+  Map<String, List<String>> get buildExtensions => {
+        '$_inputPrefix{{}}.openapi.json': [
+          for (final ext in _extensions) '$_outputPrefix{{}}$ext',
+        ],
+      };
+
+  /// The portion of [inputPath] captured by `{{}}`: the input prefix and the
+  /// `.openapi.json` suffix removed, any subdirectories preserved.
+  String captureStem(String inputPath) {
+    var path = inputPath;
+    if (_inputPrefix.isNotEmpty && path.startsWith(_inputPrefix)) {
+      path = path.substring(_inputPrefix.length);
+    }
+    return path.replaceFirst(RegExp(r'\.openapi\.json$'), '');
+  }
+
+  /// The bare base name (last path segment) used for cross-file imports.
+  String baseNameFor(String inputPath) => captureStem(inputPath).split('/').last;
+
+  /// The output asset path for [extension], matching what build_runner derives
+  /// from [buildExtensions].
+  String outputPathFor(String inputPath, String extension) =>
+      '$_outputPrefix${captureStem(inputPath)}$extension';
+
+  static String _normalize(Object? value) {
+    if (value is! String) return '';
+    return value
+        .trim()
+        .replaceAll(RegExp(r'^/+'), '')
+        .replaceAll(RegExp(r'/+$'), '');
+  }
+}
