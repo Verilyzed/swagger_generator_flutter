@@ -2,13 +2,6 @@ builders:
   swagger_generator:
     import: "package:swagger_generator_flutter/swagger_generator_flutter.dart"
     builder_factories: ["swaggerBuilder"]
-    build_extensions:
-      ".openapi.json":
-        - ".enums.dart"
-        - ".models.dart"
-        - ".service.dart"
-        - ".client.dart"
-        - ".api.dart"
     auto_apply: dependents
     build_to: source
     runs_before:

@@ -8,28 +8,25 @@ import '../parser/spec_loader.dart';
 import '../parser/spec_parser.dart';
 import '../resolve/dart_type_resolver.dart';
 import '../resolve/name_giver.dart';
+import 'builder_config.dart';
 
-Builder swaggerBuilder(BuilderOptions options) => SwaggerBuilder();
+Builder swaggerBuilder(BuilderOptions options) =>
+    SwaggerBuilder(BuilderConfig.fromOptions(options));
 
 /// Generates Dart sources from a `*.openapi.json` spec asset.
 class SwaggerBuilder implements Builder {
+  final BuilderConfig config;
+
+  SwaggerBuilder(this.config);
+
   @override
-  Map<String, List<String>> get buildExtensions => const {
-        '.openapi.json': [
-          '.enums.dart',
-          '.models.dart',
-          '.service.dart',
-          '.client.dart',
-          '.api.dart',
-        ],
-      };
+  Map<String, List<String>> get buildExtensions => config.buildExtensions;
 
   @override
   Future<void> build(BuildStep buildStep) async {
     final input = buildStep.inputId;
     final content = await buildStep.readAsString(input);
-    final baseName =
-        input.pathSegments.last.replaceAll(RegExp(r'\.openapi\.json$'), '');
+    final baseName = config.baseNameFor(input.path);
 
     final sources = generateSources(
       content,
@@ -39,20 +36,12 @@ class SwaggerBuilder implements Builder {
 
     for (final entry in sources.entries) {
       await buildStep.writeAsString(
-        AssetId(input.package, outputAssetPath(input.path, entry.key)),
+        AssetId(input.package, config.outputPathFor(input.path, entry.key)),
         entry.value,
       );
     }
   }
 }
-
-/// Maps a `*.openapi.json` input path to an output path for the given
-/// extension. The full `.openapi.json` suffix is replaced so that multi-dot
-/// inputs (e.g. `foo.openapi.json`) yield `foo.enums.dart`, matching what
-/// build_runner derives from [SwaggerBuilder.buildExtensions]. Using
-/// `AssetId.changeExtension` here would only strip the trailing `.json`.
-String outputAssetPath(String inputPath, String outputExtension) =>
-    inputPath.replaceFirst('.openapi.json', outputExtension);
 
 /// Runs the full pipeline and returns output extension -> file content.
 Map<String, String> generateSources(
