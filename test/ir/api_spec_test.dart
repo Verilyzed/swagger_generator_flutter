@@ -44,7 +44,6 @@ void main() {
       wireName: 'limit',
       type: DartType('int'),
       location: ParamLocation.query,
-      isRequired: false,
       defaultValue: '50',
     );
     expect(param.isRequired, isFalse);
