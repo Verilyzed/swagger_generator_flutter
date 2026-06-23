@@ -10,11 +10,16 @@ const _reserved = {
   'static',
 };
 
+const _chopperTypeNames = {
+  'Field', 'Part', 'PartFile', 'Header', 'Body', 'Query', 'QueryMap',
+  'Path', 'Response', 'Request', 'Tag', 'Method', 'Converter', 'Interceptor',
+};
+
 /// Produces valid Dart identifiers from arbitrary OpenAPI names.
 class NameGiver {
   String className(String raw) {
-    final parts = _words(raw);
-    return parts.map(_capitalize).join();
+    final name = _words(raw).map(_capitalize).join();
+    return _chopperTypeNames.contains(name) ? '${name}Model' : name;
   }
 
   String memberName(String raw) {
@@ -34,11 +39,19 @@ class NameGiver {
   List<String> _words(String raw) {
     final spaced = raw
         .replaceAllMapped(
+          RegExp('([A-Z]+)([A-Z][a-z])'),
+          (m) => '${m[1]} ${m[2]}',
+        )
+        .replaceAllMapped(
           RegExp('([a-z0-9])([A-Z])'),
           (m) => '${m[1]} ${m[2]}',
         )
         .replaceAll(RegExp('[^a-zA-Z0-9]+'), ' ');
-    return spaced.trim().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+    return spaced
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((w) => w.isNotEmpty)
+        .toList();
   }
 
   String _capitalize(String w) =>

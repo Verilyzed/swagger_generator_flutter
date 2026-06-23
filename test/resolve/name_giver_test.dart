@@ -25,4 +25,16 @@ void main() {
     expect(names.enumValueName('2xx'), r'$2xx');
     expect(names.enumValueName('month'), 'month');
   });
+
+  test('className splits acronym runs', () {
+    expect(names.className('APIRequest'), 'ApiRequest');
+    expect(names.className('HTTPValidationError'), 'HttpValidationError');
+    expect(names.className('FullItem'), 'FullItem');
+  });
+
+  test('className renames Chopper-colliding names', () {
+    expect(names.className('Field'), 'FieldModel');
+    expect(names.className('Response'), 'ResponseModel');
+    expect(names.className('Vault'), 'Vault');
+  });
 }
