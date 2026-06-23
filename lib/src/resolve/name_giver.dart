@@ -13,6 +13,7 @@ const _reserved = {
 const _chopperTypeNames = {
   'Field', 'Part', 'PartFile', 'Header', 'Body', 'Query', 'QueryMap',
   'Path', 'Response', 'Request', 'Tag', 'Method', 'Converter', 'Interceptor',
+  'Get', 'Post', 'Put', 'Patch', 'Delete', 'Head', 'Options',
 };
 
 /// Produces valid Dart identifiers from arbitrary OpenAPI names.
@@ -33,6 +34,7 @@ class NameGiver {
 
   String enumValueName(String raw) {
     final name = memberName(raw);
+    if (name == '_') return 'empty';
     return RegExp(r'^[0-9]').hasMatch(name) ? '\$$name' : name;
   }
 

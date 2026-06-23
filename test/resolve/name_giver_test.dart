@@ -35,6 +35,11 @@ void main() {
   test('className renames Chopper-colliding names', () {
     expect(names.className('Field'), 'FieldModel');
     expect(names.className('Response'), 'ResponseModel');
+    expect(names.className('Patch'), 'PatchModel');
     expect(names.className('Vault'), 'Vault');
+  });
+
+  test('enumValueName avoids the wildcard for empty values', () {
+    expect(names.enumValueName(''), 'empty');
   });
 }
