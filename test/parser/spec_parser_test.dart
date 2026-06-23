@@ -298,6 +298,26 @@ void main() {
         isTrue);
   });
 
+  test('does not make a dynamic non-required field nullable', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Item': {
+            'type': 'object',
+            'properties': {
+              'extra': <String, dynamic>{},
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    final field = spec.models.single.fields.single;
+    expect(field.type.name, 'dynamic');
+    expect(field.type.isNullable, isFalse);
+  });
+
   test('synthesizes a named enum for an inline-enum field', () {
     final spec = _parser().parse({
       'components': {

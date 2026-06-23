@@ -130,7 +130,7 @@ class Task {
   final DateTime targetDate;
   final TaskTypeEnum type;
   @JsonKey(name: 'end_trigger')
-  final TaskEndTriggerEnum endTrigger;
+  final TaskEndTriggerEnum? endTrigger;
   @JsonKey(name: 'target_level')
   final double? targetLevel;
   final double? costs;
@@ -149,7 +149,7 @@ class Task {
     required this.state,
     required this.targetDate,
     this.type = TaskTypeEnum.costOptimized,
-    required this.endTrigger,
+    this.endTrigger,
     this.targetLevel,
     this.costs,
     this.totalQuantity,
@@ -244,7 +244,7 @@ class Account {
   @JsonKey(name: 'selected_asset')
   final DiscoveredAsset? selectedAsset;
   @JsonKey(name: 'discovered_assets')
-  final List<DiscoveredAsset> discoveredAssets;
+  final List<DiscoveredAsset>? discoveredAssets;
   @JsonKey(name: 'updated_at')
   final DateTime? updatedAt;
 
@@ -255,7 +255,7 @@ class Account {
     required this.longitude,
     required this.createdAt,
     this.selectedAsset,
-    required this.discoveredAssets,
+    this.discoveredAssets,
     this.updatedAt,
   });
 
@@ -388,17 +388,17 @@ class FeatureFlagConfig {
 }
 
 @JsonSerializable()
-class HttpvalidationError {
-  final List<ValidationError> detail;
+class HttpValidationError {
+  final List<ValidationError>? detail;
 
-  HttpvalidationError({
-    required this.detail,
+  HttpValidationError({
+    this.detail,
   });
 
-  factory HttpvalidationError.fromJson(Map<String, dynamic> json) =>
-      _$HttpvalidationErrorFromJson(json);
+  factory HttpValidationError.fromJson(Map<String, dynamic> json) =>
+      _$HttpValidationErrorFromJson(json);
 
-  Map<String, dynamic> toJson() => _$HttpvalidationErrorToJson(this);
+  Map<String, dynamic> toJson() => _$HttpValidationErrorToJson(this);
 }
 
 @JsonSerializable()
@@ -741,14 +741,14 @@ class ValidationError {
   final String msg;
   final String type;
   final dynamic input;
-  final Map<String, dynamic> ctx;
+  final Map<String, dynamic>? ctx;
 
   ValidationError({
     required this.loc,
     required this.msg,
     required this.type,
     required this.input,
-    required this.ctx,
+    this.ctx,
   });
 
   factory ValidationError.fromJson(Map<String, dynamic> json) =>
@@ -771,7 +771,7 @@ class Asset {
   final AssetState resourceState;
   final UsageCounter odometer;
   final Location location;
-  final List<Intervention> interventions;
+  final List<Intervention>? interventions;
 
   Asset({
     required this.assetId,
@@ -781,7 +781,7 @@ class Asset {
     required this.resourceState,
     required this.odometer,
     required this.location,
-    required this.interventions,
+    this.interventions,
   });
 
   factory Asset.fromJson(Map<String, dynamic> json) =>

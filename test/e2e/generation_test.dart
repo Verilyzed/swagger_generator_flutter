@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('generates all files from the bundled spec without throwing', () {
-    final file = File('example/lib/resource_scheduler.openapi.json');
+    final file = File('example/lib/specs/resource_scheduler.openapi.json');
     final content = file.readAsStringSync();
 
     final sources = generateSources(

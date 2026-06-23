@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      swagger_generator_flutter|swagger_generator:
+        options:
+          input_folder: lib/specs
+          output_folder: lib/generated

@@ -123,7 +123,10 @@ class SpecParser {
       // An OpenAPI property that is not required may be absent from the
       // payload, so it is optional and nullable in Dart unless it has a
       // default.
-      final fieldType = !isRequired && defaultValue == null && !type.isNullable
+      final fieldType = !isRequired &&
+              defaultValue == null &&
+              !type.isNullable &&
+              type.name != 'dynamic'
           ? DartType(type.name, isNullable: true)
           : type;
       fields.add(FieldDef(

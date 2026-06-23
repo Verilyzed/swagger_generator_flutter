@@ -11,8 +11,9 @@ abstract class ResourceSchedulerService extends ChopperService {
   @GET(path: '/assets/{asset_id}/schedule')
   Future<Response<Schedule>> getScheduleForAsset(
     @Path('asset_id') String assetId,
-    @Query('deadline_filter') DeadlineFilterEnum deadlineFilter,
-  );
+    {
+    @Query('deadline_filter') DeadlineFilterEnum deadlineFilter = DeadlineFilterEnum.all,
+  });
 
   @POST(path: '/assets/{asset_id}/schedule')
   Future<Response<Schedule>> createSchedule(
@@ -61,12 +62,13 @@ abstract class ResourceSchedulerService extends ChopperService {
   @GET(path: '/assets/{asset_id}/tasks')
   Future<Response<List<Task>>> listTasksForAsset(
     @Path('asset_id') String assetId,
+    {
     @Query('aggregation') AggregationEnum? aggregation,
     @Query('period') String? period,
     @Query('sort') TaskSortFieldEnum? sort,
-    @Query('order') SortOrderEnum order,
+    @Query('order') SortOrderEnum order = SortOrderEnum.asc,
     @Query('limit') int? limit,
-  );
+  });
 
   @POST(path: '/assets/{asset_id}/stream_token')
   Future<Response<StreamTokenResponse>> getStreamTokenForAsset(
@@ -112,24 +114,25 @@ abstract class ResourceSchedulerService extends ChopperService {
   );
 
   @GET(path: '/system/features')
-  Future<Response<FeatureFlagConfig>> getFeatures(
-  );
+  Future<Response<FeatureFlagConfig>> getFeatures();
 
   @GET(path: '/assets/{asset_id}/runs')
   Future<Response<List<Run>>> listRunsForAsset(
     @Path('asset_id') String assetId,
-    @Query('limit') int limit,
-    @Query('page') int page,
-    @Query('sort_order') SortOrderEnum sortOrder,
+    {
+    @Query('limit') int limit = 5,
+    @Query('page') int page = 0,
+    @Query('sort_order') SortOrderEnum sortOrder = SortOrderEnum.desc,
     @Query('state') RunStateEnum? state,
-  );
+  });
 
   @GET(path: '/assets/{asset_id}/runs/metrics')
   Future<Response<RunMetrics>> getRunMetrics(
     @Path('asset_id') String assetId,
     @Query('aggregation') AggregationEnum aggregation,
+    {
     @Query('period') String? period,
-  );
+  });
 
   static ResourceSchedulerService create([ChopperClient? client]) =>
       _$ResourceSchedulerService(client);

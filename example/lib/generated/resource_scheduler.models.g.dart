@@ -127,7 +127,10 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
   type:
       $enumDecodeNullable(_$TaskTypeEnumEnumMap, json['type']) ??
       TaskTypeEnum.costOptimized,
-  endTrigger: $enumDecode(_$TaskEndTriggerEnumEnumMap, json['end_trigger']),
+  endTrigger: $enumDecodeNullable(
+    _$TaskEndTriggerEnumEnumMap,
+    json['end_trigger'],
+  ),
   targetLevel: (json['target_level'] as num?)?.toDouble(),
   costs: (json['costs'] as num?)?.toDouble(),
   totalQuantity: (json['total_quantity'] as num?)?.toDouble(),
@@ -145,7 +148,7 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
   'state': _$TaskStateEnumEnumMap[instance.state]!,
   'target_date': instance.targetDate.toIso8601String(),
   'type': _$TaskTypeEnumEnumMap[instance.type]!,
-  'end_trigger': _$TaskEndTriggerEnumEnumMap[instance.endTrigger]!,
+  'end_trigger': _$TaskEndTriggerEnumEnumMap[instance.endTrigger],
   'target_level': instance.targetLevel,
   'costs': instance.costs,
   'total_quantity': instance.totalQuantity,
@@ -264,8 +267,8 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
       : DiscoveredAsset.fromJson(
           json['selected_asset'] as Map<String, dynamic>,
         ),
-  discoveredAssets: (json['discovered_assets'] as List<dynamic>)
-      .map((e) => DiscoveredAsset.fromJson(e as Map<String, dynamic>))
+  discoveredAssets: (json['discovered_assets'] as List<dynamic>?)
+      ?.map((e) => DiscoveredAsset.fromJson(e as Map<String, dynamic>))
       .toList(),
   updatedAt: json['updated_at'] == null
       ? null
@@ -390,15 +393,15 @@ FeatureFlagConfig _$FeatureFlagConfigFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$FeatureFlagConfigToJson(FeatureFlagConfig instance) =>
     <String, dynamic>{'scheduling': instance.scheduling};
 
-HttpvalidationError _$HttpvalidationErrorFromJson(Map<String, dynamic> json) =>
-    HttpvalidationError(
-      detail: (json['detail'] as List<dynamic>)
-          .map((e) => ValidationError.fromJson(e as Map<String, dynamic>))
+HttpValidationError _$HttpValidationErrorFromJson(Map<String, dynamic> json) =>
+    HttpValidationError(
+      detail: (json['detail'] as List<dynamic>?)
+          ?.map((e) => ValidationError.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$HttpvalidationErrorToJson(
-  HttpvalidationError instance,
+Map<String, dynamic> _$HttpValidationErrorToJson(
+  HttpValidationError instance,
 ) => <String, dynamic>{'detail': instance.detail};
 
 Intervention _$InterventionFromJson(Map<String, dynamic> json) => Intervention(
@@ -686,7 +689,7 @@ ValidationError _$ValidationErrorFromJson(Map<String, dynamic> json) =>
       msg: json['msg'] as String,
       type: json['type'] as String,
       input: json['input'],
-      ctx: json['ctx'] as Map<String, dynamic>,
+      ctx: json['ctx'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$ValidationErrorToJson(ValidationError instance) =>
@@ -710,8 +713,8 @@ Asset _$AssetFromJson(Map<String, dynamic> json) => Asset(
   ),
   odometer: UsageCounter.fromJson(json['odometer'] as Map<String, dynamic>),
   location: Location.fromJson(json['location'] as Map<String, dynamic>),
-  interventions: (json['interventions'] as List<dynamic>)
-      .map((e) => Intervention.fromJson(e as Map<String, dynamic>))
+  interventions: (json['interventions'] as List<dynamic>?)
+      ?.map((e) => Intervention.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 
