@@ -273,4 +273,31 @@ void main() {
     expect(keys, containsAll(<String>['id', 'title', 'sections']));
     expect(full.fields.firstWhere((f) => f.jsonKey == 'id').isRequired, isTrue);
   });
+
+  test('synthesizes a named enum for an inline-enum field', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Item': {
+            'type': 'object',
+            'properties': {
+              'category': {
+                'type': 'string',
+                'enum': ['LOGIN', 'PASSWORD'],
+                'default': 'LOGIN',
+              },
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    final itemEnum = spec.enums.firstWhere((e) => e.name == 'ItemCategory');
+    expect(itemEnum.values.map((v) => v.jsonValue), ['LOGIN', 'PASSWORD']);
+
+    final field = spec.models.single.fields.single;
+    expect(field.type.name, 'ItemCategory');
+    expect(field.defaultValue, 'ItemCategory.login');
+  });
 }

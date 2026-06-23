@@ -46,7 +46,12 @@ class SpecParser {
       } else if (schema['allOf'] is List ||
           schema['type'] == 'object' ||
           schema['properties'] is Map) {
-        models.add(_model(entry.key, schema, enumNames: enumNames));
+        models.add(_model(
+          entry.key,
+          schema,
+          enums: enums,
+          enumNames: enumNames,
+        ));
       }
     }
 
@@ -80,7 +85,8 @@ class SpecParser {
   ModelDef _model(
     String rawName,
     Map<String, dynamic> schema, {
-    Set<String> enumNames = const {},
+    required List<EnumDef> enums,
+    required Set<String> enumNames,
   }) {
     final merged = _mergedObject(schema);
     final required = merged.required;
@@ -89,7 +95,25 @@ class SpecParser {
 
     for (final entry in properties.entries) {
       final propSchema = (entry.value as Map).cast<String, dynamic>();
-      final type = _resolver.resolve(propSchema);
+      final DartType type;
+      if (propSchema['enum'] is List && propSchema[r'$ref'] == null) {
+        final enumName = _names.className('$rawName ${entry.key}');
+        if (!enumNames.contains(enumName)) {
+          enums.add(EnumDef(
+            name: enumName,
+            values: (propSchema['enum'] as List)
+                .map((v) => EnumValueDef(
+                      dartName: _names.enumValueName(v.toString()),
+                      jsonValue: v.toString(),
+                    ))
+                .toList(),
+          ));
+          enumNames.add(enumName);
+        }
+        type = DartType(enumName, isNullable: _resolver.isNullable(propSchema));
+      } else {
+        type = _resolver.resolve(propSchema);
+      }
       fields.add(FieldDef(
         dartName: _names.memberName(entry.key),
         jsonKey: entry.key,
