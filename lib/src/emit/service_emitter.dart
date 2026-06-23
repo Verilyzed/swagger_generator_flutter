@@ -44,11 +44,15 @@ class ServiceEmitter {
     final named =
         op.parameters.map((p) => '    ${_namedParam(p)},').toList();
 
-    buffer
-      ..writeln("  @$verb(path: '${op.path}')")
-      ..write(
-        '  Future<Response<${op.responseType.display}>> ${op.methodName}(',
-      );
+    buffer.writeln("  @$verb(path: '${op.path}')");
+    if (op.parameters.any((p) =>
+        p.location == ParamLocation.part ||
+        p.location == ParamLocation.partFile)) {
+      buffer.writeln('  @multipart');
+    }
+    buffer.write(
+      '  Future<Response<${op.responseType.display}>> ${op.methodName}(',
+    );
 
     if (named.isEmpty) {
       buffer.writeln(');');
@@ -98,6 +102,10 @@ class ServiceEmitter {
         return "@Query('${p.wireName}')";
       case ParamLocation.body:
         return '@Body()';
+      case ParamLocation.part:
+        return "@Part('${p.wireName}')";
+      case ParamLocation.partFile:
+        return "@PartFile('${p.wireName}')";
     }
   }
 

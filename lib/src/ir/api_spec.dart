@@ -37,7 +37,7 @@ class ModelDef {
   const ModelDef({required this.name, required this.fields});
 }
 
-enum ParamLocation { path, query, body }
+enum ParamLocation { path, query, body, part, partFile }
 
 class ParamDef {
   final String dartName;

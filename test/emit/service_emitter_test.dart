@@ -91,4 +91,44 @@ void main() {
 
     expect(out, isNot(contains("import 'demo.enums.dart';")));
   });
+
+  test('emits multipart parts', () {
+    final out = ServiceEmitter().emit(
+      const ServiceDef(
+        name: 'DemoService',
+        operations: [
+          OperationDef(
+            methodName: 'upload',
+            httpMethod: 'POST',
+            path: '/upload',
+            parameters: [
+              ParamDef(
+                dartName: 'file',
+                wireName: 'file',
+                type: DartType('MultipartFile'),
+                location: ParamLocation.partFile,
+                isRequired: true,
+              ),
+              ParamDef(
+                dartName: 'label',
+                wireName: 'label',
+                type: DartType('String'),
+                location: ParamLocation.part,
+                isRequired: true,
+              ),
+            ],
+            responseType: DartType('dynamic'),
+          ),
+        ],
+      ),
+      partFileName: 'demo.service.chopper.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains('  @multipart'));
+    expect(out, contains("@PartFile('file') required MultipartFile file,"));
+    expect(out, contains("@Part('label') required String label,"));
+  });
 }
