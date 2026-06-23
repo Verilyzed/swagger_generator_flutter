@@ -156,6 +156,14 @@ class SpecParser {
     return (properties: properties, required: required);
   }
 
+  // A binary file part: 3.0 uses `format: binary`; 3.1 uses `contentMediaType`
+  // or `contentEncoding` on a string schema.
+  bool _isFilePart(Map<String, dynamic> schema) =>
+      schema['type'] == 'string' &&
+      (schema['format'] == 'binary' ||
+          schema.containsKey('contentMediaType') ||
+          schema.containsKey('contentEncoding'));
+
   ({Map<String, dynamic> properties, List<String> required}) _objectFor(
     Map<String, dynamic> schema,
   ) {
@@ -250,8 +258,7 @@ class SpecParser {
         final object = _objectFor(schema.cast<String, dynamic>());
         for (final entry in object.properties.entries) {
           final propSchema = (entry.value as Map).cast<String, dynamic>();
-          final isFile = propSchema['type'] == 'string' &&
-              propSchema['format'] == 'binary';
+          final isFile = _isFilePart(propSchema);
           params.add(ParamDef(
             dartName: _names.memberName(entry.key),
             wireName: entry.key,

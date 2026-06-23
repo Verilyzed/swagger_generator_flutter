@@ -316,6 +316,40 @@ void main() {
     expect(params.any((p) => p.location == ParamLocation.body), isFalse);
   });
 
+  test('treats a 3.1 contentMediaType string as a file part', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/u': {
+          'post': {
+            'operationId': 'u',
+            'requestBody': {
+              'content': {
+                'multipart/form-data': {
+                  'schema': {
+                    'type': 'object',
+                    'required': ['file'],
+                    'properties': {
+                      'file': {
+                        'type': 'string',
+                        'contentMediaType': 'application/octet-stream',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    final file = spec.service.operations.single.parameters.single;
+    expect(file.location, ParamLocation.partFile);
+    expect(file.type.name, 'MultipartFile');
+  });
+
   test('flattens allOf into a single model', () {
     final spec = _parser().parse({
       'components': {
