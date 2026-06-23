@@ -101,6 +101,26 @@ void main() {
     );
   });
 
+  test('nameFromPath is true when method_names is path', () {
+    final config = BuilderConfig.fromOptions(
+      const BuilderOptions({'method_names': 'path'}),
+    );
+    expect(config.nameFromPath, isTrue);
+  });
+
+  test('nameFromPath defaults to false', () {
+    expect(
+      BuilderConfig.fromOptions(const BuilderOptions({})).nameFromPath,
+      isFalse,
+    );
+    expect(
+      BuilderConfig.fromOptions(
+        const BuilderOptions({'method_names': 'operationId'}),
+      ).nameFromPath,
+      isFalse,
+    );
+  });
+
   test('buildExtensions cover json, yaml, and yml inputs', () {
     final config = BuilderConfig.fromOptions(const BuilderOptions({}));
     expect(config.buildExtensions.keys, containsAll(<String>[

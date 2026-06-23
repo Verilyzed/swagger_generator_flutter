@@ -7,8 +7,13 @@ import 'package:build/build.dart';
 class BuilderConfig {
   final String inputFolder;
   final String outputFolder;
+  final bool nameFromPath;
 
-  const BuilderConfig({required this.inputFolder, required this.outputFolder});
+  const BuilderConfig({
+    required this.inputFolder,
+    required this.outputFolder,
+    this.nameFromPath = false,
+  });
 
   factory BuilderConfig.fromOptions(BuilderOptions options) {
     final input = _normalize(options.config['input_folder']);
@@ -26,7 +31,12 @@ class BuilderConfig {
             '(build_runner only writes generated source there)',
       );
     }
-    return BuilderConfig(inputFolder: input, outputFolder: output);
+    final nameFromPath = options.config['method_names'] == 'path';
+    return BuilderConfig(
+      inputFolder: input,
+      outputFolder: output,
+      nameFromPath: nameFromPath,
+    );
   }
 
   static const _extensions = [
