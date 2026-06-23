@@ -2,6 +2,7 @@ import '../ir/api_spec.dart';
 import '../ir/dart_type.dart';
 import '../resolve/dart_type_resolver.dart';
 import '../resolve/name_giver.dart';
+import 'operation_name.dart';
 
 const _httpMethods = {
   'get',
@@ -293,10 +294,12 @@ class SpecParser {
 
     return OperationDef(
       methodName: _names.memberName(
-        _nameFromPath
-            ? '${httpMethod.toLowerCase()}_$path'
-            : op['operationId'] as String? ??
-                '${httpMethod.toLowerCase()}_$path',
+        operationBaseName(
+          httpMethod: httpMethod,
+          path: path,
+          operationId: op['operationId'] as String?,
+          nameFromPath: _nameFromPath,
+        ),
       ),
       httpMethod: httpMethod,
       path: path,
