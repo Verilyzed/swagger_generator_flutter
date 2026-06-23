@@ -6,8 +6,10 @@ import 'name_giver.dart';
 /// here.
 abstract class DartTypeResolver {
   final NameGiver _names;
+  final Map<String, dynamic> _schemas;
 
-  DartTypeResolver(this._names);
+  DartTypeResolver(this._names, {Map<String, dynamic> schemas = const {}})
+      : _schemas = schemas;
 
   DartType resolve(Map<String, dynamic> schema) {
     final core = coreSchema(schema);
@@ -27,7 +29,12 @@ abstract class DartTypeResolver {
   DartType _resolveCore(Map<String, dynamic> schema) {
     final ref = schema[r'$ref'];
     if (ref is String) {
-      return DartType(_names.className(ref.split('/').last));
+      final name = ref.split('/').last;
+      final target = _schemas[name];
+      if (target is Map<String, dynamic> && _isAlias(target)) {
+        return resolve(target);
+      }
+      return DartType(_names.className(name));
     }
 
     final type = schema['type'];
@@ -59,11 +66,21 @@ abstract class DartTypeResolver {
         return const DartType('dynamic');
     }
   }
+
+  /// A named schema becomes a Dart class only when it is an object, an enum, or
+  /// an `allOf`. Anything else (array, primitive) is a type alias resolved
+  /// inline.
+  bool _isAlias(Map<String, dynamic> schema) {
+    if (schema['enum'] is List) return false;
+    if (schema['allOf'] is List) return false;
+    if (schema['type'] == 'object' || schema['properties'] is Map) return false;
+    return true;
+  }
 }
 
 /// OpenAPI 3.0: nullability via `nullable: true`.
 class OpenApi30TypeResolver extends DartTypeResolver {
-  OpenApi30TypeResolver(super.names);
+  OpenApi30TypeResolver(super.names, {super.schemas});
 
   @override
   Map<String, dynamic> coreSchema(Map<String, dynamic> schema) => schema;
@@ -74,7 +91,7 @@ class OpenApi30TypeResolver extends DartTypeResolver {
 
 /// OpenAPI 3.1: nullability via `anyOf` null or a `type` array containing null.
 class OpenApi31TypeResolver extends DartTypeResolver {
-  OpenApi31TypeResolver(super.names);
+  OpenApi31TypeResolver(super.names, {super.schemas});
 
   @override
   Map<String, dynamic> coreSchema(Map<String, dynamic> schema) {

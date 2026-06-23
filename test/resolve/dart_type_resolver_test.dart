@@ -87,4 +87,33 @@ void main() {
     expect(r.resolve({'type': 'string', 'nullable': true}).display, 'String?');
     expect(r.resolve({'type': 'string'}).display, 'String');
   });
+
+  test('resolves a ref to an array alias as a List', () {
+    final r = OpenApi31TypeResolver(
+      NameGiver(),
+      schemas: {
+        'Patch': {
+          'type': 'array',
+          'items': {'type': 'string'},
+        },
+      },
+    );
+    expect(
+      r.resolve({r'$ref': '#/components/schemas/Patch'}).display,
+      'List<String>',
+    );
+  });
+
+  test('keeps a ref to an object schema as a class name', () {
+    final r = OpenApi31TypeResolver(
+      NameGiver(),
+      schemas: {
+        'Task': {'type': 'object', 'properties': <String, dynamic>{}},
+      },
+    );
+    expect(
+      r.resolve({r'$ref': '#/components/schemas/Task'}).display,
+      'Task',
+    );
+  });
 }

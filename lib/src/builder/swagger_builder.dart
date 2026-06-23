@@ -51,7 +51,15 @@ Map<String, String> generateSources(
 }) {
   final names = NameGiver();
   final loaded = SpecLoader().load(content, path: path);
-  final resolver = resolverForVersion(loaded['openapi'] as String?, names);
+  final schemas =
+      ((loaded['components'] as Map?)?['schemas'] as Map?)
+          ?.cast<String, dynamic>() ??
+      const {};
+  final resolver = resolverForVersion(
+    loaded['openapi'] as String?,
+    names,
+    schemas: schemas,
+  );
   final spec = SpecParser(names, resolver).parse(loaded, name: baseName);
 
   final enumsFile = '$baseName.enums.dart';
