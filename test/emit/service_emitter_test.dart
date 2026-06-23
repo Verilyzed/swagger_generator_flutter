@@ -50,12 +50,45 @@ void main() {
       partFileName: 'demo.service.chopper.dart',
       modelsImport: 'demo.models.dart',
       enumsImport: 'demo.enums.dart',
+      enumNames: {'StatusEnum'},
     );
 
+    expect(out, contains("import 'demo.enums.dart';"));
     expect(out, contains('Future<Response<List<Gadget>>> listGadgets({'));
     expect(out, contains("@Query('limit') int limit = 50,"));
     expect(out, contains("@Query('status') StatusEnum? status,"));
     expect(out, contains("@Path('gadget_id') String gadgetId,"));
     expect(out, isNot(contains('listGadgets(@Query')));
+  });
+
+  test('omits the enums import when no operation references an enum', () {
+    final out = ServiceEmitter().emit(
+      const ServiceDef(
+        name: 'DemoService',
+        operations: [
+          OperationDef(
+            methodName: 'getVault',
+            httpMethod: 'GET',
+            path: '/vaults/{id}',
+            parameters: [
+              ParamDef(
+                dartName: 'id',
+                wireName: 'id',
+                type: DartType('String'),
+                location: ParamLocation.path,
+                isRequired: true,
+              ),
+            ],
+            responseType: DartType('Vault'),
+          ),
+        ],
+      ),
+      partFileName: 'demo.service.chopper.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: {'StatusEnum'},
+    );
+
+    expect(out, isNot(contains("import 'demo.enums.dart';")));
   });
 }
