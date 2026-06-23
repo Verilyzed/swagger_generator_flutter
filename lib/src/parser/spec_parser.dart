@@ -114,16 +114,24 @@ class SpecParser {
       } else {
         type = _resolver.resolve(propSchema);
       }
+      final isRequired = required.contains(entry.key);
+      final defaultValue = _defaultLiteral(
+        propSchema['default'],
+        typeName: type.name,
+        enumNames: enumNames,
+      );
+      // An OpenAPI property that is not required may be absent from the
+      // payload, so it is optional and nullable in Dart unless it has a
+      // default.
+      final fieldType = !isRequired && defaultValue == null && !type.isNullable
+          ? DartType(type.name, isNullable: true)
+          : type;
       fields.add(FieldDef(
         dartName: _names.memberName(entry.key),
         jsonKey: entry.key,
-        type: type,
-        isRequired: required.contains(entry.key),
-        defaultValue: _defaultLiteral(
-          propSchema['default'],
-          typeName: type.name,
-          enumNames: enumNames,
-        ),
+        type: fieldType,
+        isRequired: isRequired,
+        defaultValue: defaultValue,
       ));
     }
 

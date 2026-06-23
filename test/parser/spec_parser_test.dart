@@ -274,6 +274,30 @@ void main() {
     expect(full.fields.firstWhere((f) => f.jsonKey == 'id').isRequired, isTrue);
   });
 
+  test('marks non-required fields without a default as nullable', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Item': {
+            'type': 'object',
+            'required': ['id'],
+            'properties': {
+              'id': {'type': 'string'},
+              'note': {'type': 'string'},
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    final item = spec.models.single;
+    expect(item.fields.firstWhere((f) => f.jsonKey == 'id').type.isNullable,
+        isFalse);
+    expect(item.fields.firstWhere((f) => f.jsonKey == 'note').type.isNullable,
+        isTrue);
+  });
+
   test('synthesizes a named enum for an inline-enum field', () {
     final spec = _parser().parse({
       'components': {
