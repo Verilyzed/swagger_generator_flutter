@@ -239,4 +239,38 @@ void main() {
 
     expect(spec.service.operations.single.parameters.single.isRequired, isTrue);
   });
+
+  test('flattens allOf into a single model', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Item': {
+            'type': 'object',
+            'required': ['id'],
+            'properties': {
+              'id': {'type': 'string'},
+              'title': {'type': 'string'},
+            },
+          },
+          'FullItem': {
+            'allOf': [
+              {r'$ref': '#/components/schemas/Item'},
+              {
+                'type': 'object',
+                'properties': {
+                  'sections': {'type': 'string'},
+                },
+              },
+            ],
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    final full = spec.models.firstWhere((m) => m.name == 'FullItem');
+    final keys = full.fields.map((f) => f.jsonKey).toSet();
+    expect(keys, containsAll(<String>['id', 'title', 'sections']));
+    expect(full.fields.firstWhere((f) => f.jsonKey == 'id').isRequired, isTrue);
+  });
 }

@@ -21,8 +21,11 @@ class SpecParser {
 
   SpecParser(this._names, this._resolver);
 
+  Map<String, dynamic> _schemasCache = const {};
+
   ApiSpec parse(Map<String, dynamic> spec, {required String name}) {
     final schemas = _schemas(spec);
+    _schemasCache = schemas;
     final enums = <EnumDef>[];
     final models = <ModelDef>[];
 
@@ -40,7 +43,9 @@ class SpecParser {
       if (schema is! Map<String, dynamic>) continue;
       if (schema['enum'] is List) {
         enums.add(_enum(entry.key, schema));
-      } else if (schema['type'] == 'object' || schema['properties'] is Map) {
+      } else if (schema['allOf'] is List ||
+          schema['type'] == 'object' ||
+          schema['properties'] is Map) {
         models.add(_model(entry.key, schema, enumNames: enumNames));
       }
     }
@@ -77,9 +82,9 @@ class SpecParser {
     Map<String, dynamic> schema, {
     Set<String> enumNames = const {},
   }) {
-    final required = (schema['required'] as List?)?.cast<String>() ?? const [];
-    final properties =
-        (schema['properties'] as Map?)?.cast<String, dynamic>() ?? const {};
+    final merged = _mergedObject(schema);
+    final required = merged.required;
+    final properties = merged.properties;
     final fields = <FieldDef>[];
 
     for (final entry in properties.entries) {
@@ -99,6 +104,39 @@ class SpecParser {
     }
 
     return ModelDef(name: _names.className(rawName), fields: fields);
+  }
+
+  ({Map<String, dynamic> properties, List<String> required}) _mergedObject(
+    Map<String, dynamic> schema,
+  ) {
+    final allOf = schema['allOf'];
+    if (allOf is! List) {
+      return (
+        properties:
+            (schema['properties'] as Map?)?.cast<String, dynamic>() ?? const {},
+        required:
+            (schema['required'] as List?)?.cast<String>() ?? const <String>[],
+      );
+    }
+
+    final properties = <String, dynamic>{};
+    final required = <String>[];
+    for (final raw in allOf) {
+      if (raw is! Map) continue;
+      var member = raw.cast<String, dynamic>();
+      final ref = member[r'$ref'];
+      if (ref is String) {
+        final target = _schemasCache[ref.split('/').last];
+        if (target is Map<String, dynamic>) member = target;
+      }
+      properties.addAll(
+        (member['properties'] as Map?)?.cast<String, dynamic>() ?? const {},
+      );
+      required.addAll(
+        (member['required'] as List?)?.cast<String>() ?? const <String>[],
+      );
+    }
+    return (properties: properties, required: required);
   }
 
   String? _defaultLiteral(
