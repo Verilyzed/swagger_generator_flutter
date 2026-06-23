@@ -49,7 +49,6 @@ class SpecParser {
         models.add(_model(
           entry.key,
           schema,
-          enums: enums,
           enumNames: enumNames,
         ));
       }
@@ -85,7 +84,6 @@ class SpecParser {
   ModelDef _model(
     String rawName,
     Map<String, dynamic> schema, {
-    required List<EnumDef> enums,
     required Set<String> enumNames,
   }) {
     final merged = _mergedObject(schema);
@@ -95,25 +93,7 @@ class SpecParser {
 
     for (final entry in properties.entries) {
       final propSchema = (entry.value as Map).cast<String, dynamic>();
-      final DartType type;
-      if (propSchema['enum'] is List && propSchema[r'$ref'] == null) {
-        final enumName = _names.className('$rawName ${entry.key}');
-        if (!enumNames.contains(enumName)) {
-          enums.add(EnumDef(
-            name: enumName,
-            values: (propSchema['enum'] as List)
-                .map((v) => EnumValueDef(
-                      dartName: _names.enumValueName(v.toString()),
-                      jsonValue: v.toString(),
-                    ))
-                .toList(),
-          ));
-          enumNames.add(enumName);
-        }
-        type = DartType(enumName, isNullable: _resolver.isNullable(propSchema));
-      } else {
-        type = _resolver.resolve(propSchema);
-      }
+      final type = _resolver.resolve(propSchema);
       final isRequired = required.contains(entry.key);
       final defaultValue = _defaultLiteral(
         propSchema['default'],
@@ -248,7 +228,7 @@ class SpecParser {
     DartType? bodyType;
     final body = op['requestBody'];
     final bodyMap = body is Map ? body.cast<String, dynamic>() : null;
-    final bodySchema = _jsonSchema(bodyMap);
+    final bodySchema = _contentSchema(bodyMap);
     if (bodySchema != null) {
       bodyType = _resolver.resolve(bodySchema);
       params.add(ParamDef(
@@ -261,7 +241,7 @@ class SpecParser {
     }
 
     final responses = (op['responses'] as Map?)?.cast<String, dynamic>();
-    final okSchema = _jsonSchema(
+    final okSchema = _contentSchema(
       (responses?['200'] as Map?)?.cast<String, dynamic>(),
     );
     final responseType =
@@ -279,10 +259,11 @@ class SpecParser {
     );
   }
 
-  Map<String, dynamic>? _jsonSchema(Map<String, dynamic>? container) {
+  Map<String, dynamic>? _contentSchema(Map<String, dynamic>? container) {
     final content = (container?['content'] as Map?)?.cast<String, dynamic>();
-    final json = (content?['application/json'] as Map?)?.cast<String, dynamic>();
-    final schema = json?['schema'];
+    if (content == null || content.isEmpty) return null;
+    final media = content['application/json'] ?? content.values.first;
+    final schema = (media as Map?)?['schema'];
     return schema is Map ? schema.cast<String, dynamic>() : null;
   }
 }

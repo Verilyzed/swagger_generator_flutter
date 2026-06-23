@@ -4,6 +4,7 @@ import '../emit/client_emitter.dart';
 import '../emit/enum_emitter.dart';
 import '../emit/model_emitter.dart';
 import '../emit/service_emitter.dart';
+import '../parser/schema_hoister.dart';
 import '../parser/spec_loader.dart';
 import '../parser/spec_parser.dart';
 import '../resolve/name_giver.dart';
@@ -51,16 +52,17 @@ Map<String, String> generateSources(
 }) {
   final names = NameGiver();
   final loaded = SpecLoader().load(content, path: path);
+  final normalized = SchemaHoister(names).hoist(loaded);
   final schemas =
-      ((loaded['components'] as Map?)?['schemas'] as Map?)
+      ((normalized['components'] as Map?)?['schemas'] as Map?)
           ?.cast<String, dynamic>() ??
       const {};
   final resolver = resolverForVersion(
-    loaded['openapi'] as String?,
+    normalized['openapi'] as String?,
     names,
     schemas: schemas,
   );
-  final spec = SpecParser(names, resolver).parse(loaded, name: baseName);
+  final spec = SpecParser(names, resolver).parse(normalized, name: baseName);
 
   final enumsFile = '$baseName.enums.dart';
   final modelsFile = '$baseName.models.dart';

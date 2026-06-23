@@ -318,16 +318,19 @@ void main() {
     expect(field.type.isNullable, isFalse);
   });
 
-  test('synthesizes a named enum for an inline-enum field', () {
+  test('formats an enum default from a ref-to-enum field', () {
     final spec = _parser().parse({
       'components': {
         'schemas': {
+          'ItemCategory': {
+            'type': 'string',
+            'enum': ['LOGIN', 'PASSWORD'],
+          },
           'Item': {
             'type': 'object',
             'properties': {
               'category': {
-                'type': 'string',
-                'enum': ['LOGIN', 'PASSWORD'],
+                r'$ref': '#/components/schemas/ItemCategory',
                 'default': 'LOGIN',
               },
             },
@@ -337,11 +340,33 @@ void main() {
       'paths': <String, dynamic>{},
     }, name: 'demo');
 
-    final itemEnum = spec.enums.firstWhere((e) => e.name == 'ItemCategory');
-    expect(itemEnum.values.map((v) => v.jsonValue), ['LOGIN', 'PASSWORD']);
-
-    final field = spec.models.single.fields.single;
+    final field =
+        spec.models.firstWhere((m) => m.name == 'Item').fields.single;
     expect(field.type.name, 'ItemCategory');
     expect(field.defaultValue, 'ItemCategory.login');
+  });
+
+  test('resolves a text/plain response as its schema type', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/heartbeat': {
+          'get': {
+            'operationId': 'getHeartbeat',
+            'responses': {
+              '200': {
+                'content': {
+                  'text/plain': {
+                    'schema': {'type': 'string'},
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.responseType.display, 'String');
   });
 }
