@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, File, Form, UploadFile
 
 from app.schemas import (
     ErrorResponse,
@@ -78,3 +78,12 @@ def get_container(container_id: str):
         gadgets=[gadget],
         gadget_map={"k": gadget},
     )
+
+
+@app.post("/gadgets/{gadget_id}/attachments", tags=["gadgets"])
+async def upload_attachment(
+    gadget_id: str,
+    file: UploadFile = File(...),
+    label: str = Form(...),
+):
+    return {"gadget_id": gadget_id, "filename": file.filename, "label": label}
