@@ -18,8 +18,10 @@ const _httpMethods = {
 class SpecParser {
   final NameGiver _names;
   final DartTypeResolver _resolver;
+  final bool _nameFromPath;
 
-  SpecParser(this._names, this._resolver);
+  SpecParser(this._names, this._resolver, {bool nameFromPath = false})
+      : _nameFromPath = nameFromPath;
 
   Map<String, dynamic> _schemasCache = const {};
 
@@ -249,7 +251,10 @@ class SpecParser {
 
     return OperationDef(
       methodName: _names.memberName(
-        op['operationId'] as String? ?? '${httpMethod.toLowerCase()}_$path',
+        _nameFromPath
+            ? '${httpMethod.toLowerCase()}_$path'
+            : op['operationId'] as String? ??
+                '${httpMethod.toLowerCase()}_$path',
       ),
       httpMethod: httpMethod,
       path: path,

@@ -240,6 +240,44 @@ void main() {
     expect(spec.service.operations.single.parameters.single.isRequired, isTrue);
   });
 
+  test('names methods from the path when nameFromPath is true', () {
+    final names = NameGiver();
+    final parser = SpecParser(
+      names,
+      OpenApi31TypeResolver(names),
+      nameFromPath: true,
+    );
+    final spec = parser.parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/health': {
+          'get': {
+            'operationId': 'GetServerHealth',
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.methodName, 'getHealth');
+  });
+
+  test('names methods from the operationId by default', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/health': {
+          'get': {
+            'operationId': 'GetServerHealth',
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.methodName, 'getServerHealth');
+  });
+
   test('flattens allOf into a single model', () {
     final spec = _parser().parse({
       'components': {
