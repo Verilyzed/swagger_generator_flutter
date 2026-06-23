@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 
 SpecParser _parser() {
   final names = NameGiver();
-  return SpecParser(names, DartTypeResolver(names));
+  return SpecParser(names, OpenApi31TypeResolver(names));
 }
 
 void main() {

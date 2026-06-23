@@ -3,7 +3,7 @@ import 'package:swagger_generator_flutter/src/resolve/name_giver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final resolver = DartTypeResolver(NameGiver());
+  final resolver = OpenApi31TypeResolver(NameGiver());
 
   test('maps primitive types', () {
     expect(resolver.resolve({'type': 'string'}).display, 'String');
@@ -69,5 +69,22 @@ void main() {
 
   test('bare object maps to Map<String, dynamic>', () {
     expect(resolver.resolve({'type': 'object'}).display, 'Map<String, dynamic>');
+  });
+
+  test('3.1 resolver maps type array with null to nullable', () {
+    expect(
+      OpenApi31TypeResolver(NameGiver())
+          .resolve({
+            'type': ['string', 'null'],
+          })
+          .display,
+      'String?',
+    );
+  });
+
+  test('3.0 resolver reads nullable true', () {
+    final r = OpenApi30TypeResolver(NameGiver());
+    expect(r.resolve({'type': 'string', 'nullable': true}).display, 'String?');
+    expect(r.resolve({'type': 'string'}).display, 'String');
   });
 }

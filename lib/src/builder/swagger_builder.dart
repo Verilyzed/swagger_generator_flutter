@@ -6,8 +6,8 @@ import '../emit/model_emitter.dart';
 import '../emit/service_emitter.dart';
 import '../parser/spec_loader.dart';
 import '../parser/spec_parser.dart';
-import '../resolve/dart_type_resolver.dart';
 import '../resolve/name_giver.dart';
+import '../resolve/resolver_factory.dart';
 import 'builder_config.dart';
 
 Builder swaggerBuilder(BuilderOptions options) =>
@@ -50,9 +50,9 @@ Map<String, String> generateSources(
   required String baseName,
 }) {
   final names = NameGiver();
-  final resolver = DartTypeResolver(names);
-  final spec = SpecParser(names, resolver)
-      .parse(SpecLoader().load(content, path: path), name: baseName);
+  final loaded = SpecLoader().load(content, path: path);
+  final resolver = resolverForVersion(loaded['openapi'] as String?, names);
+  final spec = SpecParser(names, resolver).parse(loaded, name: baseName);
 
   final enumsFile = '$baseName.enums.dart';
   final modelsFile = '$baseName.models.dart';
