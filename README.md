@@ -56,9 +56,14 @@ targets:
 | --- | --- | --- |
 | `input_folder` | package sources | Folder holding the spec files. |
 | `output_folder` | same as `input_folder` (co-located) | Folder the generated Dart is written to. Must be under `lib/`. |
+| `method_names` | `operationId` | How service method names are derived: `operationId` (default) or `path` (from the HTTP verb and request path). |
 
 Each spec generates a `<name>.api.dart` barrel that exports its enums, models,
 service, and client.
+
+With `method_names: path`, `GET /vaults/{vaultUuid}/items` generates
+`getVaultsVaultUuidItems`. The path form includes parameter segments so names
+stay unique.
 
 When you set `output_folder`, also set `input_folder` so the spec's directory
 prefix is stripped; otherwise the generated files nest under the captured path

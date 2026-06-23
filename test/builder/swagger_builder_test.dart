@@ -70,5 +70,13 @@ void main() {
     expect(sources['.client.dart'], contains('JsonSerializableConverter'));
     expect(sources['.client.dart'], contains('Task: Task.fromJson,'));
     expect(sources['.api.dart'], contains("export 'demo.enums.dart';"));
+
+    final pathNamed = generateSources(
+      content,
+      path: 'lib/api/demo.openapi.json',
+      baseName: 'demo',
+      nameFromPath: true,
+    );
+    expect(pathNamed['.service.dart'], contains('getTasks('));
   });
 }

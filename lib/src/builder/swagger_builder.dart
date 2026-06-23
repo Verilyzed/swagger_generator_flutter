@@ -33,6 +33,7 @@ class SwaggerBuilder implements Builder {
       content,
       path: input.path,
       baseName: baseName,
+      nameFromPath: config.nameFromPath,
     );
 
     for (final entry in sources.entries) {
@@ -49,6 +50,7 @@ Map<String, String> generateSources(
   String content, {
   required String path,
   required String baseName,
+  bool nameFromPath = false,
 }) {
   final names = NameGiver();
   final loaded = SpecLoader().load(content, path: path);
@@ -62,7 +64,8 @@ Map<String, String> generateSources(
     names,
     schemas: schemas,
   );
-  final spec = SpecParser(names, resolver).parse(normalized, name: baseName);
+  final spec = SpecParser(names, resolver, nameFromPath: nameFromPath)
+      .parse(normalized, name: baseName);
 
   final enumsFile = '$baseName.enums.dart';
   final modelsFile = '$baseName.models.dart';
