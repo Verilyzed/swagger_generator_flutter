@@ -14,13 +14,13 @@ abstract class NewapiService extends ChopperService {
   });
 
   @GET(path: '/health')
-  Future<Response<Map<String, dynamic>>> getServerHealth();
+  Future<Response<GetServerHealthResponse>> getServerHealth();
 
   @GET(path: '/heartbeat')
-  Future<Response<dynamic>> getHeartbeat();
+  Future<Response<String>> getHeartbeat();
 
   @GET(path: '/metrics')
-  Future<Response<dynamic>> getPrometheusMetrics();
+  Future<Response<String>> getPrometheusMetrics();
 
   @GET(path: '/vaults')
   Future<Response<List<Vault>>> getVaults({
@@ -63,7 +63,7 @@ abstract class NewapiService extends ChopperService {
     @Path('vaultUuid') String vaultUuid,
     @Path('itemUuid') String itemUuid,
     {
-    @Body() List<Map<String, dynamic>>? body,
+    @Body() List<PatchItem>? body,
   });
 
   @PUT(path: '/vaults/{vaultUuid}/items/{itemUuid}')
@@ -92,7 +92,7 @@ abstract class NewapiService extends ChopperService {
   });
 
   @GET(path: '/vaults/{vaultUuid}/items/{itemUuid}/files/{fileUuid}/content')
-  Future<Response<dynamic>> downloadFileById();
+  Future<Response<String>> downloadFileById();
 
   static NewapiService create([ChopperClient? client]) =>
       _$NewapiService(client);

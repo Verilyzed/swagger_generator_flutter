@@ -8,9 +8,13 @@ part of 'newapi.models.dart';
 
 ApiRequest _$ApiRequestFromJson(Map<String, dynamic> json) => ApiRequest(
   action: $enumDecodeNullable(_$ApiRequestActionEnumMap, json['action']),
-  actor: json['actor'] as Map<String, dynamic>?,
+  actor: json['actor'] == null
+      ? null
+      : ApiRequestActor.fromJson(json['actor'] as Map<String, dynamic>),
   requestId: json['requestId'] as String?,
-  resource: json['resource'] as Map<String, dynamic>?,
+  resource: json['resource'] == null
+      ? null
+      : ApiRequestResource.fromJson(json['resource'] as Map<String, dynamic>),
   result: $enumDecodeNullable(_$ApiRequestResultEnumMap, json['result']),
   timestamp: json['timestamp'] == null
       ? null
@@ -57,7 +61,9 @@ FieldModel _$FieldModelFromJson(Map<String, dynamic> json) => FieldModel(
   recipe: json['recipe'] == null
       ? null
       : GeneratorRecipe.fromJson(json['recipe'] as Map<String, dynamic>),
-  section: json['section'] as Map<String, dynamic>?,
+  section: json['section'] == null
+      ? null
+      : FieldSection.fromJson(json['section'] as Map<String, dynamic>),
   type:
       $enumDecodeNullable(_$FieldTypeEnumMap, json['type']) ?? FieldType.string,
   value: json['value'] as String?,
@@ -99,7 +105,9 @@ File _$FileFromJson(Map<String, dynamic> json) => File(
   contentPath: json['content_path'] as String?,
   id: json['id'] as String?,
   name: json['name'] as String?,
-  section: json['section'] as Map<String, dynamic>?,
+  section: json['section'] == null
+      ? null
+      : FileSection.fromJson(json['section'] as Map<String, dynamic>),
   size: (json['size'] as num?)?.toInt(),
 );
 
@@ -113,100 +121,6 @@ Map<String, dynamic> _$FileToJson(File instance) => <String, dynamic>{
 };
 
 FullItem _$FullItemFromJson(Map<String, dynamic> json) => FullItem(
-  category: $enumDecode(_$FullItemCategoryEnumMap, json['category']),
-  createdAt: json['createdAt'] == null
-      ? null
-      : DateTime.parse(json['createdAt'] as String),
-  favorite: json['favorite'] as bool? ?? false,
-  id: json['id'] as String?,
-  lastEditedBy: json['lastEditedBy'] as String?,
-  state: $enumDecodeNullable(_$FullItemStateEnumMap, json['state']),
-  tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
-  title: json['title'] as String?,
-  updatedAt: json['updatedAt'] == null
-      ? null
-      : DateTime.parse(json['updatedAt'] as String),
-  urls: (json['urls'] as List<dynamic>?)
-      ?.map((e) => e as Map<String, dynamic>)
-      .toList(),
-  vault: json['vault'] as Map<String, dynamic>,
-  version: (json['version'] as num?)?.toInt(),
-  fields: (json['fields'] as List<dynamic>?)
-      ?.map((e) => FieldModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  files: (json['files'] as List<dynamic>?)
-      ?.map((e) => File.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  sections: (json['sections'] as List<dynamic>?)
-      ?.map((e) => e as Map<String, dynamic>)
-      .toList(),
-);
-
-Map<String, dynamic> _$FullItemToJson(FullItem instance) => <String, dynamic>{
-  'category': _$FullItemCategoryEnumMap[instance.category]!,
-  'createdAt': instance.createdAt?.toIso8601String(),
-  'favorite': instance.favorite,
-  'id': instance.id,
-  'lastEditedBy': instance.lastEditedBy,
-  'state': _$FullItemStateEnumMap[instance.state],
-  'tags': instance.tags,
-  'title': instance.title,
-  'updatedAt': instance.updatedAt?.toIso8601String(),
-  'urls': instance.urls,
-  'vault': instance.vault,
-  'version': instance.version,
-  'fields': instance.fields,
-  'files': instance.files,
-  'sections': instance.sections,
-};
-
-const _$FullItemCategoryEnumMap = {
-  FullItemCategory.login: 'LOGIN',
-  FullItemCategory.password: 'PASSWORD',
-  FullItemCategory.apiCredential: 'API_CREDENTIAL',
-  FullItemCategory.server: 'SERVER',
-  FullItemCategory.database: 'DATABASE',
-  FullItemCategory.creditCard: 'CREDIT_CARD',
-  FullItemCategory.membership: 'MEMBERSHIP',
-  FullItemCategory.passport: 'PASSPORT',
-  FullItemCategory.softwareLicense: 'SOFTWARE_LICENSE',
-  FullItemCategory.outdoorLicense: 'OUTDOOR_LICENSE',
-  FullItemCategory.secureNote: 'SECURE_NOTE',
-  FullItemCategory.wirelessRouter: 'WIRELESS_ROUTER',
-  FullItemCategory.bankAccount: 'BANK_ACCOUNT',
-  FullItemCategory.driverLicense: 'DRIVER_LICENSE',
-  FullItemCategory.identity: 'IDENTITY',
-  FullItemCategory.rewardProgram: 'REWARD_PROGRAM',
-  FullItemCategory.document: 'DOCUMENT',
-  FullItemCategory.emailAccount: 'EMAIL_ACCOUNT',
-  FullItemCategory.socialSecurityNumber: 'SOCIAL_SECURITY_NUMBER',
-  FullItemCategory.medicalRecord: 'MEDICAL_RECORD',
-  FullItemCategory.sshKey: 'SSH_KEY',
-  FullItemCategory.custom: 'CUSTOM',
-};
-
-const _$FullItemStateEnumMap = {
-  FullItemState.archived: 'ARCHIVED',
-  FullItemState.deleted: 'DELETED',
-};
-
-GeneratorRecipe _$GeneratorRecipeFromJson(Map<String, dynamic> json) =>
-    GeneratorRecipe(
-      characterSets: (json['characterSets'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      excludeCharacters: json['excludeCharacters'] as String?,
-      length: (json['length'] as num?)?.toInt() ?? 32,
-    );
-
-Map<String, dynamic> _$GeneratorRecipeToJson(GeneratorRecipe instance) =>
-    <String, dynamic>{
-      'characterSets': instance.characterSets,
-      'excludeCharacters': instance.excludeCharacters,
-      'length': instance.length,
-    };
-
-Item _$ItemFromJson(Map<String, dynamic> json) => Item(
   category: $enumDecode(_$ItemCategoryEnumMap, json['category']),
   createdAt: json['createdAt'] == null
       ? null
@@ -221,13 +135,22 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item(
       ? null
       : DateTime.parse(json['updatedAt'] as String),
   urls: (json['urls'] as List<dynamic>?)
-      ?.map((e) => e as Map<String, dynamic>)
+      ?.map((e) => ItemUrlsItem.fromJson(e as Map<String, dynamic>))
       .toList(),
-  vault: json['vault'] as Map<String, dynamic>,
+  vault: ItemVault.fromJson(json['vault'] as Map<String, dynamic>),
   version: (json['version'] as num?)?.toInt(),
+  fields: (json['fields'] as List<dynamic>?)
+      ?.map((e) => FieldModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  files: (json['files'] as List<dynamic>?)
+      ?.map((e) => File.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  sections: (json['sections'] as List<dynamic>?)
+      ?.map((e) => FullItemSectionsItem.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
-Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
+Map<String, dynamic> _$FullItemToJson(FullItem instance) => <String, dynamic>{
   'category': _$ItemCategoryEnumMap[instance.category]!,
   'createdAt': instance.createdAt?.toIso8601String(),
   'favorite': instance.favorite,
@@ -240,6 +163,9 @@ Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
   'urls': instance.urls,
   'vault': instance.vault,
   'version': instance.version,
+  'fields': instance.fields,
+  'files': instance.files,
+  'sections': instance.sections,
 };
 
 const _$ItemCategoryEnumMap = {
@@ -270,6 +196,68 @@ const _$ItemCategoryEnumMap = {
 const _$ItemStateEnumMap = {
   ItemState.archived: 'ARCHIVED',
   ItemState.deleted: 'DELETED',
+};
+
+GeneratorRecipe _$GeneratorRecipeFromJson(Map<String, dynamic> json) =>
+    GeneratorRecipe(
+      characterSets: (json['characterSets'] as List<dynamic>?)
+          ?.map(
+            (e) => $enumDecode(_$GeneratorRecipeCharacterSetsItemEnumMap, e),
+          )
+          .toList(),
+      excludeCharacters: json['excludeCharacters'] as String?,
+      length: (json['length'] as num?)?.toInt() ?? 32,
+    );
+
+Map<String, dynamic> _$GeneratorRecipeToJson(GeneratorRecipe instance) =>
+    <String, dynamic>{
+      'characterSets': instance.characterSets
+          ?.map((e) => _$GeneratorRecipeCharacterSetsItemEnumMap[e]!)
+          .toList(),
+      'excludeCharacters': instance.excludeCharacters,
+      'length': instance.length,
+    };
+
+const _$GeneratorRecipeCharacterSetsItemEnumMap = {
+  GeneratorRecipeCharacterSetsItem.letters: 'LETTERS',
+  GeneratorRecipeCharacterSetsItem.digits: 'DIGITS',
+  GeneratorRecipeCharacterSetsItem.symbols: 'SYMBOLS',
+};
+
+Item _$ItemFromJson(Map<String, dynamic> json) => Item(
+  category: $enumDecode(_$ItemCategoryEnumMap, json['category']),
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  favorite: json['favorite'] as bool? ?? false,
+  id: json['id'] as String?,
+  lastEditedBy: json['lastEditedBy'] as String?,
+  state: $enumDecodeNullable(_$ItemStateEnumMap, json['state']),
+  tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+  title: json['title'] as String?,
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+  urls: (json['urls'] as List<dynamic>?)
+      ?.map((e) => ItemUrlsItem.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  vault: ItemVault.fromJson(json['vault'] as Map<String, dynamic>),
+  version: (json['version'] as num?)?.toInt(),
+);
+
+Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
+  'category': _$ItemCategoryEnumMap[instance.category]!,
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'favorite': instance.favorite,
+  'id': instance.id,
+  'lastEditedBy': instance.lastEditedBy,
+  'state': _$ItemStateEnumMap[instance.state],
+  'tags': instance.tags,
+  'title': instance.title,
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+  'urls': instance.urls,
+  'vault': instance.vault,
+  'version': instance.version,
 };
 
 ServiceDependency _$ServiceDependencyFromJson(Map<String, dynamic> json) =>
@@ -319,4 +307,143 @@ const _$VaultTypeEnumMap = {
   VaultType.personal: 'PERSONAL',
   VaultType.everyone: 'EVERYONE',
   VaultType.transfer: 'TRANSFER',
+};
+
+ApiRequestActor _$ApiRequestActorFromJson(Map<String, dynamic> json) =>
+    ApiRequestActor(
+      account: json['account'] as String?,
+      id: json['id'] as String?,
+      jti: json['jti'] as String?,
+      requestIp: json['requestIp'] as String?,
+      userAgent: json['userAgent'] as String?,
+    );
+
+Map<String, dynamic> _$ApiRequestActorToJson(ApiRequestActor instance) =>
+    <String, dynamic>{
+      'account': instance.account,
+      'id': instance.id,
+      'jti': instance.jti,
+      'requestIp': instance.requestIp,
+      'userAgent': instance.userAgent,
+    };
+
+ApiRequestResourceItem _$ApiRequestResourceItemFromJson(
+  Map<String, dynamic> json,
+) => ApiRequestResourceItem(id: json['id'] as String?);
+
+Map<String, dynamic> _$ApiRequestResourceItemToJson(
+  ApiRequestResourceItem instance,
+) => <String, dynamic>{'id': instance.id};
+
+ApiRequestResourceVault _$ApiRequestResourceVaultFromJson(
+  Map<String, dynamic> json,
+) => ApiRequestResourceVault(id: json['id'] as String?);
+
+Map<String, dynamic> _$ApiRequestResourceVaultToJson(
+  ApiRequestResourceVault instance,
+) => <String, dynamic>{'id': instance.id};
+
+ApiRequestResource _$ApiRequestResourceFromJson(
+  Map<String, dynamic> json,
+) => ApiRequestResource(
+  item: json['item'] == null
+      ? null
+      : ApiRequestResourceItem.fromJson(json['item'] as Map<String, dynamic>),
+  itemVersion: (json['itemVersion'] as num?)?.toInt(),
+  type: $enumDecodeNullable(_$ApiRequestResourceTypeEnumMap, json['type']),
+  vault: json['vault'] == null
+      ? null
+      : ApiRequestResourceVault.fromJson(json['vault'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$ApiRequestResourceToJson(ApiRequestResource instance) =>
+    <String, dynamic>{
+      'item': instance.item,
+      'itemVersion': instance.itemVersion,
+      'type': _$ApiRequestResourceTypeEnumMap[instance.type],
+      'vault': instance.vault,
+    };
+
+const _$ApiRequestResourceTypeEnumMap = {
+  ApiRequestResourceType.item: 'ITEM',
+  ApiRequestResourceType.vault: 'VAULT',
+};
+
+FieldSection _$FieldSectionFromJson(Map<String, dynamic> json) =>
+    FieldSection(id: json['id'] as String?);
+
+Map<String, dynamic> _$FieldSectionToJson(FieldSection instance) =>
+    <String, dynamic>{'id': instance.id};
+
+FileSection _$FileSectionFromJson(Map<String, dynamic> json) =>
+    FileSection(id: json['id'] as String?);
+
+Map<String, dynamic> _$FileSectionToJson(FileSection instance) =>
+    <String, dynamic>{'id': instance.id};
+
+FullItemSectionsItem _$FullItemSectionsItemFromJson(
+  Map<String, dynamic> json,
+) => FullItemSectionsItem(
+  id: json['id'] as String?,
+  label: json['label'] as String?,
+);
+
+Map<String, dynamic> _$FullItemSectionsItemToJson(
+  FullItemSectionsItem instance,
+) => <String, dynamic>{'id': instance.id, 'label': instance.label};
+
+ItemUrlsItem _$ItemUrlsItemFromJson(Map<String, dynamic> json) => ItemUrlsItem(
+  href: json['href'] as String,
+  label: json['label'] as String?,
+  primary: json['primary'] as bool?,
+);
+
+Map<String, dynamic> _$ItemUrlsItemToJson(ItemUrlsItem instance) =>
+    <String, dynamic>{
+      'href': instance.href,
+      'label': instance.label,
+      'primary': instance.primary,
+    };
+
+ItemVault _$ItemVaultFromJson(Map<String, dynamic> json) =>
+    ItemVault(id: json['id'] as String);
+
+Map<String, dynamic> _$ItemVaultToJson(ItemVault instance) => <String, dynamic>{
+  'id': instance.id,
+};
+
+PatchItem _$PatchItemFromJson(Map<String, dynamic> json) => PatchItem(
+  op: $enumDecode(_$PatchItemOpEnumMap, json['op']),
+  path: json['path'] as String,
+  value: json['value'] as Map<String, dynamic>?,
+);
+
+Map<String, dynamic> _$PatchItemToJson(PatchItem instance) => <String, dynamic>{
+  'op': _$PatchItemOpEnumMap[instance.op]!,
+  'path': instance.path,
+  'value': instance.value,
+};
+
+const _$PatchItemOpEnumMap = {
+  PatchItemOp.add: 'add',
+  PatchItemOp.remove: 'remove',
+  PatchItemOp.replace: 'replace',
+};
+
+GetServerHealthResponse _$GetServerHealthResponseFromJson(
+  Map<String, dynamic> json,
+) => GetServerHealthResponse(
+  dependencies: (json['dependencies'] as List<dynamic>?)
+      ?.map((e) => ServiceDependency.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  name: json['name'] as String,
+  version: json['version'] as String,
+);
+
+Map<String, dynamic> _$GetServerHealthResponseToJson(
+  GetServerHealthResponse instance,
+) => <String, dynamic>{
+  'dependencies': instance.dependencies,
+  'name': instance.name,
+  'version': instance.version,
 };

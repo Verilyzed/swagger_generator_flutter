@@ -38,24 +38,26 @@ final class _$NewapiService extends NewapiService {
   }
 
   @override
-  Future<Response<Map<String, dynamic>>> getServerHealth() {
+  Future<Response<GetServerHealthResponse>> getServerHealth() {
     final Uri $url = Uri.parse('/health');
     final Request $request = Request('GET', $url, client.baseUrl);
-    return client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
+    return client.send<GetServerHealthResponse, GetServerHealthResponse>(
+      $request,
+    );
   }
 
   @override
-  Future<Response<dynamic>> getHeartbeat() {
+  Future<Response<String>> getHeartbeat() {
     final Uri $url = Uri.parse('/heartbeat');
     final Request $request = Request('GET', $url, client.baseUrl);
-    return client.send<dynamic, dynamic>($request);
+    return client.send<String, String>($request);
   }
 
   @override
-  Future<Response<dynamic>> getPrometheusMetrics() {
+  Future<Response<String>> getPrometheusMetrics() {
     final Uri $url = Uri.parse('/metrics');
     final Request $request = Request('GET', $url, client.baseUrl);
-    return client.send<dynamic, dynamic>($request);
+    return client.send<String, String>($request);
   }
 
   @override
@@ -126,7 +128,7 @@ final class _$NewapiService extends NewapiService {
   Future<Response<FullItem>> patchVaultItem(
     String vaultUuid,
     String itemUuid, {
-    List<Map<String, dynamic>>? body,
+    List<PatchItem>? body,
   }) {
     final Uri $url = Uri.parse('/vaults/${vaultUuid}/items/${itemUuid}');
     final $body = body;
@@ -193,11 +195,11 @@ final class _$NewapiService extends NewapiService {
   }
 
   @override
-  Future<Response<dynamic>> downloadFileById() {
+  Future<Response<String>> downloadFileById() {
     final Uri $url = Uri.parse(
       '/vaults/{vaultUuid}/items/{itemUuid}/files/{fileUuid}/content',
     );
     final Request $request = Request('GET', $url, client.baseUrl);
-    return client.send<dynamic, dynamic>($request);
+    return client.send<String, String>($request);
   }
 }

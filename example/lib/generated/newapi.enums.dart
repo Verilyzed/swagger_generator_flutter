@@ -13,6 +13,13 @@ enum ApiRequestAction {
   delete,
 }
 
+enum ApiRequestResourceType {
+  @JsonValue('ITEM')
+  item,
+  @JsonValue('VAULT')
+  vault,
+}
+
 enum ApiRequestResult {
   @JsonValue('SUCCESS')
   success,
@@ -50,58 +57,13 @@ enum FieldType {
   menu,
 }
 
-enum FullItemCategory {
-  @JsonValue('LOGIN')
-  login,
-  @JsonValue('PASSWORD')
-  password,
-  @JsonValue('API_CREDENTIAL')
-  apiCredential,
-  @JsonValue('SERVER')
-  server,
-  @JsonValue('DATABASE')
-  database,
-  @JsonValue('CREDIT_CARD')
-  creditCard,
-  @JsonValue('MEMBERSHIP')
-  membership,
-  @JsonValue('PASSPORT')
-  passport,
-  @JsonValue('SOFTWARE_LICENSE')
-  softwareLicense,
-  @JsonValue('OUTDOOR_LICENSE')
-  outdoorLicense,
-  @JsonValue('SECURE_NOTE')
-  secureNote,
-  @JsonValue('WIRELESS_ROUTER')
-  wirelessRouter,
-  @JsonValue('BANK_ACCOUNT')
-  bankAccount,
-  @JsonValue('DRIVER_LICENSE')
-  driverLicense,
-  @JsonValue('IDENTITY')
-  identity,
-  @JsonValue('REWARD_PROGRAM')
-  rewardProgram,
-  @JsonValue('DOCUMENT')
-  document,
-  @JsonValue('EMAIL_ACCOUNT')
-  emailAccount,
-  @JsonValue('SOCIAL_SECURITY_NUMBER')
-  socialSecurityNumber,
-  @JsonValue('MEDICAL_RECORD')
-  medicalRecord,
-  @JsonValue('SSH_KEY')
-  sshKey,
-  @JsonValue('CUSTOM')
-  custom,
-}
-
-enum FullItemState {
-  @JsonValue('ARCHIVED')
-  archived,
-  @JsonValue('DELETED')
-  deleted,
+enum GeneratorRecipeCharacterSetsItem {
+  @JsonValue('LETTERS')
+  letters,
+  @JsonValue('DIGITS')
+  digits,
+  @JsonValue('SYMBOLS')
+  symbols,
 }
 
 enum ItemCategory {
@@ -156,6 +118,15 @@ enum ItemState {
   archived,
   @JsonValue('DELETED')
   deleted,
+}
+
+enum PatchItemOp {
+  @JsonValue('add')
+  add,
+  @JsonValue('remove')
+  remove,
+  @JsonValue('replace')
+  replace,
 }
 
 enum VaultType {
