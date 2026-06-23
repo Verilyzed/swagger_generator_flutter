@@ -28,66 +28,60 @@ abstract class NewapiService extends ChopperService {
   });
 
   @GET(path: '/vaults/{vaultUuid}')
-  Future<Response<Vault>> getVaultById(
-    @Path('vaultUuid') String vaultUuid,
-  );
+  Future<Response<Vault>> getVaultById({
+    @Path('vaultUuid') required String vaultUuid,
+  });
 
   @GET(path: '/vaults/{vaultUuid}/items')
-  Future<Response<List<Item>>> getVaultItems(
-    @Path('vaultUuid') String vaultUuid,
-    {
+  Future<Response<List<Item>>> getVaultItems({
+    @Path('vaultUuid') required String vaultUuid,
     @Query('filter') String? filter,
   });
 
   @POST(path: '/vaults/{vaultUuid}/items')
-  Future<Response<FullItem>> createVaultItem(
-    @Path('vaultUuid') String vaultUuid,
-    {
+  Future<Response<FullItem>> createVaultItem({
+    @Path('vaultUuid') required String vaultUuid,
     @Body() FullItem? body,
   });
 
   @DELETE(path: '/vaults/{vaultUuid}/items/{itemUuid}')
-  Future<Response<dynamic>> deleteVaultItem(
-    @Path('vaultUuid') String vaultUuid,
-    @Path('itemUuid') String itemUuid,
-  );
+  Future<Response<dynamic>> deleteVaultItem({
+    @Path('vaultUuid') required String vaultUuid,
+    @Path('itemUuid') required String itemUuid,
+  });
 
   @GET(path: '/vaults/{vaultUuid}/items/{itemUuid}')
-  Future<Response<FullItem>> getVaultItemById(
-    @Path('vaultUuid') String vaultUuid,
-    @Path('itemUuid') String itemUuid,
-  );
+  Future<Response<FullItem>> getVaultItemById({
+    @Path('vaultUuid') required String vaultUuid,
+    @Path('itemUuid') required String itemUuid,
+  });
 
   @PATCH(path: '/vaults/{vaultUuid}/items/{itemUuid}')
-  Future<Response<FullItem>> patchVaultItem(
-    @Path('vaultUuid') String vaultUuid,
-    @Path('itemUuid') String itemUuid,
-    {
+  Future<Response<FullItem>> patchVaultItem({
+    @Path('vaultUuid') required String vaultUuid,
+    @Path('itemUuid') required String itemUuid,
     @Body() List<PatchItem>? body,
   });
 
   @PUT(path: '/vaults/{vaultUuid}/items/{itemUuid}')
-  Future<Response<FullItem>> updateVaultItem(
-    @Path('vaultUuid') String vaultUuid,
-    @Path('itemUuid') String itemUuid,
-    {
+  Future<Response<FullItem>> updateVaultItem({
+    @Path('vaultUuid') required String vaultUuid,
+    @Path('itemUuid') required String itemUuid,
     @Body() FullItem? body,
   });
 
   @GET(path: '/vaults/{vaultUuid}/items/{itemUuid}/files')
-  Future<Response<List<File>>> getItemFiles(
-    @Path('vaultUuid') String vaultUuid,
-    @Path('itemUuid') String itemUuid,
-    {
+  Future<Response<List<File>>> getItemFiles({
+    @Path('vaultUuid') required String vaultUuid,
+    @Path('itemUuid') required String itemUuid,
     @Query('inline_files') bool? inlineFiles,
   });
 
   @GET(path: '/vaults/{vaultUuid}/items/{itemUuid}/files/{fileUuid}')
-  Future<Response<File>> getDetailsOfFileById(
-    @Path('vaultUuid') String vaultUuid,
-    @Path('itemUuid') String itemUuid,
-    @Path('fileUuid') String fileUuid,
-    {
+  Future<Response<File>> getDetailsOfFileById({
+    @Path('vaultUuid') required String vaultUuid,
+    @Path('itemUuid') required String itemUuid,
+    @Path('fileUuid') required String fileUuid,
     @Query('inline_files') bool? inlineFiles,
   });
 

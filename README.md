@@ -37,11 +37,10 @@ dart analyze
 dart test
 ```
 
-## Configuring input and output folders
+## Build options
 
-By default the generator writes each `<name>.openapi.json` spec's Dart output
-next to the spec. To place specs and generated code in specific folders,
-configure the builder in the consuming project's `build.yaml`:
+Spec files may be `.json`, `.yaml`, or `.yml`. Configure the generator in the
+consuming project's `build.yaml`:
 
 ```yaml
 targets:
@@ -49,18 +48,21 @@ targets:
     builders:
       swagger_generator_flutter|swagger_generator:
         options:
-          input_folder: lib
+          input_folder: lib/specs
           output_folder: lib/generated
 ```
 
-`output_folder` must be under `lib/`. If `output_folder` is omitted it defaults
-to `input_folder` (co-located).
+| Option | Default | Description |
+| --- | --- | --- |
+| `input_folder` | package sources | Folder holding the spec files. |
+| `output_folder` | same as `input_folder` (co-located) | Folder the generated Dart is written to. Must be under `lib/`. |
 
-If `input_folder` is omitted, specs are matched anywhere under the package
-sources and output is co-located. When you set `output_folder`, also set
-`input_folder` so the spec's directory prefix is stripped; otherwise the
-generated files nest under the captured path (for example
-`lib/generated/lib/...`).
+Each spec generates a `<name>.api.dart` barrel that exports its enums, models,
+service, and client.
+
+When you set `output_folder`, also set `input_folder` so the spec's directory
+prefix is stripped; otherwise the generated files nest under the captured path
+(for example `lib/generated/lib/...`).
 
 ## Contributing
 

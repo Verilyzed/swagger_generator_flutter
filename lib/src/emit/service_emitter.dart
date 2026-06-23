@@ -41,14 +41,8 @@ class ServiceEmitter {
 
   void _emitMethod(StringBuffer buffer, OperationDef op) {
     final verb = _verb(op.httpMethod);
-    final positional = op.parameters
-        .where((p) => p.isRequired)
-        .map((p) => '    ${_annotation(p)} ${p.type.display} ${p.dartName},')
-        .toList();
-    final named = op.parameters
-        .where((p) => !p.isRequired)
-        .map((p) => '    ${_namedParam(p)},')
-        .toList();
+    final named =
+        op.parameters.map((p) => '    ${_namedParam(p)},').toList();
 
     buffer
       ..writeln("  @$verb(path: '${op.path}')")
@@ -56,26 +50,10 @@ class ServiceEmitter {
         '  Future<Response<${op.responseType.display}>> ${op.methodName}(',
       );
 
-    if (positional.isEmpty && named.isEmpty) {
+    if (named.isEmpty) {
       buffer.writeln(');');
-    } else if (named.isEmpty) {
-      buffer.writeln();
-      for (final line in positional) {
-        buffer.writeln(line);
-      }
-      buffer.writeln('  );');
-    } else if (positional.isEmpty) {
-      buffer.writeln('{');
-      for (final line in named) {
-        buffer.writeln(line);
-      }
-      buffer.writeln('  });');
     } else {
-      buffer.writeln();
-      for (final line in positional) {
-        buffer.writeln(line);
-      }
-      buffer.writeln('    {');
+      buffer.writeln('{');
       for (final line in named) {
         buffer.writeln(line);
       }
@@ -87,6 +65,9 @@ class ServiceEmitter {
 
   String _namedParam(ParamDef p) {
     final annotation = _annotation(p);
+    if (p.isRequired) {
+      return '$annotation required ${p.type.display} ${p.dartName}';
+    }
     if (p.defaultValue != null) {
       return '$annotation ${p.type.display} ${p.dartName} = ${p.defaultValue}';
     }

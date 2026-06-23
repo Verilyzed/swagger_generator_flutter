@@ -74,15 +74,15 @@ final class _$NewapiService extends NewapiService {
   }
 
   @override
-  Future<Response<Vault>> getVaultById(String vaultUuid) {
+  Future<Response<Vault>> getVaultById({required String vaultUuid}) {
     final Uri $url = Uri.parse('/vaults/${vaultUuid}');
     final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<Vault, Vault>($request);
   }
 
   @override
-  Future<Response<List<Item>>> getVaultItems(
-    String vaultUuid, {
+  Future<Response<List<Item>>> getVaultItems({
+    required String vaultUuid,
     String? filter,
   }) {
     final Uri $url = Uri.parse('/vaults/${vaultUuid}/items');
@@ -97,8 +97,8 @@ final class _$NewapiService extends NewapiService {
   }
 
   @override
-  Future<Response<FullItem>> createVaultItem(
-    String vaultUuid, {
+  Future<Response<FullItem>> createVaultItem({
+    required String vaultUuid,
     FullItem? body,
   }) {
     final Uri $url = Uri.parse('/vaults/${vaultUuid}/items');
@@ -108,26 +108,29 @@ final class _$NewapiService extends NewapiService {
   }
 
   @override
-  Future<Response<dynamic>> deleteVaultItem(String vaultUuid, String itemUuid) {
+  Future<Response<dynamic>> deleteVaultItem({
+    required String vaultUuid,
+    required String itemUuid,
+  }) {
     final Uri $url = Uri.parse('/vaults/${vaultUuid}/items/${itemUuid}');
     final Request $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<FullItem>> getVaultItemById(
-    String vaultUuid,
-    String itemUuid,
-  ) {
+  Future<Response<FullItem>> getVaultItemById({
+    required String vaultUuid,
+    required String itemUuid,
+  }) {
     final Uri $url = Uri.parse('/vaults/${vaultUuid}/items/${itemUuid}');
     final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<FullItem, FullItem>($request);
   }
 
   @override
-  Future<Response<FullItem>> patchVaultItem(
-    String vaultUuid,
-    String itemUuid, {
+  Future<Response<FullItem>> patchVaultItem({
+    required String vaultUuid,
+    required String itemUuid,
     List<PatchItem>? body,
   }) {
     final Uri $url = Uri.parse('/vaults/${vaultUuid}/items/${itemUuid}');
@@ -142,9 +145,9 @@ final class _$NewapiService extends NewapiService {
   }
 
   @override
-  Future<Response<FullItem>> updateVaultItem(
-    String vaultUuid,
-    String itemUuid, {
+  Future<Response<FullItem>> updateVaultItem({
+    required String vaultUuid,
+    required String itemUuid,
     FullItem? body,
   }) {
     final Uri $url = Uri.parse('/vaults/${vaultUuid}/items/${itemUuid}');
@@ -154,9 +157,9 @@ final class _$NewapiService extends NewapiService {
   }
 
   @override
-  Future<Response<List<File>>> getItemFiles(
-    String vaultUuid,
-    String itemUuid, {
+  Future<Response<List<File>>> getItemFiles({
+    required String vaultUuid,
+    required String itemUuid,
     bool? inlineFiles,
   }) {
     final Uri $url = Uri.parse('/vaults/${vaultUuid}/items/${itemUuid}/files');
@@ -173,10 +176,10 @@ final class _$NewapiService extends NewapiService {
   }
 
   @override
-  Future<Response<File>> getDetailsOfFileById(
-    String vaultUuid,
-    String itemUuid,
-    String fileUuid, {
+  Future<Response<File>> getDetailsOfFileById({
+    required String vaultUuid,
+    required String itemUuid,
+    required String fileUuid,
     bool? inlineFiles,
   }) {
     final Uri $url = Uri.parse(

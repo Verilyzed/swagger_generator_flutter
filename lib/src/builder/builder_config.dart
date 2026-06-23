@@ -37,17 +37,20 @@ class BuilderConfig {
     '.api.dart',
   ];
 
+  static const _inputExtensions = ['.json', '.yaml', '.yml'];
+
   String get _inputPrefix => inputFolder.isEmpty ? '' : '$inputFolder/';
   String get _outputPrefix => outputFolder.isEmpty ? '' : '$outputFolder/';
 
   Map<String, List<String>> get buildExtensions => {
-        '$_inputPrefix{{}}.openapi.json': [
-          for (final ext in _extensions) '$_outputPrefix{{}}$ext',
-        ],
+        for (final inExt in _inputExtensions)
+          '$_inputPrefix{{}}$inExt': [
+            for (final ext in _extensions) '$_outputPrefix{{}}$ext',
+          ],
       };
 
   /// The portion of [inputPath] captured by `{{}}`: the input prefix and the
-  /// `.openapi.json` suffix removed, any subdirectories preserved.
+  /// `.json`/`.yaml`/`.yml` suffix removed, any subdirectories preserved.
   ///
   /// Precondition: [inputPath] must be under [inputFolder] when [inputFolder]
   /// is non-empty. build_runner only invokes the builder for inputs that match
@@ -62,7 +65,7 @@ class BuilderConfig {
     if (_inputPrefix.isNotEmpty && path.startsWith(_inputPrefix)) {
       path = path.substring(_inputPrefix.length);
     }
-    return path.replaceFirst(RegExp(r'\.openapi\.json$'), '');
+    return path.replaceFirst(RegExp(r'\.(json|ya?ml)$'), '');
   }
 
   /// The bare base name (last path segment) used for cross-file imports.

@@ -19,8 +19,8 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   final Type definitionType = ResourceSchedulerService;
 
   @override
-  Future<Response<Schedule>> getScheduleForAsset(
-    String assetId, {
+  Future<Response<Schedule>> getScheduleForAsset({
+    required String assetId,
     DeadlineFilterEnum deadlineFilter = DeadlineFilterEnum.all,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/schedule');
@@ -37,10 +37,10 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<Schedule>> createSchedule(
-    String assetId,
-    ScheduleCreateRequest body,
-  ) {
+  Future<Response<Schedule>> createSchedule({
+    required String assetId,
+    required ScheduleCreateRequest body,
+  }) {
     final Uri $url = Uri.parse('/assets/${assetId}/schedule');
     final $body = body;
     final Request $request = Request('POST', $url, client.baseUrl, body: $body);
@@ -48,11 +48,11 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<Schedule>> updateSchedule(
-    String assetId,
-    String scheduleId,
-    ScheduleUpdateRequest body,
-  ) {
+  Future<Response<Schedule>> updateSchedule({
+    required String assetId,
+    required String scheduleId,
+    required ScheduleUpdateRequest body,
+  }) {
     final Uri $url = Uri.parse('/assets/${assetId}/schedule/${scheduleId}');
     final $body = body;
     final Request $request = Request('PUT', $url, client.baseUrl, body: $body);
@@ -60,7 +60,7 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<List<Asset>>> listAssets(int accountId) {
+  Future<Response<List<Asset>>> listAssets({required int accountId}) {
     final Uri $url = Uri.parse('/assets');
     final Map<String, dynamic> $params = <String, dynamic>{
       'account_id': accountId,
@@ -75,38 +75,40 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<Asset>> getAsset(String assetId) {
+  Future<Response<Asset>> getAsset({required String assetId}) {
     final Uri $url = Uri.parse('/assets/${assetId}');
     final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<Asset, Asset>($request);
   }
 
   @override
-  Future<Response<ActivityStatus>> getAssetActivityStatus(String assetId) {
+  Future<Response<ActivityStatus>> getAssetActivityStatus({
+    required String assetId,
+  }) {
     final Uri $url = Uri.parse('/assets/${assetId}/activity_status');
     final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<ActivityStatus, ActivityStatus>($request);
   }
 
   @override
-  Future<Response<dynamic>> refreshAsset(String assetId) {
+  Future<Response<dynamic>> refreshAsset({required String assetId}) {
     final Uri $url = Uri.parse('/assets/${assetId}/refresh');
     final Request $request = Request('POST', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<AssetPolicy>> getAssetPolicy(String assetId) {
+  Future<Response<AssetPolicy>> getAssetPolicy({required String assetId}) {
     final Uri $url = Uri.parse('/asset_policy/${assetId}');
     final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<AssetPolicy, AssetPolicy>($request);
   }
 
   @override
-  Future<Response<dynamic>> patchAssetPolicy(
-    String assetId,
-    AssetPolicyRequest body,
-  ) {
+  Future<Response<dynamic>> patchAssetPolicy({
+    required String assetId,
+    required AssetPolicyRequest body,
+  }) {
     final Uri $url = Uri.parse('/asset_policy/${assetId}');
     final $body = body;
     final Request $request = Request(
@@ -119,8 +121,8 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<List<Task>>> listTasksForAsset(
-    String assetId, {
+  Future<Response<List<Task>>> listTasksForAsset({
+    required String assetId,
     AggregationEnum? aggregation,
     String? period,
     TaskSortFieldEnum? sort,
@@ -145,17 +147,19 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<StreamTokenResponse>> getStreamTokenForAsset(String assetId) {
+  Future<Response<StreamTokenResponse>> getStreamTokenForAsset({
+    required String assetId,
+  }) {
     final Uri $url = Uri.parse('/assets/${assetId}/stream_token');
     final Request $request = Request('POST', $url, client.baseUrl);
     return client.send<StreamTokenResponse, StreamTokenResponse>($request);
   }
 
   @override
-  Future<Response<TicketResponse>> createTicket(
-    String assetId,
-    TicketInput body,
-  ) {
+  Future<Response<TicketResponse>> createTicket({
+    required String assetId,
+    required TicketInput body,
+  }) {
     final Uri $url = Uri.parse('/tickets');
     final Map<String, dynamic> $params = <String, dynamic>{'asset_id': assetId};
     final $body = body;
@@ -170,10 +174,10 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<AttachmentResponse>> attachImageToTicket(
-    String ticketId,
-    AttachmentInput body,
-  ) {
+  Future<Response<AttachmentResponse>> attachImageToTicket({
+    required String ticketId,
+    required AttachmentInput body,
+  }) {
     final Uri $url = Uri.parse('/tickets/${ticketId}/attachment');
     final $body = body;
     final Request $request = Request('POST', $url, client.baseUrl, body: $body);
@@ -181,38 +185,42 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<ProviderLinkResponse>> postAccountLink(String accountId) {
+  Future<Response<ProviderLinkResponse>> postAccountLink({
+    required String accountId,
+  }) {
     final Uri $url = Uri.parse('/accounts/${accountId}/link');
     final Request $request = Request('POST', $url, client.baseUrl);
     return client.send<ProviderLinkResponse, ProviderLinkResponse>($request);
   }
 
   @override
-  Future<Response<ProviderLinkResponse>> postAccountRelink(String accountId) {
+  Future<Response<ProviderLinkResponse>> postAccountRelink({
+    required String accountId,
+  }) {
     final Uri $url = Uri.parse('/accounts/${accountId}/relink');
     final Request $request = Request('POST', $url, client.baseUrl);
     return client.send<ProviderLinkResponse, ProviderLinkResponse>($request);
   }
 
   @override
-  Future<Response<Account>> getAccount(String accountId) {
+  Future<Response<Account>> getAccount({required String accountId}) {
     final Uri $url = Uri.parse('/accounts/${accountId}');
     final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<Account, Account>($request);
   }
 
   @override
-  Future<Response<dynamic>> deleteAccount(String accountId) {
+  Future<Response<dynamic>> deleteAccount({required String accountId}) {
     final Uri $url = Uri.parse('/accounts/${accountId}');
     final Request $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<Account>> selectAsset(
-    String accountId,
-    SelectAssetRequest body,
-  ) {
+  Future<Response<Account>> selectAsset({
+    required String accountId,
+    required SelectAssetRequest body,
+  }) {
     final Uri $url = Uri.parse('/accounts/${accountId}:select-asset');
     final $body = body;
     final Request $request = Request('POST', $url, client.baseUrl, body: $body);
@@ -227,8 +235,8 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<List<Run>>> listRunsForAsset(
-    String assetId, {
+  Future<Response<List<Run>>> listRunsForAsset({
+    required String assetId,
     int limit = 5,
     int page = 0,
     SortOrderEnum sortOrder = SortOrderEnum.desc,
@@ -251,9 +259,9 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   }
 
   @override
-  Future<Response<RunMetrics>> getRunMetrics(
-    String assetId,
-    AggregationEnum aggregation, {
+  Future<Response<RunMetrics>> getRunMetrics({
+    required String assetId,
+    required AggregationEnum aggregation,
     String? period,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/runs/metrics');

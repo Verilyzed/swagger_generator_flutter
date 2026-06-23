@@ -37,17 +37,15 @@ void main() {
     );
   });
 
-  test('default buildExtensions match any openapi.json co-located', () {
+  test('default buildExtensions map json co-located', () {
     final config = BuilderConfig.fromOptions(const BuilderOptions({}));
-    expect(config.buildExtensions, {
-      '{{}}.openapi.json': [
-        '{{}}.enums.dart',
-        '{{}}.models.dart',
-        '{{}}.service.dart',
-        '{{}}.client.dart',
-        '{{}}.api.dart',
-      ],
-    });
+    expect(config.buildExtensions['{{}}.json'], [
+      '{{}}.enums.dart',
+      '{{}}.models.dart',
+      '{{}}.service.dart',
+      '{{}}.client.dart',
+      '{{}}.api.dart',
+    ]);
   });
 
   test('configured buildExtensions carry input and output prefixes', () {
@@ -57,21 +55,19 @@ void main() {
         'output_folder': 'lib/generated',
       }),
     );
-    expect(config.buildExtensions, {
-      'api_specs/{{}}.openapi.json': [
-        'lib/generated/{{}}.enums.dart',
-        'lib/generated/{{}}.models.dart',
-        'lib/generated/{{}}.service.dart',
-        'lib/generated/{{}}.client.dart',
-        'lib/generated/{{}}.api.dart',
-      ],
-    });
+    expect(config.buildExtensions['api_specs/{{}}.json'], [
+      'lib/generated/{{}}.enums.dart',
+      'lib/generated/{{}}.models.dart',
+      'lib/generated/{{}}.service.dart',
+      'lib/generated/{{}}.client.dart',
+      'lib/generated/{{}}.api.dart',
+    ]);
   });
 
-  test('default outputPathFor is co-located, replacing the full suffix', () {
+  test('default outputPathFor is co-located, replacing the suffix', () {
     final config = BuilderConfig.fromOptions(const BuilderOptions({}));
     expect(
-      config.outputPathFor('lib/resource_scheduler.openapi.json', '.enums.dart'),
+      config.outputPathFor('lib/resource_scheduler.json', '.enums.dart'),
       'lib/resource_scheduler.enums.dart',
     );
   });
@@ -84,10 +80,10 @@ void main() {
       }),
     );
     expect(
-      config.outputPathFor('api_specs/demo.openapi.json', '.models.dart'),
+      config.outputPathFor('api_specs/demo.json', '.models.dart'),
       'lib/generated/demo.models.dart',
     );
-    expect(config.baseNameFor('api_specs/demo.openapi.json'), 'demo');
+    expect(config.baseNameFor('api_specs/demo.json'), 'demo');
   });
 
   test('captureStem preserves subdirectories under the input folder', () {
@@ -97,11 +93,32 @@ void main() {
         'output_folder': 'lib/generated',
       }),
     );
-    expect(config.captureStem('api_specs/v1/demo.openapi.json'), 'v1/demo');
-    expect(config.baseNameFor('api_specs/v1/demo.openapi.json'), 'demo');
+    expect(config.captureStem('api_specs/v1/demo.json'), 'v1/demo');
+    expect(config.baseNameFor('api_specs/v1/demo.json'), 'demo');
     expect(
-      config.outputPathFor('api_specs/v1/demo.openapi.json', '.models.dart'),
+      config.outputPathFor('api_specs/v1/demo.json', '.models.dart'),
       'lib/generated/v1/demo.models.dart',
+    );
+  });
+
+  test('buildExtensions cover json, yaml, and yml inputs', () {
+    final config = BuilderConfig.fromOptions(const BuilderOptions({}));
+    expect(config.buildExtensions.keys, containsAll(<String>[
+      '{{}}.json',
+      '{{}}.yaml',
+      '{{}}.yml',
+    ]));
+  });
+
+  test('outputPathFor strips a yaml or json suffix', () {
+    final config = BuilderConfig.fromOptions(const BuilderOptions({}));
+    expect(
+      config.outputPathFor('lib/demo.yaml', '.models.dart'),
+      'lib/demo.models.dart',
+    );
+    expect(
+      config.outputPathFor('lib/demo.json', '.enums.dart'),
+      'lib/demo.enums.dart',
     );
   });
 }

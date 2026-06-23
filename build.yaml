@@ -6,7 +6,19 @@ builders:
     # .service.chopper.dart files are produced by json_serializable and
     # chopper_generator (see runs_before), not by this builder.
     build_extensions:
-      "{{}}.openapi.json":
+      "{{}}.json":
+        - "{{}}.enums.dart"
+        - "{{}}.models.dart"
+        - "{{}}.service.dart"
+        - "{{}}.client.dart"
+        - "{{}}.api.dart"
+      "{{}}.yaml":
+        - "{{}}.enums.dart"
+        - "{{}}.models.dart"
+        - "{{}}.service.dart"
+        - "{{}}.client.dart"
+        - "{{}}.api.dart"
+      "{{}}.yml":
         - "{{}}.enums.dart"
         - "{{}}.models.dart"
         - "{{}}.service.dart"

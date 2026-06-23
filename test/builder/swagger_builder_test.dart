@@ -9,7 +9,7 @@ void main() {
   test('default config writes outputs co-located with the spec', () {
     final config = BuilderConfig.fromOptions(const BuilderOptions({}));
     expect(
-      config.outputPathFor('lib/resource_scheduler.openapi.json', '.enums.dart'),
+      config.outputPathFor('lib/resource_scheduler.json', '.enums.dart'),
       'lib/resource_scheduler.enums.dart',
     );
   });

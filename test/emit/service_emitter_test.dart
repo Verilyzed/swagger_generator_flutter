@@ -57,7 +57,7 @@ void main() {
     expect(out, contains('Future<Response<List<Gadget>>> listGadgets({'));
     expect(out, contains("@Query('limit') int limit = 50,"));
     expect(out, contains("@Query('status') StatusEnum? status,"));
-    expect(out, contains("@Path('gadget_id') String gadgetId,"));
+    expect(out, contains("@Path('gadget_id') required String gadgetId,"));
     expect(out, isNot(contains('listGadgets(@Query')));
   });
 
