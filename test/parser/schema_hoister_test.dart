@@ -210,4 +210,37 @@ void main() {
     expect((props['map'] as Map)['additionalProperties'], {'type': 'string'});
     expect(props['bare'], {'type': 'object'});
   });
+
+  test('leaves multipart media schemas inline', () {
+    final out = _hoister().hoist({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/upload': {
+          'post': {
+            'operationId': 'upload',
+            'requestBody': {
+              'content': {
+                'multipart/form-data': {
+                  'schema': {
+                    'type': 'object',
+                    'properties': {
+                      'file': {'type': 'string', 'format': 'binary'},
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    expect(_schemas(out), isEmpty);
+    final post = (((out['paths'] as Map)['/upload'] as Map)['post'] as Map)
+        .cast<String, dynamic>();
+    final schema = (((post['requestBody'] as Map)['content'] as Map)
+        ['multipart/form-data'] as Map)['schema'] as Map;
+    expect(schema.containsKey('properties'), isTrue);
+    expect(schema.containsKey(r'$ref'), isFalse);
+  });
 }

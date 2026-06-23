@@ -86,7 +86,9 @@ class SchemaHoister {
   ) {
     final content = container['content'];
     if (content is! Map) return;
-    for (final media in content.values) {
+    for (final entry in content.cast<String, dynamic>().entries) {
+      if (entry.key == 'multipart/form-data') continue;
+      final media = entry.value;
       if (media is! Map) continue;
       final mediaMap = media.cast<String, dynamic>();
       final schema = mediaMap['schema'];

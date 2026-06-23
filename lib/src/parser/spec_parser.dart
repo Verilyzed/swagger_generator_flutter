@@ -156,6 +156,17 @@ class SpecParser {
     return (properties: properties, required: required);
   }
 
+  ({Map<String, dynamic> properties, List<String> required}) _objectFor(
+    Map<String, dynamic> schema,
+  ) {
+    final ref = schema[r'$ref'];
+    if (ref is String) {
+      final target = _schemasCache[ref.split('/').last];
+      if (target is Map<String, dynamic>) return _mergedObject(target);
+    }
+    return _mergedObject(schema);
+  }
+
   String? _defaultLiteral(
     dynamic value, {
     String? typeName,
@@ -230,16 +241,40 @@ class SpecParser {
     DartType? bodyType;
     final body = op['requestBody'];
     final bodyMap = body is Map ? body.cast<String, dynamic>() : null;
-    final bodySchema = _contentSchema(bodyMap);
-    if (bodySchema != null) {
-      bodyType = _resolver.resolve(bodySchema);
-      params.add(ParamDef(
-        dartName: 'body',
-        wireName: 'body',
-        type: bodyType,
-        location: ParamLocation.body,
-        isRequired: bodyMap?['required'] == true,
-      ));
+    final content = (bodyMap?['content'] as Map?)?.cast<String, dynamic>();
+    final multipart =
+        (content?['multipart/form-data'] as Map?)?.cast<String, dynamic>();
+    if (multipart != null) {
+      final schema = multipart['schema'];
+      if (schema is Map) {
+        final object = _objectFor(schema.cast<String, dynamic>());
+        for (final entry in object.properties.entries) {
+          final propSchema = (entry.value as Map).cast<String, dynamic>();
+          final isFile = propSchema['type'] == 'string' &&
+              propSchema['format'] == 'binary';
+          params.add(ParamDef(
+            dartName: _names.memberName(entry.key),
+            wireName: entry.key,
+            type: isFile
+                ? const DartType('MultipartFile')
+                : _resolver.resolve(propSchema),
+            location: isFile ? ParamLocation.partFile : ParamLocation.part,
+            isRequired: object.required.contains(entry.key),
+          ));
+        }
+      }
+    } else {
+      final bodySchema = _contentSchema(bodyMap);
+      if (bodySchema != null) {
+        bodyType = _resolver.resolve(bodySchema);
+        params.add(ParamDef(
+          dartName: 'body',
+          wireName: 'body',
+          type: bodyType,
+          location: ParamLocation.body,
+          isRequired: bodyMap?['required'] == true,
+        ));
+      }
     }
 
     final responses = (op['responses'] as Map?)?.cast<String, dynamic>();

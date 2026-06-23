@@ -278,6 +278,44 @@ void main() {
     expect(spec.service.operations.single.methodName, 'getServerHealth');
   });
 
+  test('parses a multipart body into part parameters', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/upload': {
+          'post': {
+            'operationId': 'upload',
+            'requestBody': {
+              'content': {
+                'multipart/form-data': {
+                  'schema': {
+                    'type': 'object',
+                    'required': ['file'],
+                    'properties': {
+                      'file': {'type': 'string', 'format': 'binary'},
+                      'label': {'type': 'string'},
+                    },
+                  },
+                },
+              },
+            },
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    final params = spec.service.operations.single.parameters;
+    final file = params.firstWhere((p) => p.wireName == 'file');
+    final label = params.firstWhere((p) => p.wireName == 'label');
+    expect(file.location, ParamLocation.partFile);
+    expect(file.type.name, 'MultipartFile');
+    expect(file.isRequired, isTrue);
+    expect(label.location, ParamLocation.part);
+    expect(label.type.name, 'String');
+    expect(params.any((p) => p.location == ParamLocation.body), isFalse);
+  });
+
   test('flattens allOf into a single model', () {
     final spec = _parser().parse({
       'components': {
