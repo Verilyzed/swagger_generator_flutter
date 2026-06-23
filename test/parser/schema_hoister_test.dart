@@ -211,6 +211,65 @@ void main() {
     expect(props['bare'], {'type': 'object'});
   });
 
+  test('names a hoisted response model from the path without an operationId',
+      () {
+    final out = _hoister().hoist({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/vaults/{vaultUuid}/items': {
+          'post': {
+            'responses': {
+              '200': {
+                'content': {
+                  'application/json': {
+                    'schema': {
+                      'type': 'object',
+                      'properties': {
+                        'id': {'type': 'string'},
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    expect(_schemas(out), contains('PostVaultsVaultUuidItemsResponse'));
+    expect(_schemas(out), isNot(contains('OperationResponse')));
+  });
+
+  test('names a hoisted model from the path when nameFromPath is true', () {
+    final out = SchemaHoister(NameGiver(), nameFromPath: true).hoist({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/health': {
+          'get': {
+            'operationId': 'GetServerHealth',
+            'responses': {
+              '200': {
+                'content': {
+                  'application/json': {
+                    'schema': {
+                      'type': 'object',
+                      'properties': {
+                        'name': {'type': 'string'},
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    expect(_schemas(out), contains('GetHealthResponse'));
+  });
+
   test('leaves multipart media schemas inline', () {
     final out = _hoister().hoist({
       'components': {'schemas': <String, dynamic>{}},

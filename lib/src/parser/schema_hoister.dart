@@ -1,14 +1,17 @@
 import 'dart:convert';
 
 import '../resolve/name_giver.dart';
+import 'operation_name.dart';
 
 /// Lifts inline (anonymous) object and enum schemas into named entries under
 /// `components/schemas`, replacing each in place with a `$ref`. The rest of the
 /// pipeline then treats them like any other named schema.
 class SchemaHoister {
   final NameGiver _names;
+  final bool _nameFromPath;
 
-  SchemaHoister(this._names);
+  SchemaHoister(this._names, {bool nameFromPath = false})
+      : _nameFromPath = nameFromPath;
 
   Map<String, dynamic> hoist(Map<String, dynamic> spec) {
     final copy = (jsonDecode(jsonEncode(spec)) as Map).cast<String, dynamic>();
@@ -33,11 +36,19 @@ class SchemaHoister {
 
     final paths = (copy['paths'] as Map?)?.cast<String, dynamic>();
     if (paths != null) {
-      for (final pathItem in paths.values) {
+      for (final pathEntry in paths.entries) {
+        final pathItem = pathEntry.value;
         if (pathItem is! Map) continue;
-        for (final op in pathItem.values) {
+        for (final opEntry in pathItem.cast<String, dynamic>().entries) {
+          final op = opEntry.value;
           if (op is Map) {
-            _hoistOperation(op.cast<String, dynamic>(), schemas, used);
+            _hoistOperation(
+              op.cast<String, dynamic>(),
+              pathEntry.key,
+              opEntry.key,
+              schemas,
+              used,
+            );
           }
         }
       }
@@ -48,16 +59,23 @@ class SchemaHoister {
 
   void _hoistOperation(
     Map<String, dynamic> op,
+    String path,
+    String httpMethod,
     Map<String, dynamic> schemas,
     Set<String> used,
   ) {
-    final opId = (op['operationId'] as String?) ?? 'operation';
+    final base = operationBaseName(
+      httpMethod: httpMethod,
+      path: path,
+      operationId: op['operationId'] as String?,
+      nameFromPath: _nameFromPath,
+    );
 
     final requestBody = op['requestBody'];
     if (requestBody is Map) {
       _hoistContent(
         requestBody.cast<String, dynamic>(),
-        '$opId request',
+        '$base request',
         schemas,
         used,
       );
@@ -69,7 +87,7 @@ class SchemaHoister {
         if (response is Map) {
           _hoistContent(
             response.cast<String, dynamic>(),
-            '$opId response',
+            '$base response',
             schemas,
             used,
           );
