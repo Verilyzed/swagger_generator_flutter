@@ -128,6 +128,7 @@ void main() {
     );
 
     expect(out, contains('  @multipart'));
+    expect(out, contains("import 'package:http/http.dart' show MultipartFile;"));
     expect(out, contains("@PartFile('file') required MultipartFile file,"));
     expect(out, contains("@Part('label') required String label,"));
   });

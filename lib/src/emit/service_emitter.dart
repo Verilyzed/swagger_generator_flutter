@@ -12,8 +12,11 @@ class ServiceEmitter {
   }) {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
-      ..writeln(SourceWriter.importLine('package:chopper/chopper.dart'))
-      ..writeln(SourceWriter.importLine(modelsImport));
+      ..writeln(SourceWriter.importLine('package:chopper/chopper.dart'));
+    if (_usesMultipartFile(service)) {
+      buffer.writeln("import 'package:http/http.dart' show MultipartFile;");
+    }
+    buffer.writeln(SourceWriter.importLine(modelsImport));
     if (_usesEnum(service, enumNames)) {
       buffer.writeln(SourceWriter.importLine(enumsImport));
     }
@@ -78,6 +81,10 @@ class ServiceEmitter {
     final nullable = p.type.isNullable ? p.type.display : '${p.type.name}?';
     return '$annotation $nullable ${p.dartName}';
   }
+
+  bool _usesMultipartFile(ServiceDef service) => service.operations.any(
+        (op) => op.parameters.any((p) => p.location == ParamLocation.partFile),
+      );
 
   bool _usesEnum(ServiceDef service, Set<String> enumNames) {
     if (enumNames.isEmpty) return false;
