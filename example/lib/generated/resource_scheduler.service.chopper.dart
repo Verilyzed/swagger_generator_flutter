@@ -21,7 +21,7 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   @override
   Future<Response<Schedule>> getScheduleForAsset({
     required String assetId,
-    String? deadlineFilter,
+    DeadlineFilterEnum? deadlineFilter,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/schedule');
     final Map<String, dynamic> $params = <String, dynamic>{
@@ -123,10 +123,10 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   @override
   Future<Response<List<Task>>> listTasksForAsset({
     required String assetId,
-    String? aggregation,
+    AggregationEnum? aggregation,
     String? period,
-    String? sort,
-    String? order,
+    TaskSortFieldEnum? sort,
+    SortOrderEnum? order,
     int? limit,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/tasks');
@@ -239,8 +239,8 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
     required String assetId,
     int? limit,
     int? page,
-    String? sortOrder,
-    String? state,
+    SortOrderEnum? sortOrder,
+    RunStateEnum? state,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/runs');
     final Map<String, dynamic> $params = <String, dynamic>{
@@ -261,7 +261,7 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   @override
   Future<Response<RunMetrics>> getRunMetrics({
     required String assetId,
-    required String aggregation,
+    required AggregationEnum aggregation,
     String? period,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/runs/metrics');

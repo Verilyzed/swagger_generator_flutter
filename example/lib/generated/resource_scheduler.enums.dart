@@ -8,14 +8,13 @@ enum AggregationEnum {
   @JsonValue('year')
   year,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension AggregationEnumWire on AggregationEnum {
-  String get wireValue => const {
-    AggregationEnum.month: 'month',
-    AggregationEnum.year: 'year',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        AggregationEnum.month: 'month',
+        AggregationEnum.year: 'year',
+      }[this] ?? '';
 }
 
 enum TaskStateEnum {
@@ -32,18 +31,17 @@ enum TaskStateEnum {
   @JsonValue('TRIGGERED_STOP')
   triggeredStop,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension TaskStateEnumWire on TaskStateEnum {
-  String get wireValue => const {
-    TaskStateEnum.planned: 'PLANNED',
-    TaskStateEnum.running: 'RUNNING',
-    TaskStateEnum.finished: 'FINISHED',
-    TaskStateEnum.failed: 'FAILED',
-    TaskStateEnum.triggeredStart: 'TRIGGERED_START',
-    TaskStateEnum.triggeredStop: 'TRIGGERED_STOP',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        TaskStateEnum.planned: 'PLANNED',
+        TaskStateEnum.running: 'RUNNING',
+        TaskStateEnum.finished: 'FINISHED',
+        TaskStateEnum.failed: 'FAILED',
+        TaskStateEnum.triggeredStart: 'TRIGGERED_START',
+        TaskStateEnum.triggeredStop: 'TRIGGERED_STOP',
+      }[this] ?? '';
 }
 
 enum TaskEndTriggerEnum {
@@ -52,14 +50,13 @@ enum TaskEndTriggerEnum {
   @JsonValue('DATETIME')
   datetime,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension TaskEndTriggerEnumWire on TaskEndTriggerEnum {
-  String get wireValue => const {
-    TaskEndTriggerEnum.level: 'LEVEL',
-    TaskEndTriggerEnum.datetime: 'DATETIME',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        TaskEndTriggerEnum.level: 'LEVEL',
+        TaskEndTriggerEnum.datetime: 'DATETIME',
+      }[this] ?? '';
 }
 
 enum TaskTypeEnum {
@@ -70,15 +67,14 @@ enum TaskTypeEnum {
   @JsonValue('IMMEDIATELY')
   immediately,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension TaskTypeEnumWire on TaskTypeEnum {
-  String get wireValue => const {
-    TaskTypeEnum.costOptimized: 'COST_OPTIMIZED',
-    TaskTypeEnum.minLevel: 'MIN_LEVEL',
-    TaskTypeEnum.immediately: 'IMMEDIATELY',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        TaskTypeEnum.costOptimized: 'COST_OPTIMIZED',
+        TaskTypeEnum.minLevel: 'MIN_LEVEL',
+        TaskTypeEnum.immediately: 'IMMEDIATELY',
+      }[this] ?? '';
 }
 
 enum ActivityReason {
@@ -93,17 +89,16 @@ enum ActivityReason {
   @JsonValue('MANUAL')
   manual,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension ActivityReasonWire on ActivityReason {
-  String get wireValue => const {
-    ActivityReason.costOptimized: 'COST_OPTIMIZED',
-    ActivityReason.minLevel: 'MIN_LEVEL',
-    ActivityReason.immediately: 'IMMEDIATELY',
-    ActivityReason.initializing: 'INITIALIZING',
-    ActivityReason.manual: 'MANUAL',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        ActivityReason.costOptimized: 'COST_OPTIMIZED',
+        ActivityReason.minLevel: 'MIN_LEVEL',
+        ActivityReason.immediately: 'IMMEDIATELY',
+        ActivityReason.initializing: 'INITIALIZING',
+        ActivityReason.manual: 'MANUAL',
+      }[this] ?? '';
 }
 
 enum RunStateEnum {
@@ -112,14 +107,13 @@ enum RunStateEnum {
   @JsonValue('FINISHED')
   finished,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension RunStateEnumWire on RunStateEnum {
-  String get wireValue => const {
-    RunStateEnum.active: 'ACTIVE',
-    RunStateEnum.finished: 'FINISHED',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        RunStateEnum.active: 'ACTIVE',
+        RunStateEnum.finished: 'FINISHED',
+      }[this] ?? '';
 }
 
 enum ActivityState {
@@ -130,15 +124,14 @@ enum ActivityState {
   @JsonValue('INDETERMINATE')
   indeterminate,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension ActivityStateWire on ActivityState {
-  String get wireValue => const {
-    ActivityState.shouldRun: 'SHOULD_RUN',
-    ActivityState.shouldNotRun: 'SHOULD_NOT_RUN',
-    ActivityState.indeterminate: 'INDETERMINATE',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        ActivityState.shouldRun: 'SHOULD_RUN',
+        ActivityState.shouldNotRun: 'SHOULD_NOT_RUN',
+        ActivityState.indeterminate: 'INDETERMINATE',
+      }[this] ?? '';
 }
 
 enum ActivityStateReason {
@@ -147,14 +140,13 @@ enum ActivityStateReason {
   @JsonValue('BY_OVERRIDE')
   byOverride,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension ActivityStateReasonWire on ActivityStateReason {
-  String get wireValue => const {
-    ActivityStateReason.byTask: 'BY_TASK',
-    ActivityStateReason.byOverride: 'BY_OVERRIDE',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        ActivityStateReason.byTask: 'BY_TASK',
+        ActivityStateReason.byOverride: 'BY_OVERRIDE',
+      }[this] ?? '';
 }
 
 enum DeadlineFilterEnum {
@@ -165,15 +157,14 @@ enum DeadlineFilterEnum {
   @JsonValue('all')
   all,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension DeadlineFilterEnumWire on DeadlineFilterEnum {
-  String get wireValue => const {
-    DeadlineFilterEnum.active: 'active',
-    DeadlineFilterEnum.inactive: 'inactive',
-    DeadlineFilterEnum.all: 'all',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        DeadlineFilterEnum.active: 'active',
+        DeadlineFilterEnum.inactive: 'inactive',
+        DeadlineFilterEnum.all: 'all',
+      }[this] ?? '';
 }
 
 enum DiscoveredAssetCapability {
@@ -184,15 +175,14 @@ enum DiscoveredAssetCapability {
   @JsonValue('CHECKING_COMPATIBILITY')
   checkingCompatibility,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension DiscoveredAssetCapabilityWire on DiscoveredAssetCapability {
-  String get wireValue => const {
-    DiscoveredAssetCapability.fullyCapable: 'FULLY_CAPABLE',
-    DiscoveredAssetCapability.incapable: 'INCAPABLE',
-    DiscoveredAssetCapability.checkingCompatibility: 'CHECKING_COMPATIBILITY',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        DiscoveredAssetCapability.fullyCapable: 'FULLY_CAPABLE',
+        DiscoveredAssetCapability.incapable: 'INCAPABLE',
+        DiscoveredAssetCapability.checkingCompatibility: 'CHECKING_COMPATIBILITY',
+      }[this] ?? '';
 }
 
 enum Domain {
@@ -201,14 +191,13 @@ enum Domain {
   @JsonValue('Asset')
   asset,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension DomainWire on Domain {
-  String get wireValue => const {
-    Domain.account: 'Account',
-    Domain.asset: 'Asset',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        Domain.account: 'Account',
+        Domain.asset: 'Asset',
+      }[this] ?? '';
 }
 
 enum ErrorCode {
@@ -237,24 +226,23 @@ enum ErrorCode {
   @JsonValue('LOCATION_LOOKUP_FAILED')
   locationLookupFailed,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension ErrorCodeWire on ErrorCode {
-  String get wireValue => const {
-    ErrorCode.internalServerError: 'INTERNAL_SERVER_ERROR',
-    ErrorCode.resourceNotFound: 'RESOURCE_NOT_FOUND',
-    ErrorCode.notAllowed: 'NOT_ALLOWED',
-    ErrorCode.badInput: 'BAD_INPUT',
-    ErrorCode.noUser: 'NO_USER',
-    ErrorCode.accountEnded: 'ACCOUNT_ENDED',
-    ErrorCode.accountNoPlan: 'ACCOUNT_NO_PLAN',
-    ErrorCode.accountNoActivePlan: 'ACCOUNT_NO_ACTIVE_PLAN',
-    ErrorCode.linkAssetAlreadyConnected: 'LINK_ASSET_ALREADY_CONNECTED',
-    ErrorCode.relinkNoAssetLinked: 'RELINK_NO_ASSET_LINKED',
-    ErrorCode.assetDeletionPending: 'ASSET_DELETION_PENDING',
-    ErrorCode.locationLookupFailed: 'LOCATION_LOOKUP_FAILED',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        ErrorCode.internalServerError: 'INTERNAL_SERVER_ERROR',
+        ErrorCode.resourceNotFound: 'RESOURCE_NOT_FOUND',
+        ErrorCode.notAllowed: 'NOT_ALLOWED',
+        ErrorCode.badInput: 'BAD_INPUT',
+        ErrorCode.noUser: 'NO_USER',
+        ErrorCode.accountEnded: 'ACCOUNT_ENDED',
+        ErrorCode.accountNoPlan: 'ACCOUNT_NO_PLAN',
+        ErrorCode.accountNoActivePlan: 'ACCOUNT_NO_ACTIVE_PLAN',
+        ErrorCode.linkAssetAlreadyConnected: 'LINK_ASSET_ALREADY_CONNECTED',
+        ErrorCode.relinkNoAssetLinked: 'RELINK_NO_ASSET_LINKED',
+        ErrorCode.assetDeletionPending: 'ASSET_DELETION_PENDING',
+        ErrorCode.locationLookupFailed: 'LOCATION_LOOKUP_FAILED',
+      }[this] ?? '';
 }
 
 enum FailureReasonTypeEnum {
@@ -267,29 +255,27 @@ enum FailureReasonTypeEnum {
   @JsonValue('NOT_FOUND')
   notFound,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension FailureReasonTypeEnumWire on FailureReasonTypeEnum {
-  String get wireValue => const {
-    FailureReasonTypeEnum.noResponse: 'NO_RESPONSE',
-    FailureReasonTypeEnum.failedPrecondition: 'FAILED_PRECONDITION',
-    FailureReasonTypeEnum.unnecessary: 'UNNECESSARY',
-    FailureReasonTypeEnum.notFound: 'NOT_FOUND',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        FailureReasonTypeEnum.noResponse: 'NO_RESPONSE',
+        FailureReasonTypeEnum.failedPrecondition: 'FAILED_PRECONDITION',
+        FailureReasonTypeEnum.unnecessary: 'UNNECESSARY',
+        FailureReasonTypeEnum.notFound: 'NOT_FOUND',
+      }[this] ?? '';
 }
 
 enum TaskSortFieldEnum {
   @JsonValue('price_per_unit')
   pricePerUnit,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension TaskSortFieldEnumWire on TaskSortFieldEnum {
-  String get wireValue => const {
-    TaskSortFieldEnum.pricePerUnit: 'price_per_unit',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        TaskSortFieldEnum.pricePerUnit: 'price_per_unit',
+      }[this] ?? '';
 }
 
 enum ConnectionState {
@@ -312,21 +298,20 @@ enum ConnectionState {
   @JsonValue('CONNECTED:DRAINING')
   connectedDraining,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension ConnectionStateWire on ConnectionState {
-  String get wireValue => const {
-    ConnectionState.unknown: 'UNKNOWN',
-    ConnectionState.disconnected: 'DISCONNECTED',
-    ConnectionState.connectedInitializing: 'CONNECTED:INITIALIZING',
-    ConnectionState.connectedActive: 'CONNECTED:ACTIVE',
-    ConnectionState.connectedStopped: 'CONNECTED:STOPPED',
-    ConnectionState.connectedComplete: 'CONNECTED:COMPLETE',
-    ConnectionState.connectedNoPower: 'CONNECTED:NO_POWER',
-    ConnectionState.connectedFault: 'CONNECTED:FAULT',
-    ConnectionState.connectedDraining: 'CONNECTED:DRAINING',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        ConnectionState.unknown: 'UNKNOWN',
+        ConnectionState.disconnected: 'DISCONNECTED',
+        ConnectionState.connectedInitializing: 'CONNECTED:INITIALIZING',
+        ConnectionState.connectedActive: 'CONNECTED:ACTIVE',
+        ConnectionState.connectedStopped: 'CONNECTED:STOPPED',
+        ConnectionState.connectedComplete: 'CONNECTED:COMPLETE',
+        ConnectionState.connectedNoPower: 'CONNECTED:NO_POWER',
+        ConnectionState.connectedFault: 'CONNECTED:FAULT',
+        ConnectionState.connectedDraining: 'CONNECTED:DRAINING',
+      }[this] ?? '';
 }
 
 enum ResolutionAccess {
@@ -335,14 +320,13 @@ enum ResolutionAccess {
   @JsonValue('Physical')
   physical,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension ResolutionAccessWire on ResolutionAccess {
-  String get wireValue => const {
-    ResolutionAccess.remote: 'Remote',
-    ResolutionAccess.physical: 'Physical',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        ResolutionAccess.remote: 'Remote',
+        ResolutionAccess.physical: 'Physical',
+      }[this] ?? '';
 }
 
 enum ResolutionAction {
@@ -351,14 +335,13 @@ enum ResolutionAction {
   @JsonValue('LinkAdditionalAsset')
   linkAdditionalAsset,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension ResolutionActionWire on ResolutionAction {
-  String get wireValue => const {
-    ResolutionAction.link: 'Link',
-    ResolutionAction.linkAdditionalAsset: 'LinkAdditionalAsset',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        ResolutionAction.link: 'Link',
+        ResolutionAction.linkAdditionalAsset: 'LinkAdditionalAsset',
+      }[this] ?? '';
 }
 
 enum ResolutionAgent {
@@ -367,14 +350,13 @@ enum ResolutionAgent {
   @JsonValue('ThirdParty')
   thirdParty,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension ResolutionAgentWire on ResolutionAgent {
-  String get wireValue => const {
-    ResolutionAgent.user: 'User',
-    ResolutionAgent.thirdParty: 'ThirdParty',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        ResolutionAgent.user: 'User',
+        ResolutionAgent.thirdParty: 'ThirdParty',
+      }[this] ?? '';
 }
 
 enum SortOrderEnum {
@@ -383,14 +365,13 @@ enum SortOrderEnum {
   @JsonValue('desc')
   desc,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension SortOrderEnumWire on SortOrderEnum {
-  String get wireValue => const {
-    SortOrderEnum.asc: 'asc',
-    SortOrderEnum.desc: 'desc',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        SortOrderEnum.asc: 'asc',
+        SortOrderEnum.desc: 'desc',
+      }[this] ?? '';
 }
 
 enum Weekday {
@@ -409,18 +390,17 @@ enum Weekday {
   @JsonValue('Sunday')
   sunday,
   // Fallback for values not present in the spec.
-  $unknown,
-}
+  $unknown;
 
-extension WeekdayWire on Weekday {
-  String get wireValue => const {
-    Weekday.monday: 'Monday',
-    Weekday.tuesday: 'Tuesday',
-    Weekday.wednesday: 'Wednesday',
-    Weekday.thursday: 'Thursday',
-    Weekday.friday: 'Friday',
-    Weekday.saturday: 'Saturday',
-    Weekday.sunday: 'Sunday',
-  }[this] ?? '';
+  @override
+  String toString() => const {
+        Weekday.monday: 'Monday',
+        Weekday.tuesday: 'Tuesday',
+        Weekday.wednesday: 'Wednesday',
+        Weekday.thursday: 'Thursday',
+        Weekday.friday: 'Friday',
+        Weekday.saturday: 'Saturday',
+        Weekday.sunday: 'Sunday',
+      }[this] ?? '';
 }
 

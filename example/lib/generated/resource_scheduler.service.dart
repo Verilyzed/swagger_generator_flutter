@@ -11,7 +11,7 @@ abstract class ResourceSchedulerService extends ChopperService {
   @GET(path: '/assets/{asset_id}/schedule')
   Future<Response<Schedule>> getScheduleForAsset({
     @Path('asset_id') required String assetId,
-    @Query('deadline_filter') String? deadlineFilter,
+    @Query('deadline_filter') DeadlineFilterEnum? deadlineFilter,
   });
 
   @POST(path: '/assets/{asset_id}/schedule')
@@ -61,10 +61,10 @@ abstract class ResourceSchedulerService extends ChopperService {
   @GET(path: '/assets/{asset_id}/tasks')
   Future<Response<List<Task>>> listTasksForAsset({
     @Path('asset_id') required String assetId,
-    @Query('aggregation') String? aggregation,
+    @Query('aggregation') AggregationEnum? aggregation,
     @Query('period') String? period,
-    @Query('sort') String? sort,
-    @Query('order') String? order,
+    @Query('sort') TaskSortFieldEnum? sort,
+    @Query('order') SortOrderEnum? order,
     @Query('limit') int? limit,
   });
 
@@ -119,14 +119,14 @@ abstract class ResourceSchedulerService extends ChopperService {
     @Path('asset_id') required String assetId,
     @Query('limit') int? limit,
     @Query('page') int? page,
-    @Query('sort_order') String? sortOrder,
-    @Query('state') String? state,
+    @Query('sort_order') SortOrderEnum? sortOrder,
+    @Query('state') RunStateEnum? state,
   });
 
   @GET(path: '/assets/{asset_id}/runs/metrics')
   Future<Response<RunMetrics>> getRunMetrics({
     @Path('asset_id') required String assetId,
-    @Query('aggregation') required String aggregation,
+    @Query('aggregation') required AggregationEnum aggregation,
     @Query('period') String? period,
   });
 
@@ -145,7 +145,7 @@ class ResourceSchedulerApi {
   }) =>
       _service.getScheduleForAsset(
         assetId: assetId,
-        deadlineFilter: (deadlineFilter ?? DeadlineFilterEnum.all).wireValue,
+        deadlineFilter: deadlineFilter ?? DeadlineFilterEnum.all,
       );
 
   Future<Response<Schedule>> createSchedule({
@@ -222,10 +222,10 @@ class ResourceSchedulerApi {
   }) =>
       _service.listTasksForAsset(
         assetId: assetId,
-        aggregation: aggregation?.wireValue,
+        aggregation: aggregation,
         period: period,
-        sort: sort?.wireValue,
-        order: (order ?? SortOrderEnum.asc).wireValue,
+        sort: sort,
+        order: order ?? SortOrderEnum.asc,
         limit: limit,
       );
 
@@ -305,8 +305,8 @@ class ResourceSchedulerApi {
         assetId: assetId,
         limit: limit ?? 5,
         page: page ?? 0,
-        sortOrder: (sortOrder ?? SortOrderEnum.desc).wireValue,
-        state: state?.wireValue,
+        sortOrder: sortOrder ?? SortOrderEnum.desc,
+        state: state,
       );
 
   Future<Response<RunMetrics>> getRunMetrics({
@@ -316,7 +316,7 @@ class ResourceSchedulerApi {
   }) =>
       _service.getRunMetrics(
         assetId: assetId,
-        aggregation: aggregation.wireValue,
+        aggregation: aggregation,
         period: period,
       );
 

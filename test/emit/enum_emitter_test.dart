@@ -17,11 +17,11 @@ void main() {
     expect(out, contains('enum AggregationEnum {'));
     expect(out, contains("@JsonValue('month')"));
     expect(out, contains('month,'));
-    expect(out, contains(r'  $unknown,'));
+    expect(out, contains(r'  $unknown;'));
     expect(out, contains('// Fallback for values not present in the spec.'));
     expect(out, contains("import 'package:json_annotation/json_annotation.dart';"));
-    expect(out, contains('extension AggregationEnumWire on AggregationEnum {'));
-    expect(out, contains('  String get wireValue => const {'));
-    expect(out, contains("    AggregationEnum.month: 'month',"));
+    expect(out, contains('  @override'));
+    expect(out, contains('  String toString() => const {'));
+    expect(out, contains("        AggregationEnum.month: 'month',"));
   });
 }
