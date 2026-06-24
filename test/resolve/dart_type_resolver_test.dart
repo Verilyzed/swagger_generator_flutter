@@ -19,6 +19,28 @@ void main() {
     );
   });
 
+  test('maps date format to a date-only DateTime', () {
+    final t = resolver.resolve({'type': 'string', 'format': 'date'});
+    expect(t.name, 'DateTime');
+    expect(t.isDateOnly, isTrue);
+  });
+
+  test('keeps isDateOnly when a date field is nullable', () {
+    final t = resolver.resolve({
+      'type': ['string', 'null'],
+      'format': 'date',
+    });
+    expect(t.name, 'DateTime');
+    expect(t.isNullable, isTrue);
+    expect(t.isDateOnly, isTrue);
+  });
+
+  test('date-time is not flagged date-only', () {
+    final t = resolver.resolve({'type': 'string', 'format': 'date-time'});
+    expect(t.name, 'DateTime');
+    expect(t.isDateOnly, isFalse);
+  });
+
   test('resolves a ref to the class name', () {
     expect(
       resolver.resolve({r'$ref': '#/components/schemas/Task'}).display,

@@ -16,7 +16,7 @@ abstract class DartTypeResolver {
     final nullable = isNullable(schema);
     final inner = _resolveCore(core);
     return nullable || inner.isNullable
-        ? DartType(inner.name, isNullable: true)
+        ? DartType(inner.name, isNullable: true, isDateOnly: inner.isDateOnly)
         : inner;
   }
 
@@ -40,9 +40,11 @@ abstract class DartTypeResolver {
     final type = schema['type'];
     switch (type) {
       case 'string':
-        return schema['format'] == 'date-time'
-            ? const DartType('DateTime')
-            : const DartType('String');
+        if (schema['format'] == 'date-time') return const DartType('DateTime');
+        if (schema['format'] == 'date') {
+          return const DartType('DateTime', isDateOnly: true);
+        }
+        return const DartType('String');
       case 'integer':
         return const DartType('int');
       case 'number':
