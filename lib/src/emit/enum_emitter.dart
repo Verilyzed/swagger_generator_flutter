@@ -24,6 +24,15 @@ class EnumEmitter {
         ..writeln('  // Fallback for values not present in the spec.')
         ..writeln(r'  $unknown,')
         ..writeln('}')
+        ..writeln()
+        ..writeln('extension ${e.name}Wire on ${e.name} {')
+        ..writeln('  String get wireValue => const {');
+      for (final v in e.values) {
+        buffer.writeln("    ${e.name}.${v.dartName}: '${v.jsonValue}',");
+      }
+      buffer
+        ..writeln("  }[this] ?? '';")
+        ..writeln('}')
         ..writeln();
     }
 

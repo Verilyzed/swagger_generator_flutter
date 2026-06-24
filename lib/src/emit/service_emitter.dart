@@ -28,7 +28,7 @@ class ServiceEmitter {
       ..writeln('abstract class ${service.name} extends ChopperService {');
 
     for (final op in service.operations) {
-      _emitMethod(buffer, op);
+      _emitMethod(buffer, op, enumNames);
     }
 
     buffer
@@ -39,12 +39,16 @@ class ServiceEmitter {
       ..writeln('}')
       ..writeln();
 
-    _emitFacade(buffer, service);
+    _emitFacade(buffer, service, enumNames);
 
     return buffer.toString();
   }
 
-  void _emitFacade(StringBuffer buffer, ServiceDef service) {
+  void _emitFacade(
+    StringBuffer buffer,
+    ServiceDef service,
+    Set<String> enumNames,
+  ) {
     final apiName = service.name.endsWith('Service')
         ? '${service.name.substring(0, service.name.length - 'Service'.length)}Api'
         : '${service.name}Api';
@@ -59,7 +63,7 @@ class ServiceEmitter {
       ..writeln();
 
     for (final op in service.operations) {
-      _emitFacadeMethod(buffer, op);
+      _emitFacadeMethod(buffer, op, enumNames);
     }
 
     buffer
@@ -67,7 +71,11 @@ class ServiceEmitter {
       ..writeln();
   }
 
-  void _emitFacadeMethod(StringBuffer buffer, OperationDef op) {
+  void _emitFacadeMethod(
+    StringBuffer buffer,
+    OperationDef op,
+    Set<String> enumNames,
+  ) {
     buffer.write(
       '  Future<Response<${op.responseType.display}>> ${op.methodName}(',
     );
@@ -88,7 +96,7 @@ class ServiceEmitter {
       ..writeln('  }) =>')
       ..writeln('      _service.${op.methodName}(');
     for (final p in op.parameters) {
-      buffer.writeln('        ${_facadeArg(p)},');
+      buffer.writeln('        ${_facadeArg(p, enumNames)},');
     }
     buffer
       ..writeln('      );')
@@ -101,17 +109,31 @@ class ServiceEmitter {
     return '$nullable ${p.dartName}';
   }
 
-  String _facadeArg(ParamDef p) {
-    if (!p.isRequired && p.defaultValue != null) {
-      return '${p.dartName}: ${p.dartName} ?? ${p.defaultValue}';
+  String _facadeArg(ParamDef p, Set<String> enumNames) {
+    final name = p.dartName;
+    if (_isEnumWireParam(p, enumNames)) {
+      if (p.isRequired) return '$name: $name.wireValue';
+      if (p.defaultValue != null) {
+        return '$name: ($name ?? ${p.defaultValue}).wireValue';
+      }
+      return '$name: $name?.wireValue';
     }
-    return '${p.dartName}: ${p.dartName}';
+    if (!p.isRequired && p.defaultValue != null) {
+      return '$name: $name ?? ${p.defaultValue}';
+    }
+    return '$name: $name';
   }
 
-  void _emitMethod(StringBuffer buffer, OperationDef op) {
+  /// An enum-typed query or path parameter is sent on the wire as a String,
+  /// converted from its `@JsonValue` rather than Chopper's default `toString`.
+  bool _isEnumWireParam(ParamDef p, Set<String> enumNames) =>
+      enumNames.contains(p.type.name) &&
+      (p.location == ParamLocation.query || p.location == ParamLocation.path);
+
+  void _emitMethod(StringBuffer buffer, OperationDef op, Set<String> enumNames) {
     final verb = _verb(op.httpMethod);
     final named =
-        op.parameters.map((p) => '    ${_namedParam(p)},').toList();
+        op.parameters.map((p) => '    ${_namedParam(p, enumNames)},').toList();
 
     buffer.writeln("  @$verb(path: '${op.path}')");
     if (op.parameters.any((p) =>
@@ -136,12 +158,16 @@ class ServiceEmitter {
     buffer.writeln();
   }
 
-  String _namedParam(ParamDef p) {
+  String _namedParam(ParamDef p, Set<String> enumNames) {
     final annotation = _annotation(p);
+    final wire = _isEnumWireParam(p, enumNames);
     if (p.isRequired) {
-      return '$annotation required ${p.type.display} ${p.dartName}';
+      final display = wire ? 'String' : p.type.display;
+      return '$annotation required $display ${p.dartName}';
     }
-    final nullable = p.type.isNullable ? p.type.display : '${p.type.name}?';
+    final nullable = wire
+        ? 'String?'
+        : (p.type.isNullable ? p.type.display : '${p.type.name}?');
     return '$annotation $nullable ${p.dartName}';
   }
 

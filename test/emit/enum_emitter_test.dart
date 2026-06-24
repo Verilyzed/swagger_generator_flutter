@@ -20,5 +20,8 @@ void main() {
     expect(out, contains(r'  $unknown,'));
     expect(out, contains('// Fallback for values not present in the spec.'));
     expect(out, contains("import 'package:json_annotation/json_annotation.dart';"));
+    expect(out, contains('extension AggregationEnumWire on AggregationEnum {'));
+    expect(out, contains('  String get wireValue => const {'));
+    expect(out, contains("    AggregationEnum.month: 'month',"));
   });
 }

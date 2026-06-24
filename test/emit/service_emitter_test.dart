@@ -57,7 +57,7 @@ void main() {
     expect(out, contains('Future<Response<List<Gadget>>> listGadgets({'));
     expect(out, contains("@Query('limit') int? limit,"));
     expect(out, isNot(contains('int limit = 50')));
-    expect(out, contains("@Query('status') StatusEnum? status,"));
+    expect(out, contains("@Query('status') String? status,"));
     expect(out, contains("@Path('gadget_id') required String gadgetId,"));
     expect(out, isNot(contains('listGadgets(@Query')));
 
@@ -73,7 +73,7 @@ void main() {
     expect(out, contains('    int? limit,'));
     expect(out, contains('    StatusEnum? status,'));
     expect(out, contains('      limit: limit ?? 50,'));
-    expect(out, contains('      status: status,'));
+    expect(out, contains('      status: status?.wireValue,'));
     expect(out, contains('  Future<Response<Gadget>> getGadget({'));
     expect(out, contains('    required String gadgetId,'));
     expect(out, contains('      gadgetId: gadgetId,'));
@@ -108,6 +108,39 @@ void main() {
     );
 
     expect(out, isNot(contains("import 'demo.enums.dart';")));
+  });
+
+  test('serializes enum query parameters as wire values', () {
+    final out = ServiceEmitter().emit(
+      const ServiceDef(
+        name: 'DemoService',
+        operations: [
+          OperationDef(
+            methodName: 'list',
+            httpMethod: 'GET',
+            path: '/x',
+            parameters: [
+              ParamDef(
+                dartName: 'order',
+                wireName: 'order',
+                type: DartType('SortOrderEnum'),
+                location: ParamLocation.query,
+                defaultValue: 'SortOrderEnum.asc',
+              ),
+            ],
+            responseType: DartType('dynamic'),
+          ),
+        ],
+      ),
+      partFileName: 'demo.service.chopper.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: {'SortOrderEnum'},
+    );
+
+    expect(out, contains("@Query('order') String? order,"));
+    expect(out, contains('    SortOrderEnum? order,'));
+    expect(out, contains('      order: (order ?? SortOrderEnum.asc).wireValue,'));
   });
 
   test('emits multipart parts', () {

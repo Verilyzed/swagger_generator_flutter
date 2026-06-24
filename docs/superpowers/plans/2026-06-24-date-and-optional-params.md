@@ -564,6 +564,33 @@ git commit -m "Regenerate example with date fields and parameter facade"
 
 ---
 
+### Task 6: Enum query and path parameters serialize as wire values
+
+Added after the Task 5 runtime check revealed that Chopper serializes an enum
+`@Query`/`@Path` value with `toString()` (`SortOrderEnum.asc`) instead of its
+`@JsonValue` (`asc`). Enum model fields and request bodies are unaffected
+(json_serializable handles them).
+
+**Files:**
+- Modify: `lib/src/emit/enum_emitter.dart`
+- Modify: `lib/src/emit/service_emitter.dart`
+- Modify: `test/emit/enum_emitter_test.dart`
+- Modify: `test/emit/service_emitter_test.dart`
+
+**Approach:**
+- `EnumEmitter` emits a `wireValue` extension per enum: a total
+  `String get wireValue` from the real members' `@JsonValue`s, falling back to
+  `''` (so the `$unknown` sentinel does not need a wire mapping).
+- `ServiceEmitter` renders an enum-typed `query`/`path` parameter as `String` in
+  the Chopper method (required -> `required String`, optional -> `String?`).
+- The facade keeps the enum-typed parameter and converts in the delegation:
+  required -> `name: name.wireValue`; optional with default ->
+  `name: (name ?? <default>).wireValue`; optional without default ->
+  `name: name?.wireValue`.
+- `enumNames` is threaded into `_namedParam` and the facade arg builder; a
+  parameter is enum-typed when `p.type.name` is in `enumNames` and its location
+  is `query` or `path`.
+
 ## Notes for the implementer
 
 - The facade lives in the service file, which already imports chopper, models,
