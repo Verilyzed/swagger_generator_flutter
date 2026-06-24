@@ -71,6 +71,24 @@ class SchemaHoister {
       nameFromPath: _nameFromPath,
     );
 
+    final parameters = op['parameters'];
+    if (parameters is List) {
+      for (final raw in parameters) {
+        if (raw is! Map) continue;
+        final p = raw.cast<String, dynamic>();
+        final paramName = p['name'];
+        final schema = p['schema'];
+        if (paramName is String && schema is Map) {
+          p['schema'] = _hoistType(
+            schema.cast<String, dynamic>(),
+            '$base $paramName',
+            schemas,
+            used,
+          );
+        }
+      }
+    }
+
     final requestBody = op['requestBody'];
     if (requestBody is Map) {
       _hoistContent(

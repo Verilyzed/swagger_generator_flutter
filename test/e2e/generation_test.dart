@@ -26,4 +26,41 @@ void main() {
       expect(source, startsWith('// GENERATED CODE'));
     }
   });
+
+  test('creates a named enum for an inline enum parameter', () {
+    const spec = '''
+{
+  "openapi": "3.0.0",
+  "info": {"title": "t", "version": "1"},
+  "paths": {
+    "/curve": {
+      "get": {
+        "operationId": "getCurve",
+        "parameters": [
+          {
+            "name": "interpolationsAufloesung",
+            "in": "query",
+            "schema": {"type": "string", "enum": ["LINEAR", "CUBIC"]}
+          }
+        ],
+        "responses": {"200": {"description": "ok"}}
+      }
+    }
+  }
+}
+''';
+
+    final sources = generateSources(spec, path: 'curve.json', baseName: 'curve');
+
+    expect(
+      sources['.enums.dart'],
+      contains('enum GetCurveInterpolationsAufloesung {'),
+    );
+    expect(
+      sources['.service.dart'],
+      contains(
+        'GetCurveInterpolationsAufloesung? interpolationsAufloesung',
+      ),
+    );
+  });
 }

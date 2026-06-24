@@ -270,6 +270,69 @@ void main() {
     expect(_schemas(out), contains('GetHealthResponse'));
   });
 
+  test('hoists an inline enum parameter to <OperationId><ParamName>', () {
+    final out = _hoister().hoist({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/curve': {
+          'get': {
+            'operationId': 'getCurve',
+            'parameters': [
+              {
+                'name': 'interpolationsAufloesung',
+                'in': 'query',
+                'schema': {
+                  'type': 'string',
+                  'enum': ['LINEAR', 'CUBIC'],
+                  'default': 'LINEAR',
+                },
+              },
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    });
+
+    final schemas = _schemas(out);
+    expect(
+      (schemas['GetCurveInterpolationsAufloesung'] as Map<String, dynamic>)['enum'],
+      ['LINEAR', 'CUBIC'],
+    );
+
+    final paths = (out['paths'] as Map).cast<String, dynamic>();
+    final get = ((paths['/curve'] as Map)['get'] as Map).cast<String, dynamic>();
+    final param =
+        ((get['parameters'] as List).first as Map).cast<String, dynamic>();
+    expect(param['schema'], {
+      r'$ref': '#/components/schemas/GetCurveInterpolationsAufloesung',
+      'default': 'LINEAR',
+    });
+  });
+
+  test('leaves a non-enum primitive parameter untouched', () {
+    final out = _hoister().hoist({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/x': {
+          'get': {
+            'operationId': 'getX',
+            'parameters': [
+              {
+                'name': 'limit',
+                'in': 'query',
+                'schema': {'type': 'integer'},
+              },
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    });
+
+    expect(_schemas(out), isEmpty);
+  });
+
   test('leaves multipart media schemas inline', () {
     final out = _hoister().hoist({
       'components': {'schemas': <String, dynamic>{}},
