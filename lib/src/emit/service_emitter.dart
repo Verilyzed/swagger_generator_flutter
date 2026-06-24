@@ -75,9 +75,6 @@ class ServiceEmitter {
     if (p.isRequired) {
       return '$annotation required ${p.type.display} ${p.dartName}';
     }
-    if (p.defaultValue != null) {
-      return '$annotation ${p.type.display} ${p.dartName} = ${p.defaultValue}';
-    }
     final nullable = p.type.isNullable ? p.type.display : '${p.type.name}?';
     return '$annotation $nullable ${p.dartName}';
   }

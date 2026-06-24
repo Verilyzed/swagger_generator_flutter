@@ -55,7 +55,8 @@ void main() {
 
     expect(out, contains("import 'demo.enums.dart';"));
     expect(out, contains('Future<Response<List<Gadget>>> listGadgets({'));
-    expect(out, contains("@Query('limit') int limit = 50,"));
+    expect(out, contains("@Query('limit') int? limit,"));
+    expect(out, isNot(contains('int limit = 50')));
     expect(out, contains("@Query('status') StatusEnum? status,"));
     expect(out, contains("@Path('gadget_id') required String gadgetId,"));
     expect(out, isNot(contains('listGadgets(@Query')));
