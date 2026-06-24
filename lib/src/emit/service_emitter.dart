@@ -39,7 +39,73 @@ class ServiceEmitter {
       ..writeln('}')
       ..writeln();
 
+    _emitFacade(buffer, service);
+
     return buffer.toString();
+  }
+
+  void _emitFacade(StringBuffer buffer, ServiceDef service) {
+    final apiName = service.name.endsWith('Service')
+        ? '${service.name.substring(0, service.name.length - 'Service'.length)}Api'
+        : '${service.name}Api';
+
+    buffer
+      ..writeln('class $apiName {')
+      ..writeln('  final ${service.name} _service;')
+      ..writeln()
+      ..writeln(
+        '  $apiName(ChopperClient client) : _service = ${service.name}.create(client);',
+      )
+      ..writeln();
+
+    for (final op in service.operations) {
+      _emitFacadeMethod(buffer, op);
+    }
+
+    buffer
+      ..writeln('}')
+      ..writeln();
+  }
+
+  void _emitFacadeMethod(StringBuffer buffer, OperationDef op) {
+    buffer.write(
+      '  Future<Response<${op.responseType.display}>> ${op.methodName}(',
+    );
+
+    if (op.parameters.isEmpty) {
+      buffer
+        ..writeln(') =>')
+        ..writeln('      _service.${op.methodName}();')
+        ..writeln();
+      return;
+    }
+
+    buffer.writeln('{');
+    for (final p in op.parameters) {
+      buffer.writeln('    ${_facadeParam(p)},');
+    }
+    buffer
+      ..writeln('  }) =>')
+      ..writeln('      _service.${op.methodName}(');
+    for (final p in op.parameters) {
+      buffer.writeln('        ${_facadeArg(p)},');
+    }
+    buffer
+      ..writeln('      );')
+      ..writeln();
+  }
+
+  String _facadeParam(ParamDef p) {
+    if (p.isRequired) return 'required ${p.type.display} ${p.dartName}';
+    final nullable = p.type.isNullable ? p.type.display : '${p.type.name}?';
+    return '$nullable ${p.dartName}';
+  }
+
+  String _facadeArg(ParamDef p) {
+    if (!p.isRequired && p.defaultValue != null) {
+      return '${p.dartName}: ${p.dartName} ?? ${p.defaultValue}';
+    }
+    return '${p.dartName}: ${p.dartName}';
   }
 
   void _emitMethod(StringBuffer buffer, OperationDef op) {
