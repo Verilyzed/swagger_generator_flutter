@@ -7,6 +7,7 @@ class ModelEmitter {
     List<ModelDef> models, {
     required String partFileName,
     required String enumsImport,
+    required Set<String> enumNames,
   }) {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
@@ -21,20 +22,28 @@ class ModelEmitter {
       ..writeln();
 
     for (final model in models) {
-      _emitClass(buffer, model);
+      _emitClass(buffer, model, enumNames);
     }
 
     return buffer.toString();
   }
 
-  void _emitClass(StringBuffer buffer, ModelDef model) {
+  void _emitClass(StringBuffer buffer, ModelDef model, Set<String> enumNames) {
     buffer
       ..writeln('@JsonSerializable()')
       ..writeln('class ${model.name} {');
 
     for (final field in model.fields) {
+      final enumName = _enumOf(field.type.name, enumNames);
+      final keyArgs = <String>[];
       if (field.jsonKey != field.dartName) {
-        buffer.writeln("  @JsonKey(name: '${field.jsonKey}')");
+        keyArgs.add("name: '${field.jsonKey}'");
+      }
+      if (enumName != null) {
+        keyArgs.add('unknownEnumValue: $enumName.\$unknown');
+      }
+      if (keyArgs.isNotEmpty) {
+        buffer.writeln('  @JsonKey(${keyArgs.join(', ')})');
       }
       buffer.writeln('  final ${field.type.display} ${field.dartName};');
     }
@@ -62,5 +71,14 @@ class ModelEmitter {
       )
       ..writeln('}')
       ..writeln();
+  }
+
+  String? _enumOf(String typeName, Set<String> enumNames) {
+    for (final id in RegExp(r'[A-Za-z_][A-Za-z0-9_]*')
+        .allMatches(typeName)
+        .map((m) => m[0]!)) {
+      if (enumNames.contains(id)) return id;
+    }
+    return null;
   }
 }

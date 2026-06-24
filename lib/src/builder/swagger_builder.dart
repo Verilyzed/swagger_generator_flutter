@@ -81,6 +81,7 @@ Map<String, String> generateSources(
       spec.models,
       partFileName: '$baseName.models.g.dart',
       enumsImport: enumsFile,
+      enumNames: spec.enums.map((e) => e.name).toSet(),
     ),
     '.service.dart': ServiceEmitter().emit(
       spec.service,

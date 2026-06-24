@@ -33,6 +33,7 @@ void main() {
       ],
       partFileName: 'demo.models.g.dart',
       enumsImport: 'demo.enums.dart',
+      enumNames: const {},
     );
 
     expect(out, contains("part 'demo.models.g.dart';"));
@@ -63,6 +64,7 @@ void main() {
       ],
       partFileName: 'demo.models.g.dart',
       enumsImport: 'demo.enums.dart',
+      enumNames: const {},
     );
 
     expect(out, contains('required this.title'));
@@ -86,6 +88,7 @@ void main() {
       ],
       partFileName: 'demo.models.g.dart',
       enumsImport: 'demo.enums.dart',
+      enumNames: const {},
     );
 
     expect(out, contains("this.type = 'COST_OPTIMIZED'"));
@@ -110,9 +113,61 @@ void main() {
       ],
       partFileName: 'demo.models.g.dart',
       enumsImport: 'demo.enums.dart',
+      enumNames: const {},
     );
 
     expect(out, contains("this.mode = 'auto'"));
     expect(out, isNot(contains('required this.mode')));
+  });
+
+  test('adds unknownEnumValue to an enum field', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Item',
+          fields: [
+            FieldDef(
+              dartName: 'category',
+              jsonKey: 'category',
+              type: DartType('ItemCategory'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {'ItemCategory'},
+    );
+
+    expect(out, contains(r'@JsonKey(unknownEnumValue: ItemCategory.$unknown)'));
+  });
+
+  test('merges name and unknownEnumValue for a renamed enum field', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Item',
+          fields: [
+            FieldDef(
+              dartName: 'errorCode',
+              jsonKey: 'error_code',
+              type: DartType('ErrorCode'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {'ErrorCode'},
+    );
+
+    expect(
+      out,
+      contains(
+        r"@JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)",
+      ),
+    );
   });
 }
