@@ -71,7 +71,7 @@ class BadInputResponse {
 @JsonSerializable()
 class RunImmediatelyConfig {
   @JsonKey(name: 'max_level')
-  final double? maxLevel;
+  final num? maxLevel;
 
   RunImmediatelyConfig({
     this.maxLevel,
@@ -85,24 +85,24 @@ class RunImmediatelyConfig {
 
 @JsonSerializable()
 class AssetState {
-  final double? level;
-  final double? range;
+  final num? level;
+  final num? range;
   @JsonKey(name: 'is_connected')
   final bool? isConnected;
   @JsonKey(name: 'is_active')
   final bool? isActive;
   @JsonKey(name: 'is_complete')
   final bool? isComplete;
-  final double? capacity;
+  final num? capacity;
   @JsonKey(name: 'level_limit')
-  final double? levelLimit;
-  final double? throughput;
+  final num? levelLimit;
+  final num? throughput;
   @JsonKey(name: 'time_remaining')
-  final double? timeRemaining;
+  final num? timeRemaining;
   @JsonKey(name: 'last_updated')
   final DateTime? lastUpdated;
   @JsonKey(name: 'max_rate')
-  final double? maxRate;
+  final num? maxRate;
   @JsonKey(name: 'connection_state', unknownEnumValue: ConnectionState.$unknown)
   final ConnectionState connectionState;
 
@@ -145,12 +145,12 @@ class Task {
   @JsonKey(name: 'end_trigger', unknownEnumValue: TaskEndTriggerEnum.$unknown)
   final TaskEndTriggerEnum? endTrigger;
   @JsonKey(name: 'target_level')
-  final double? targetLevel;
-  final double? costs;
+  final num? targetLevel;
+  final num? costs;
   @JsonKey(name: 'total_quantity')
-  final double? totalQuantity;
+  final num? totalQuantity;
   @JsonKey(name: 'price_per_unit')
-  final double? pricePerUnit;
+  final num? pricePerUnit;
   @JsonKey(name: 'failure_reason')
   final FailureReason? failureReason;
 
@@ -251,8 +251,8 @@ class Account {
   final String providerUserId;
   @JsonKey(name: 'account_id')
   final String accountId;
-  final double latitude;
-  final double longitude;
+  final num latitude;
+  final num longitude;
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
   @JsonKey(name: 'selected_asset')
@@ -449,7 +449,7 @@ class Intervention {
 
 @JsonSerializable()
 class Quantity {
-  final double? value;
+  final num? value;
   final String unit;
 
   Quantity({
@@ -465,8 +465,8 @@ class Quantity {
 
 @JsonSerializable()
 class Location {
-  final double? longitude;
-  final double? latitude;
+  final num? longitude;
+  final num? latitude;
   @JsonKey(name: 'last_updated')
   final DateTime? lastUpdated;
   @JsonKey(name: 'at_base')
@@ -544,7 +544,7 @@ class NotFoundResponse {
 
 @JsonSerializable()
 class UsageCounter {
-  final double? reading;
+  final num? reading;
   @JsonKey(name: 'last_updated')
   final DateTime? lastUpdated;
 
@@ -561,7 +561,7 @@ class UsageCounter {
 
 @JsonSerializable()
 class Percent {
-  final double? value;
+  final num? value;
   final String unit;
 
   Percent({
@@ -846,7 +846,7 @@ class AssetPolicy {
   @JsonKey(name: 'activity_state_reason', unknownEnumValue: ActivityStateReason.$unknown)
   final ActivityStateReason? activityStateReason;
   @JsonKey(name: 'min_level')
-  final double minLevel;
+  final num minLevel;
   @JsonKey(name: 'run_immediately_config')
   final RunImmediatelyConfig? runImmediatelyConfig;
 
@@ -870,7 +870,7 @@ class AssetPolicyRequest {
   @JsonKey(name: 'scheduling_active')
   final bool? schedulingActive;
   @JsonKey(name: 'min_level')
-  final double? minLevel;
+  final num? minLevel;
   @JsonKey(name: 'run_immediately_config')
   final RunImmediatelyConfig? runImmediatelyConfig;
 

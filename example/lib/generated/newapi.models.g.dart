@@ -63,7 +63,7 @@ Map<String, dynamic> _$ErrorResponseToJson(ErrorResponse instance) =>
     <String, dynamic>{'message': instance.message, 'status': instance.status};
 
 FieldModel _$FieldModelFromJson(Map<String, dynamic> json) => FieldModel(
-  entropy: (json['entropy'] as num?)?.toDouble(),
+  entropy: json['entropy'] as num?,
   generate: json['generate'] as bool? ?? false,
   id: json['id'] as String,
   label: json['label'] as String?,

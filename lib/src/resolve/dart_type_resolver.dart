@@ -48,7 +48,7 @@ abstract class DartTypeResolver {
       case 'integer':
         return const DartType('int');
       case 'number':
-        return const DartType('double');
+        return const DartType('num');
       case 'boolean':
         return const DartType('bool');
       case 'array':
