@@ -25,6 +25,16 @@ void main() {
     expect(t.isDateOnly, isTrue);
   });
 
+  test('keeps a date with an example as a String', () {
+    final t = resolver.resolve({
+      'type': 'string',
+      'format': 'date',
+      'example': '2025-04-20',
+    });
+    expect(t.name, 'String');
+    expect(t.isDateOnly, isFalse);
+  });
+
   test('keeps isDateOnly when a date field is nullable', () {
     final t = resolver.resolve({
       'type': ['string', 'null'],

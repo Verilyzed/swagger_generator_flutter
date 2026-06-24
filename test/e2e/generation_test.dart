@@ -27,6 +27,33 @@ void main() {
     }
   });
 
+  test('keeps a date field with an example as a String', () {
+    const spec = '''
+{
+  "openapi": "3.0.0",
+  "info": {"title": "t", "version": "1"},
+  "components": {
+    "schemas": {
+      "Event": {
+        "type": "object",
+        "properties": {
+          "occurredAt": {"type": "string", "format": "date", "example": "2025-04-20"},
+          "createdAt": {"type": "string", "format": "date"}
+        }
+      }
+    }
+  },
+  "paths": {}
+}
+''';
+
+    final sources = generateSources(spec, path: 'ev.json', baseName: 'ev');
+    final models = sources['.models.dart'];
+
+    expect(models, contains('final String? occurredAt;'));
+    expect(models, contains('final DateTime? createdAt;'));
+  });
+
   test('creates a named enum for an inline enum parameter', () {
     const spec = '''
 {
