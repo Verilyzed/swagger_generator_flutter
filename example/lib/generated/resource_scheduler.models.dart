@@ -43,7 +43,7 @@ class AttachmentResponse {
 @JsonSerializable()
 class BadInputResponse {
   final String detail;
-  @JsonKey(name: 'error_code')
+  @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
 
   BadInputResponse({
@@ -92,7 +92,7 @@ class AssetState {
   final DateTime? lastUpdated;
   @JsonKey(name: 'max_rate')
   final double? maxRate;
-  @JsonKey(name: 'connection_state')
+  @JsonKey(name: 'connection_state', unknownEnumValue: ConnectionState.$unknown)
   final ConnectionState connectionState;
 
   AssetState({
@@ -125,11 +125,13 @@ class Task {
   final DateTime calculatedStart;
   @JsonKey(name: 'calculated_end')
   final DateTime calculatedEnd;
+  @JsonKey(unknownEnumValue: TaskStateEnum.$unknown)
   final TaskStateEnum state;
   @JsonKey(name: 'target_date')
   final DateTime targetDate;
+  @JsonKey(unknownEnumValue: TaskTypeEnum.$unknown)
   final TaskTypeEnum type;
-  @JsonKey(name: 'end_trigger')
+  @JsonKey(name: 'end_trigger', unknownEnumValue: TaskEndTriggerEnum.$unknown)
   final TaskEndTriggerEnum? endTrigger;
   @JsonKey(name: 'target_level')
   final double? targetLevel;
@@ -176,6 +178,7 @@ class Run {
   final DateTime targetDate;
   @JsonKey(name: 'target_level')
   final Percent? targetLevel;
+  @JsonKey(unknownEnumValue: RunStateEnum.$unknown)
   final RunStateEnum state;
   final List<Task> tasks;
   @JsonKey(name: 'total_quantity')
@@ -217,7 +220,7 @@ class Run {
 class ActivityStatus {
   @JsonKey(name: 'asset_id')
   final String assetId;
-  @JsonKey(name: 'activity_reason')
+  @JsonKey(name: 'activity_reason', unknownEnumValue: ActivityReason.$unknown)
   final ActivityReason? activityReason;
 
   ActivityStatus({
@@ -288,6 +291,7 @@ class DiscoveredAsset {
   final String assetId;
   @JsonKey(name: 'asset_information')
   final AssetInformation assetInformation;
+  @JsonKey(unknownEnumValue: DiscoveredAssetCapability.$unknown)
   final DiscoveredAssetCapability capability;
   @JsonKey(name: 'has_interventions')
   final bool hasInterventions;
@@ -326,7 +330,7 @@ class ErrorResponse {
   final String detail;
   @JsonKey(name: 'error_id')
   final String? errorId;
-  @JsonKey(name: 'error_code')
+  @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
 
   ErrorResponse({
@@ -359,6 +363,7 @@ class Money {
 
 @JsonSerializable()
 class FailureReason {
+  @JsonKey(unknownEnumValue: FailureReasonTypeEnum.$unknown)
   final FailureReasonTypeEnum type;
   final String detail;
 
@@ -406,9 +411,13 @@ class Intervention {
   final String id;
   final String title;
   final String description;
+  @JsonKey(unknownEnumValue: Domain.$unknown)
   final Domain domain;
+  @JsonKey(unknownEnumValue: ResolutionAccess.$unknown)
   final ResolutionAccess access;
+  @JsonKey(unknownEnumValue: ResolutionAgent.$unknown)
   final ResolutionAgent agent;
+  @JsonKey(unknownEnumValue: ResolutionAction.$unknown)
   final ResolutionAction? action;
 
   Intervention({
@@ -487,7 +496,7 @@ class MetricValue {
 @JsonSerializable()
 class NotAllowedResponse {
   final String detail;
-  @JsonKey(name: 'error_code')
+  @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
 
   NotAllowedResponse({
@@ -504,7 +513,7 @@ class NotAllowedResponse {
 @JsonSerializable()
 class NotFoundResponse {
   final String detail;
-  @JsonKey(name: 'error_code')
+  @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
   final String? entity;
   final String? id;
@@ -593,6 +602,7 @@ class SelectAssetRequest {
 @JsonSerializable()
 class RunMetrics {
   final String period;
+  @JsonKey(unknownEnumValue: AggregationEnum.$unknown)
   final AggregationEnum aggregation;
   @JsonKey(name: 'session_count')
   final MetricValue sessionCount;
@@ -819,9 +829,9 @@ class AssetPolicy {
   final String id;
   @JsonKey(name: 'scheduling_active')
   final bool schedulingActive;
-  @JsonKey(name: 'activity_state')
+  @JsonKey(name: 'activity_state', unknownEnumValue: ActivityState.$unknown)
   final ActivityState activityState;
-  @JsonKey(name: 'activity_state_reason')
+  @JsonKey(name: 'activity_state_reason', unknownEnumValue: ActivityStateReason.$unknown)
   final ActivityStateReason? activityStateReason;
   @JsonKey(name: 'min_level')
   final double minLevel;

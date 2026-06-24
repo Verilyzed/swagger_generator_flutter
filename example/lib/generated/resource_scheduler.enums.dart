@@ -7,6 +7,8 @@ enum AggregationEnum {
   month,
   @JsonValue('year')
   year,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum TaskStateEnum {
@@ -22,6 +24,8 @@ enum TaskStateEnum {
   triggeredStart,
   @JsonValue('TRIGGERED_STOP')
   triggeredStop,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum TaskEndTriggerEnum {
@@ -29,6 +33,8 @@ enum TaskEndTriggerEnum {
   level,
   @JsonValue('DATETIME')
   datetime,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum TaskTypeEnum {
@@ -38,6 +44,8 @@ enum TaskTypeEnum {
   minLevel,
   @JsonValue('IMMEDIATELY')
   immediately,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ActivityReason {
@@ -51,6 +59,8 @@ enum ActivityReason {
   initializing,
   @JsonValue('MANUAL')
   manual,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum RunStateEnum {
@@ -58,6 +68,8 @@ enum RunStateEnum {
   active,
   @JsonValue('FINISHED')
   finished,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ActivityState {
@@ -67,6 +79,8 @@ enum ActivityState {
   shouldNotRun,
   @JsonValue('INDETERMINATE')
   indeterminate,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ActivityStateReason {
@@ -74,6 +88,8 @@ enum ActivityStateReason {
   byTask,
   @JsonValue('BY_OVERRIDE')
   byOverride,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum DeadlineFilterEnum {
@@ -83,6 +99,8 @@ enum DeadlineFilterEnum {
   inactive,
   @JsonValue('all')
   all,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum DiscoveredAssetCapability {
@@ -92,6 +110,8 @@ enum DiscoveredAssetCapability {
   incapable,
   @JsonValue('CHECKING_COMPATIBILITY')
   checkingCompatibility,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum Domain {
@@ -99,6 +119,8 @@ enum Domain {
   account,
   @JsonValue('Asset')
   asset,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ErrorCode {
@@ -126,6 +148,8 @@ enum ErrorCode {
   assetDeletionPending,
   @JsonValue('LOCATION_LOOKUP_FAILED')
   locationLookupFailed,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum FailureReasonTypeEnum {
@@ -137,11 +161,15 @@ enum FailureReasonTypeEnum {
   unnecessary,
   @JsonValue('NOT_FOUND')
   notFound,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum TaskSortFieldEnum {
   @JsonValue('price_per_unit')
   pricePerUnit,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ConnectionState {
@@ -163,6 +191,8 @@ enum ConnectionState {
   connectedFault,
   @JsonValue('CONNECTED:DRAINING')
   connectedDraining,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ResolutionAccess {
@@ -170,6 +200,8 @@ enum ResolutionAccess {
   remote,
   @JsonValue('Physical')
   physical,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ResolutionAction {
@@ -177,6 +209,8 @@ enum ResolutionAction {
   link,
   @JsonValue('LinkAdditionalAsset')
   linkAdditionalAsset,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ResolutionAgent {
@@ -184,6 +218,8 @@ enum ResolutionAgent {
   user,
   @JsonValue('ThirdParty')
   thirdParty,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum SortOrderEnum {
@@ -191,6 +227,8 @@ enum SortOrderEnum {
   asc,
   @JsonValue('desc')
   desc,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum Weekday {
@@ -208,5 +246,7 @@ enum Weekday {
   saturday,
   @JsonValue('Sunday')
   sunday,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 

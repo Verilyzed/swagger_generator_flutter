@@ -11,6 +11,8 @@ enum ApiRequestAction {
   update,
   @JsonValue('DELETE')
   delete,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ApiRequestResourceType {
@@ -18,6 +20,8 @@ enum ApiRequestResourceType {
   item,
   @JsonValue('VAULT')
   vault,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ApiRequestResult {
@@ -25,6 +29,8 @@ enum ApiRequestResult {
   success,
   @JsonValue('DENY')
   deny,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum FieldPurpose {
@@ -36,6 +42,8 @@ enum FieldPurpose {
   password,
   @JsonValue('NOTES')
   notes,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum FieldType {
@@ -55,6 +63,8 @@ enum FieldType {
   monthYear,
   @JsonValue('MENU')
   menu,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum GeneratorRecipeCharacterSetsItem {
@@ -64,6 +74,8 @@ enum GeneratorRecipeCharacterSetsItem {
   digits,
   @JsonValue('SYMBOLS')
   symbols,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ItemCategory {
@@ -111,6 +123,8 @@ enum ItemCategory {
   sshKey,
   @JsonValue('CUSTOM')
   custom,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum ItemState {
@@ -118,6 +132,8 @@ enum ItemState {
   archived,
   @JsonValue('DELETED')
   deleted,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum PatchItemOp {
@@ -127,6 +143,8 @@ enum PatchItemOp {
   remove,
   @JsonValue('replace')
   replace,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 
 enum VaultType {
@@ -138,5 +156,7 @@ enum VaultType {
   everyone,
   @JsonValue('TRANSFER')
   transfer,
+  // Fallback for values not present in the spec.
+  $unknown,
 }
 

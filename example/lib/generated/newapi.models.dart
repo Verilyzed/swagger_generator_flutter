@@ -7,10 +7,12 @@ part 'newapi.models.g.dart';
 
 @JsonSerializable()
 class ApiRequest {
+  @JsonKey(unknownEnumValue: ApiRequestAction.$unknown)
   final ApiRequestAction? action;
   final ApiRequestActor? actor;
   final String? requestId;
   final ApiRequestResource? resource;
+  @JsonKey(unknownEnumValue: ApiRequestResult.$unknown)
   final ApiRequestResult? result;
   final DateTime? timestamp;
 
@@ -51,9 +53,11 @@ class FieldModel {
   final bool generate;
   final String id;
   final String? label;
+  @JsonKey(unknownEnumValue: FieldPurpose.$unknown)
   final FieldPurpose? purpose;
   final GeneratorRecipe? recipe;
   final FieldSection? section;
+  @JsonKey(unknownEnumValue: FieldType.$unknown)
   final FieldType type;
   final String? value;
 
@@ -102,11 +106,13 @@ class File {
 
 @JsonSerializable()
 class FullItem {
+  @JsonKey(unknownEnumValue: ItemCategory.$unknown)
   final ItemCategory category;
   final DateTime? createdAt;
   final bool favorite;
   final String? id;
   final String? lastEditedBy;
+  @JsonKey(unknownEnumValue: ItemState.$unknown)
   final ItemState? state;
   final List<String>? tags;
   final String? title;
@@ -144,6 +150,7 @@ class FullItem {
 
 @JsonSerializable()
 class GeneratorRecipe {
+  @JsonKey(unknownEnumValue: GeneratorRecipeCharacterSetsItem.$unknown)
   final List<GeneratorRecipeCharacterSetsItem>? characterSets;
   final String? excludeCharacters;
   final int length;
@@ -162,11 +169,13 @@ class GeneratorRecipe {
 
 @JsonSerializable()
 class Item {
+  @JsonKey(unknownEnumValue: ItemCategory.$unknown)
   final ItemCategory category;
   final DateTime? createdAt;
   final bool favorite;
   final String? id;
   final String? lastEditedBy;
+  @JsonKey(unknownEnumValue: ItemState.$unknown)
   final ItemState? state;
   final List<String>? tags;
   final String? title;
@@ -223,6 +232,7 @@ class Vault {
   final String? id;
   final int? items;
   final String? name;
+  @JsonKey(unknownEnumValue: VaultType.$unknown)
   final VaultType? type;
   final DateTime? updatedAt;
 
@@ -298,6 +308,7 @@ class ApiRequestResourceVault {
 class ApiRequestResource {
   final ApiRequestResourceItem? item;
   final int? itemVersion;
+  @JsonKey(unknownEnumValue: ApiRequestResourceType.$unknown)
   final ApiRequestResourceType? type;
   final ApiRequestResourceVault? vault;
 
@@ -392,6 +403,7 @@ class ItemVault {
 
 @JsonSerializable()
 class PatchItem {
+  @JsonKey(unknownEnumValue: PatchItemOp.$unknown)
   final PatchItemOp op;
   final String path;
   final Map<String, dynamic>? value;

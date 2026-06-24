@@ -7,7 +7,11 @@ part of 'newapi.models.dart';
 // **************************************************************************
 
 ApiRequest _$ApiRequestFromJson(Map<String, dynamic> json) => ApiRequest(
-  action: $enumDecodeNullable(_$ApiRequestActionEnumMap, json['action']),
+  action: $enumDecodeNullable(
+    _$ApiRequestActionEnumMap,
+    json['action'],
+    unknownValue: ApiRequestAction.$unknown,
+  ),
   actor: json['actor'] == null
       ? null
       : ApiRequestActor.fromJson(json['actor'] as Map<String, dynamic>),
@@ -15,7 +19,11 @@ ApiRequest _$ApiRequestFromJson(Map<String, dynamic> json) => ApiRequest(
   resource: json['resource'] == null
       ? null
       : ApiRequestResource.fromJson(json['resource'] as Map<String, dynamic>),
-  result: $enumDecodeNullable(_$ApiRequestResultEnumMap, json['result']),
+  result: $enumDecodeNullable(
+    _$ApiRequestResultEnumMap,
+    json['result'],
+    unknownValue: ApiRequestResult.$unknown,
+  ),
   timestamp: json['timestamp'] == null
       ? null
       : DateTime.parse(json['timestamp'] as String),
@@ -36,11 +44,13 @@ const _$ApiRequestActionEnumMap = {
   ApiRequestAction.create: 'CREATE',
   ApiRequestAction.update: 'UPDATE',
   ApiRequestAction.delete: 'DELETE',
+  ApiRequestAction.$unknown: r'$unknown',
 };
 
 const _$ApiRequestResultEnumMap = {
   ApiRequestResult.success: 'SUCCESS',
   ApiRequestResult.deny: 'DENY',
+  ApiRequestResult.$unknown: r'$unknown',
 };
 
 ErrorResponse _$ErrorResponseFromJson(Map<String, dynamic> json) =>
@@ -57,7 +67,11 @@ FieldModel _$FieldModelFromJson(Map<String, dynamic> json) => FieldModel(
   generate: json['generate'] as bool? ?? false,
   id: json['id'] as String,
   label: json['label'] as String?,
-  purpose: $enumDecodeNullable(_$FieldPurposeEnumMap, json['purpose']),
+  purpose: $enumDecodeNullable(
+    _$FieldPurposeEnumMap,
+    json['purpose'],
+    unknownValue: FieldPurpose.$unknown,
+  ),
   recipe: json['recipe'] == null
       ? null
       : GeneratorRecipe.fromJson(json['recipe'] as Map<String, dynamic>),
@@ -65,7 +79,12 @@ FieldModel _$FieldModelFromJson(Map<String, dynamic> json) => FieldModel(
       ? null
       : FieldSection.fromJson(json['section'] as Map<String, dynamic>),
   type:
-      $enumDecodeNullable(_$FieldTypeEnumMap, json['type']) ?? FieldType.string,
+      $enumDecodeNullable(
+        _$FieldTypeEnumMap,
+        json['type'],
+        unknownValue: FieldType.$unknown,
+      ) ??
+      FieldType.string,
   value: json['value'] as String?,
 );
 
@@ -87,6 +106,7 @@ const _$FieldPurposeEnumMap = {
   FieldPurpose.username: 'USERNAME',
   FieldPurpose.password: 'PASSWORD',
   FieldPurpose.notes: 'NOTES',
+  FieldPurpose.$unknown: r'$unknown',
 };
 
 const _$FieldTypeEnumMap = {
@@ -98,6 +118,7 @@ const _$FieldTypeEnumMap = {
   FieldType.date: 'DATE',
   FieldType.monthYear: 'MONTH_YEAR',
   FieldType.menu: 'MENU',
+  FieldType.$unknown: r'$unknown',
 };
 
 File _$FileFromJson(Map<String, dynamic> json) => File(
@@ -121,14 +142,22 @@ Map<String, dynamic> _$FileToJson(File instance) => <String, dynamic>{
 };
 
 FullItem _$FullItemFromJson(Map<String, dynamic> json) => FullItem(
-  category: $enumDecode(_$ItemCategoryEnumMap, json['category']),
+  category: $enumDecode(
+    _$ItemCategoryEnumMap,
+    json['category'],
+    unknownValue: ItemCategory.$unknown,
+  ),
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
   favorite: json['favorite'] as bool? ?? false,
   id: json['id'] as String?,
   lastEditedBy: json['lastEditedBy'] as String?,
-  state: $enumDecodeNullable(_$ItemStateEnumMap, json['state']),
+  state: $enumDecodeNullable(
+    _$ItemStateEnumMap,
+    json['state'],
+    unknownValue: ItemState.$unknown,
+  ),
   tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
   title: json['title'] as String?,
   updatedAt: json['updatedAt'] == null
@@ -191,18 +220,24 @@ const _$ItemCategoryEnumMap = {
   ItemCategory.medicalRecord: 'MEDICAL_RECORD',
   ItemCategory.sshKey: 'SSH_KEY',
   ItemCategory.custom: 'CUSTOM',
+  ItemCategory.$unknown: r'$unknown',
 };
 
 const _$ItemStateEnumMap = {
   ItemState.archived: 'ARCHIVED',
   ItemState.deleted: 'DELETED',
+  ItemState.$unknown: r'$unknown',
 };
 
 GeneratorRecipe _$GeneratorRecipeFromJson(Map<String, dynamic> json) =>
     GeneratorRecipe(
       characterSets: (json['characterSets'] as List<dynamic>?)
           ?.map(
-            (e) => $enumDecode(_$GeneratorRecipeCharacterSetsItemEnumMap, e),
+            (e) => $enumDecode(
+              _$GeneratorRecipeCharacterSetsItemEnumMap,
+              e,
+              unknownValue: GeneratorRecipeCharacterSetsItem.$unknown,
+            ),
           )
           .toList(),
       excludeCharacters: json['excludeCharacters'] as String?,
@@ -222,17 +257,26 @@ const _$GeneratorRecipeCharacterSetsItemEnumMap = {
   GeneratorRecipeCharacterSetsItem.letters: 'LETTERS',
   GeneratorRecipeCharacterSetsItem.digits: 'DIGITS',
   GeneratorRecipeCharacterSetsItem.symbols: 'SYMBOLS',
+  GeneratorRecipeCharacterSetsItem.$unknown: r'$unknown',
 };
 
 Item _$ItemFromJson(Map<String, dynamic> json) => Item(
-  category: $enumDecode(_$ItemCategoryEnumMap, json['category']),
+  category: $enumDecode(
+    _$ItemCategoryEnumMap,
+    json['category'],
+    unknownValue: ItemCategory.$unknown,
+  ),
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
   favorite: json['favorite'] as bool? ?? false,
   id: json['id'] as String?,
   lastEditedBy: json['lastEditedBy'] as String?,
-  state: $enumDecodeNullable(_$ItemStateEnumMap, json['state']),
+  state: $enumDecodeNullable(
+    _$ItemStateEnumMap,
+    json['state'],
+    unknownValue: ItemState.$unknown,
+  ),
   tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
   title: json['title'] as String?,
   updatedAt: json['updatedAt'] == null
@@ -284,7 +328,11 @@ Vault _$VaultFromJson(Map<String, dynamic> json) => Vault(
   id: json['id'] as String?,
   items: (json['items'] as num?)?.toInt(),
   name: json['name'] as String?,
-  type: $enumDecodeNullable(_$VaultTypeEnumMap, json['type']),
+  type: $enumDecodeNullable(
+    _$VaultTypeEnumMap,
+    json['type'],
+    unknownValue: VaultType.$unknown,
+  ),
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
@@ -307,6 +355,7 @@ const _$VaultTypeEnumMap = {
   VaultType.personal: 'PERSONAL',
   VaultType.everyone: 'EVERYONE',
   VaultType.transfer: 'TRANSFER',
+  VaultType.$unknown: r'$unknown',
 };
 
 ApiRequestActor _$ApiRequestActorFromJson(Map<String, dynamic> json) =>
@@ -350,7 +399,11 @@ ApiRequestResource _$ApiRequestResourceFromJson(
       ? null
       : ApiRequestResourceItem.fromJson(json['item'] as Map<String, dynamic>),
   itemVersion: (json['itemVersion'] as num?)?.toInt(),
-  type: $enumDecodeNullable(_$ApiRequestResourceTypeEnumMap, json['type']),
+  type: $enumDecodeNullable(
+    _$ApiRequestResourceTypeEnumMap,
+    json['type'],
+    unknownValue: ApiRequestResourceType.$unknown,
+  ),
   vault: json['vault'] == null
       ? null
       : ApiRequestResourceVault.fromJson(json['vault'] as Map<String, dynamic>),
@@ -367,6 +420,7 @@ Map<String, dynamic> _$ApiRequestResourceToJson(ApiRequestResource instance) =>
 const _$ApiRequestResourceTypeEnumMap = {
   ApiRequestResourceType.item: 'ITEM',
   ApiRequestResourceType.vault: 'VAULT',
+  ApiRequestResourceType.$unknown: r'$unknown',
 };
 
 FieldSection _$FieldSectionFromJson(Map<String, dynamic> json) =>
@@ -413,7 +467,11 @@ Map<String, dynamic> _$ItemVaultToJson(ItemVault instance) => <String, dynamic>{
 };
 
 PatchItem _$PatchItemFromJson(Map<String, dynamic> json) => PatchItem(
-  op: $enumDecode(_$PatchItemOpEnumMap, json['op']),
+  op: $enumDecode(
+    _$PatchItemOpEnumMap,
+    json['op'],
+    unknownValue: PatchItemOp.$unknown,
+  ),
   path: json['path'] as String,
   value: json['value'] as Map<String, dynamic>?,
 );
@@ -428,6 +486,7 @@ const _$PatchItemOpEnumMap = {
   PatchItemOp.add: 'add',
   PatchItemOp.remove: 'remove',
   PatchItemOp.replace: 'replace',
+  PatchItemOp.$unknown: r'$unknown',
 };
 
 GetServerHealthResponse _$GetServerHealthResponseFromJson(

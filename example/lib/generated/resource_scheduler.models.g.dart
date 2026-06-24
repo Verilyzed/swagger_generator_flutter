@@ -36,7 +36,11 @@ BadInputResponse _$BadInputResponseFromJson(Map<String, dynamic> json) =>
     BadInputResponse(
       detail: json['detail'] as String,
       errorCode:
-          $enumDecodeNullable(_$ErrorCodeEnumMap, json['error_code']) ??
+          $enumDecodeNullable(
+            _$ErrorCodeEnumMap,
+            json['error_code'],
+            unknownValue: ErrorCode.$unknown,
+          ) ??
           ErrorCode.badInput,
     );
 
@@ -59,6 +63,7 @@ const _$ErrorCodeEnumMap = {
   ErrorCode.relinkNoAssetLinked: 'RELINK_NO_ASSET_LINKED',
   ErrorCode.assetDeletionPending: 'ASSET_DELETION_PENDING',
   ErrorCode.locationLookupFailed: 'LOCATION_LOOKUP_FAILED',
+  ErrorCode.$unknown: r'$unknown',
 };
 
 RunImmediatelyConfig _$RunImmediatelyConfigFromJson(
@@ -86,6 +91,7 @@ AssetState _$AssetStateFromJson(Map<String, dynamic> json) => AssetState(
   connectionState: $enumDecode(
     _$ConnectionStateEnumMap,
     json['connection_state'],
+    unknownValue: ConnectionState.$unknown,
   ),
 );
 
@@ -115,6 +121,7 @@ const _$ConnectionStateEnumMap = {
   ConnectionState.connectedNoPower: 'CONNECTED:NO_POWER',
   ConnectionState.connectedFault: 'CONNECTED:FAULT',
   ConnectionState.connectedDraining: 'CONNECTED:DRAINING',
+  ConnectionState.$unknown: r'$unknown',
 };
 
 Task _$TaskFromJson(Map<String, dynamic> json) => Task(
@@ -122,14 +129,23 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
   assetId: json['asset_id'] as String,
   calculatedStart: DateTime.parse(json['calculated_start'] as String),
   calculatedEnd: DateTime.parse(json['calculated_end'] as String),
-  state: $enumDecode(_$TaskStateEnumEnumMap, json['state']),
+  state: $enumDecode(
+    _$TaskStateEnumEnumMap,
+    json['state'],
+    unknownValue: TaskStateEnum.$unknown,
+  ),
   targetDate: DateTime.parse(json['target_date'] as String),
   type:
-      $enumDecodeNullable(_$TaskTypeEnumEnumMap, json['type']) ??
+      $enumDecodeNullable(
+        _$TaskTypeEnumEnumMap,
+        json['type'],
+        unknownValue: TaskTypeEnum.$unknown,
+      ) ??
       TaskTypeEnum.costOptimized,
   endTrigger: $enumDecodeNullable(
     _$TaskEndTriggerEnumEnumMap,
     json['end_trigger'],
+    unknownValue: TaskEndTriggerEnum.$unknown,
   ),
   targetLevel: (json['target_level'] as num?)?.toDouble(),
   costs: (json['costs'] as num?)?.toDouble(),
@@ -163,17 +179,20 @@ const _$TaskStateEnumEnumMap = {
   TaskStateEnum.failed: 'FAILED',
   TaskStateEnum.triggeredStart: 'TRIGGERED_START',
   TaskStateEnum.triggeredStop: 'TRIGGERED_STOP',
+  TaskStateEnum.$unknown: r'$unknown',
 };
 
 const _$TaskTypeEnumEnumMap = {
   TaskTypeEnum.costOptimized: 'COST_OPTIMIZED',
   TaskTypeEnum.minLevel: 'MIN_LEVEL',
   TaskTypeEnum.immediately: 'IMMEDIATELY',
+  TaskTypeEnum.$unknown: r'$unknown',
 };
 
 const _$TaskEndTriggerEnumEnumMap = {
   TaskEndTriggerEnum.level: 'LEVEL',
   TaskEndTriggerEnum.datetime: 'DATETIME',
+  TaskEndTriggerEnum.$unknown: r'$unknown',
 };
 
 Run _$RunFromJson(Map<String, dynamic> json) => Run(
@@ -187,7 +206,11 @@ Run _$RunFromJson(Map<String, dynamic> json) => Run(
   targetLevel: json['target_level'] == null
       ? null
       : Percent.fromJson(json['target_level'] as Map<String, dynamic>),
-  state: $enumDecode(_$RunStateEnumEnumMap, json['state']),
+  state: $enumDecode(
+    _$RunStateEnumEnumMap,
+    json['state'],
+    unknownValue: RunStateEnum.$unknown,
+  ),
   tasks: (json['tasks'] as List<dynamic>)
       .map((e) => Task.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -231,6 +254,7 @@ Map<String, dynamic> _$RunToJson(Run instance) => <String, dynamic>{
 const _$RunStateEnumEnumMap = {
   RunStateEnum.active: 'ACTIVE',
   RunStateEnum.finished: 'FINISHED',
+  RunStateEnum.$unknown: r'$unknown',
 };
 
 ActivityStatus _$ActivityStatusFromJson(Map<String, dynamic> json) =>
@@ -239,6 +263,7 @@ ActivityStatus _$ActivityStatusFromJson(Map<String, dynamic> json) =>
       activityReason: $enumDecodeNullable(
         _$ActivityReasonEnumMap,
         json['activity_reason'],
+        unknownValue: ActivityReason.$unknown,
       ),
     );
 
@@ -254,6 +279,7 @@ const _$ActivityReasonEnumMap = {
   ActivityReason.immediately: 'IMMEDIATELY',
   ActivityReason.initializing: 'INITIALIZING',
   ActivityReason.manual: 'MANUAL',
+  ActivityReason.$unknown: r'$unknown',
 };
 
 Account _$AccountFromJson(Map<String, dynamic> json) => Account(
@@ -306,6 +332,7 @@ DiscoveredAsset _$DiscoveredAssetFromJson(Map<String, dynamic> json) =>
       capability: $enumDecode(
         _$DiscoveredAssetCapabilityEnumMap,
         json['capability'],
+        unknownValue: DiscoveredAssetCapability.$unknown,
       ),
       hasInterventions: json['has_interventions'] as bool,
     );
@@ -322,6 +349,7 @@ const _$DiscoveredAssetCapabilityEnumMap = {
   DiscoveredAssetCapability.fullyCapable: 'FULLY_CAPABLE',
   DiscoveredAssetCapability.incapable: 'INCAPABLE',
   DiscoveredAssetCapability.checkingCompatibility: 'CHECKING_COMPATIBILITY',
+  DiscoveredAssetCapability.$unknown: r'$unknown',
 };
 
 ProviderLinkResponse _$ProviderLinkResponseFromJson(
@@ -343,7 +371,11 @@ ErrorResponse _$ErrorResponseFromJson(Map<String, dynamic> json) =>
       detail: json['detail'] as String,
       errorId: json['error_id'] as String?,
       errorCode:
-          $enumDecodeNullable(_$ErrorCodeEnumMap, json['error_code']) ??
+          $enumDecodeNullable(
+            _$ErrorCodeEnumMap,
+            json['error_code'],
+            unknownValue: ErrorCode.$unknown,
+          ) ??
           ErrorCode.internalServerError,
     );
 
@@ -366,7 +398,11 @@ Map<String, dynamic> _$MoneyToJson(Money instance) => <String, dynamic>{
 
 FailureReason _$FailureReasonFromJson(Map<String, dynamic> json) =>
     FailureReason(
-      type: $enumDecode(_$FailureReasonTypeEnumEnumMap, json['type']),
+      type: $enumDecode(
+        _$FailureReasonTypeEnumEnumMap,
+        json['type'],
+        unknownValue: FailureReasonTypeEnum.$unknown,
+      ),
       detail: json['detail'] as String,
     );
 
@@ -381,6 +417,7 @@ const _$FailureReasonTypeEnumEnumMap = {
   FailureReasonTypeEnum.failedPrecondition: 'FAILED_PRECONDITION',
   FailureReasonTypeEnum.unnecessary: 'UNNECESSARY',
   FailureReasonTypeEnum.notFound: 'NOT_FOUND',
+  FailureReasonTypeEnum.$unknown: r'$unknown',
 };
 
 FeatureFlagConfig _$FeatureFlagConfigFromJson(Map<String, dynamic> json) =>
@@ -408,10 +445,26 @@ Intervention _$InterventionFromJson(Map<String, dynamic> json) => Intervention(
   id: json['id'] as String,
   title: json['title'] as String,
   description: json['description'] as String,
-  domain: $enumDecode(_$DomainEnumMap, json['domain']),
-  access: $enumDecode(_$ResolutionAccessEnumMap, json['access']),
-  agent: $enumDecode(_$ResolutionAgentEnumMap, json['agent']),
-  action: $enumDecodeNullable(_$ResolutionActionEnumMap, json['action']),
+  domain: $enumDecode(
+    _$DomainEnumMap,
+    json['domain'],
+    unknownValue: Domain.$unknown,
+  ),
+  access: $enumDecode(
+    _$ResolutionAccessEnumMap,
+    json['access'],
+    unknownValue: ResolutionAccess.$unknown,
+  ),
+  agent: $enumDecode(
+    _$ResolutionAgentEnumMap,
+    json['agent'],
+    unknownValue: ResolutionAgent.$unknown,
+  ),
+  action: $enumDecodeNullable(
+    _$ResolutionActionEnumMap,
+    json['action'],
+    unknownValue: ResolutionAction.$unknown,
+  ),
 );
 
 Map<String, dynamic> _$InterventionToJson(Intervention instance) =>
@@ -425,21 +478,28 @@ Map<String, dynamic> _$InterventionToJson(Intervention instance) =>
       'action': _$ResolutionActionEnumMap[instance.action],
     };
 
-const _$DomainEnumMap = {Domain.account: 'Account', Domain.asset: 'Asset'};
+const _$DomainEnumMap = {
+  Domain.account: 'Account',
+  Domain.asset: 'Asset',
+  Domain.$unknown: r'$unknown',
+};
 
 const _$ResolutionAccessEnumMap = {
   ResolutionAccess.remote: 'Remote',
   ResolutionAccess.physical: 'Physical',
+  ResolutionAccess.$unknown: r'$unknown',
 };
 
 const _$ResolutionAgentEnumMap = {
   ResolutionAgent.user: 'User',
   ResolutionAgent.thirdParty: 'ThirdParty',
+  ResolutionAgent.$unknown: r'$unknown',
 };
 
 const _$ResolutionActionEnumMap = {
   ResolutionAction.link: 'Link',
   ResolutionAction.linkAdditionalAsset: 'LinkAdditionalAsset',
+  ResolutionAction.$unknown: r'$unknown',
 };
 
 Quantity _$QuantityFromJson(Map<String, dynamic> json) => Quantity(
@@ -485,7 +545,11 @@ NotAllowedResponse _$NotAllowedResponseFromJson(Map<String, dynamic> json) =>
     NotAllowedResponse(
       detail: json['detail'] as String,
       errorCode:
-          $enumDecodeNullable(_$ErrorCodeEnumMap, json['error_code']) ??
+          $enumDecodeNullable(
+            _$ErrorCodeEnumMap,
+            json['error_code'],
+            unknownValue: ErrorCode.$unknown,
+          ) ??
           ErrorCode.notAllowed,
     );
 
@@ -499,7 +563,11 @@ NotFoundResponse _$NotFoundResponseFromJson(Map<String, dynamic> json) =>
     NotFoundResponse(
       detail: json['detail'] as String? ?? 'Ressource not found',
       errorCode:
-          $enumDecodeNullable(_$ErrorCodeEnumMap, json['error_code']) ??
+          $enumDecodeNullable(
+            _$ErrorCodeEnumMap,
+            json['error_code'],
+            unknownValue: ErrorCode.$unknown,
+          ) ??
           ErrorCode.resourceNotFound,
       entity: json['entity'] as String?,
       id: json['id'] as String?,
@@ -559,7 +627,11 @@ Map<String, dynamic> _$SelectAssetRequestToJson(SelectAssetRequest instance) =>
 
 RunMetrics _$RunMetricsFromJson(Map<String, dynamic> json) => RunMetrics(
   period: json['period'] as String,
-  aggregation: $enumDecode(_$AggregationEnumEnumMap, json['aggregation']),
+  aggregation: $enumDecode(
+    _$AggregationEnumEnumMap,
+    json['aggregation'],
+    unknownValue: AggregationEnum.$unknown,
+  ),
   sessionCount: MetricValue.fromJson(
     json['session_count'] as Map<String, dynamic>,
   ),
@@ -585,6 +657,7 @@ Map<String, dynamic> _$RunMetricsToJson(RunMetrics instance) =>
 const _$AggregationEnumEnumMap = {
   AggregationEnum.month: 'month',
   AggregationEnum.year: 'year',
+  AggregationEnum.$unknown: r'$unknown',
 };
 
 SchedulingStatus _$SchedulingStatusFromJson(Map<String, dynamic> json) =>
@@ -750,10 +823,15 @@ Map<String, dynamic> _$AssetInformationToJson(AssetInformation instance) =>
 AssetPolicy _$AssetPolicyFromJson(Map<String, dynamic> json) => AssetPolicy(
   id: json['id'] as String,
   schedulingActive: json['scheduling_active'] as bool,
-  activityState: $enumDecode(_$ActivityStateEnumMap, json['activity_state']),
+  activityState: $enumDecode(
+    _$ActivityStateEnumMap,
+    json['activity_state'],
+    unknownValue: ActivityState.$unknown,
+  ),
   activityStateReason: $enumDecodeNullable(
     _$ActivityStateReasonEnumMap,
     json['activity_state_reason'],
+    unknownValue: ActivityStateReason.$unknown,
   ),
   minLevel: (json['min_level'] as num).toDouble(),
   runImmediatelyConfig: json['run_immediately_config'] == null
@@ -778,11 +856,13 @@ const _$ActivityStateEnumMap = {
   ActivityState.shouldRun: 'SHOULD_RUN',
   ActivityState.shouldNotRun: 'SHOULD_NOT_RUN',
   ActivityState.indeterminate: 'INDETERMINATE',
+  ActivityState.$unknown: r'$unknown',
 };
 
 const _$ActivityStateReasonEnumMap = {
   ActivityStateReason.byTask: 'BY_TASK',
   ActivityStateReason.byOverride: 'BY_OVERRIDE',
+  ActivityStateReason.$unknown: r'$unknown',
 };
 
 AssetPolicyRequest _$AssetPolicyRequestFromJson(Map<String, dynamic> json) =>
