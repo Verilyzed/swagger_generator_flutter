@@ -669,7 +669,7 @@ Map<String, dynamic> _$SchedulingStatusToJson(SchedulingStatus instance) =>
 TicketInput _$TicketInputFromJson(Map<String, dynamic> json) => TicketInput(
   subject: json['subject'] as String,
   description: json['description'] as String,
-  occurredAt: json['occurred_at'] as String,
+  occurredAt: const DateConverter().fromJson(json['occurred_at'] as String),
   email: json['email'] as String,
 );
 
@@ -677,7 +677,7 @@ Map<String, dynamic> _$TicketInputToJson(TicketInput instance) =>
     <String, dynamic>{
       'subject': instance.subject,
       'description': instance.description,
-      'occurred_at': instance.occurredAt,
+      'occurred_at': const DateConverter().toJson(instance.occurredAt),
       'email': instance.email,
     };
 

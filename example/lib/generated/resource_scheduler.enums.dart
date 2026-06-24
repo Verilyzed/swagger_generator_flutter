@@ -11,6 +11,13 @@ enum AggregationEnum {
   $unknown,
 }
 
+extension AggregationEnumWire on AggregationEnum {
+  String get wireValue => const {
+    AggregationEnum.month: 'month',
+    AggregationEnum.year: 'year',
+  }[this] ?? '';
+}
+
 enum TaskStateEnum {
   @JsonValue('PLANNED')
   planned,
@@ -28,6 +35,17 @@ enum TaskStateEnum {
   $unknown,
 }
 
+extension TaskStateEnumWire on TaskStateEnum {
+  String get wireValue => const {
+    TaskStateEnum.planned: 'PLANNED',
+    TaskStateEnum.running: 'RUNNING',
+    TaskStateEnum.finished: 'FINISHED',
+    TaskStateEnum.failed: 'FAILED',
+    TaskStateEnum.triggeredStart: 'TRIGGERED_START',
+    TaskStateEnum.triggeredStop: 'TRIGGERED_STOP',
+  }[this] ?? '';
+}
+
 enum TaskEndTriggerEnum {
   @JsonValue('LEVEL')
   level,
@@ -35,6 +53,13 @@ enum TaskEndTriggerEnum {
   datetime,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension TaskEndTriggerEnumWire on TaskEndTriggerEnum {
+  String get wireValue => const {
+    TaskEndTriggerEnum.level: 'LEVEL',
+    TaskEndTriggerEnum.datetime: 'DATETIME',
+  }[this] ?? '';
 }
 
 enum TaskTypeEnum {
@@ -46,6 +71,14 @@ enum TaskTypeEnum {
   immediately,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension TaskTypeEnumWire on TaskTypeEnum {
+  String get wireValue => const {
+    TaskTypeEnum.costOptimized: 'COST_OPTIMIZED',
+    TaskTypeEnum.minLevel: 'MIN_LEVEL',
+    TaskTypeEnum.immediately: 'IMMEDIATELY',
+  }[this] ?? '';
 }
 
 enum ActivityReason {
@@ -63,6 +96,16 @@ enum ActivityReason {
   $unknown,
 }
 
+extension ActivityReasonWire on ActivityReason {
+  String get wireValue => const {
+    ActivityReason.costOptimized: 'COST_OPTIMIZED',
+    ActivityReason.minLevel: 'MIN_LEVEL',
+    ActivityReason.immediately: 'IMMEDIATELY',
+    ActivityReason.initializing: 'INITIALIZING',
+    ActivityReason.manual: 'MANUAL',
+  }[this] ?? '';
+}
+
 enum RunStateEnum {
   @JsonValue('ACTIVE')
   active,
@@ -70,6 +113,13 @@ enum RunStateEnum {
   finished,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension RunStateEnumWire on RunStateEnum {
+  String get wireValue => const {
+    RunStateEnum.active: 'ACTIVE',
+    RunStateEnum.finished: 'FINISHED',
+  }[this] ?? '';
 }
 
 enum ActivityState {
@@ -83,6 +133,14 @@ enum ActivityState {
   $unknown,
 }
 
+extension ActivityStateWire on ActivityState {
+  String get wireValue => const {
+    ActivityState.shouldRun: 'SHOULD_RUN',
+    ActivityState.shouldNotRun: 'SHOULD_NOT_RUN',
+    ActivityState.indeterminate: 'INDETERMINATE',
+  }[this] ?? '';
+}
+
 enum ActivityStateReason {
   @JsonValue('BY_TASK')
   byTask,
@@ -90,6 +148,13 @@ enum ActivityStateReason {
   byOverride,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension ActivityStateReasonWire on ActivityStateReason {
+  String get wireValue => const {
+    ActivityStateReason.byTask: 'BY_TASK',
+    ActivityStateReason.byOverride: 'BY_OVERRIDE',
+  }[this] ?? '';
 }
 
 enum DeadlineFilterEnum {
@@ -103,6 +168,14 @@ enum DeadlineFilterEnum {
   $unknown,
 }
 
+extension DeadlineFilterEnumWire on DeadlineFilterEnum {
+  String get wireValue => const {
+    DeadlineFilterEnum.active: 'active',
+    DeadlineFilterEnum.inactive: 'inactive',
+    DeadlineFilterEnum.all: 'all',
+  }[this] ?? '';
+}
+
 enum DiscoveredAssetCapability {
   @JsonValue('FULLY_CAPABLE')
   fullyCapable,
@@ -114,6 +187,14 @@ enum DiscoveredAssetCapability {
   $unknown,
 }
 
+extension DiscoveredAssetCapabilityWire on DiscoveredAssetCapability {
+  String get wireValue => const {
+    DiscoveredAssetCapability.fullyCapable: 'FULLY_CAPABLE',
+    DiscoveredAssetCapability.incapable: 'INCAPABLE',
+    DiscoveredAssetCapability.checkingCompatibility: 'CHECKING_COMPATIBILITY',
+  }[this] ?? '';
+}
+
 enum Domain {
   @JsonValue('Account')
   account,
@@ -121,6 +202,13 @@ enum Domain {
   asset,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension DomainWire on Domain {
+  String get wireValue => const {
+    Domain.account: 'Account',
+    Domain.asset: 'Asset',
+  }[this] ?? '';
 }
 
 enum ErrorCode {
@@ -152,6 +240,23 @@ enum ErrorCode {
   $unknown,
 }
 
+extension ErrorCodeWire on ErrorCode {
+  String get wireValue => const {
+    ErrorCode.internalServerError: 'INTERNAL_SERVER_ERROR',
+    ErrorCode.resourceNotFound: 'RESOURCE_NOT_FOUND',
+    ErrorCode.notAllowed: 'NOT_ALLOWED',
+    ErrorCode.badInput: 'BAD_INPUT',
+    ErrorCode.noUser: 'NO_USER',
+    ErrorCode.accountEnded: 'ACCOUNT_ENDED',
+    ErrorCode.accountNoPlan: 'ACCOUNT_NO_PLAN',
+    ErrorCode.accountNoActivePlan: 'ACCOUNT_NO_ACTIVE_PLAN',
+    ErrorCode.linkAssetAlreadyConnected: 'LINK_ASSET_ALREADY_CONNECTED',
+    ErrorCode.relinkNoAssetLinked: 'RELINK_NO_ASSET_LINKED',
+    ErrorCode.assetDeletionPending: 'ASSET_DELETION_PENDING',
+    ErrorCode.locationLookupFailed: 'LOCATION_LOOKUP_FAILED',
+  }[this] ?? '';
+}
+
 enum FailureReasonTypeEnum {
   @JsonValue('NO_RESPONSE')
   noResponse,
@@ -165,11 +270,26 @@ enum FailureReasonTypeEnum {
   $unknown,
 }
 
+extension FailureReasonTypeEnumWire on FailureReasonTypeEnum {
+  String get wireValue => const {
+    FailureReasonTypeEnum.noResponse: 'NO_RESPONSE',
+    FailureReasonTypeEnum.failedPrecondition: 'FAILED_PRECONDITION',
+    FailureReasonTypeEnum.unnecessary: 'UNNECESSARY',
+    FailureReasonTypeEnum.notFound: 'NOT_FOUND',
+  }[this] ?? '';
+}
+
 enum TaskSortFieldEnum {
   @JsonValue('price_per_unit')
   pricePerUnit,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension TaskSortFieldEnumWire on TaskSortFieldEnum {
+  String get wireValue => const {
+    TaskSortFieldEnum.pricePerUnit: 'price_per_unit',
+  }[this] ?? '';
 }
 
 enum ConnectionState {
@@ -195,6 +315,20 @@ enum ConnectionState {
   $unknown,
 }
 
+extension ConnectionStateWire on ConnectionState {
+  String get wireValue => const {
+    ConnectionState.unknown: 'UNKNOWN',
+    ConnectionState.disconnected: 'DISCONNECTED',
+    ConnectionState.connectedInitializing: 'CONNECTED:INITIALIZING',
+    ConnectionState.connectedActive: 'CONNECTED:ACTIVE',
+    ConnectionState.connectedStopped: 'CONNECTED:STOPPED',
+    ConnectionState.connectedComplete: 'CONNECTED:COMPLETE',
+    ConnectionState.connectedNoPower: 'CONNECTED:NO_POWER',
+    ConnectionState.connectedFault: 'CONNECTED:FAULT',
+    ConnectionState.connectedDraining: 'CONNECTED:DRAINING',
+  }[this] ?? '';
+}
+
 enum ResolutionAccess {
   @JsonValue('Remote')
   remote,
@@ -202,6 +336,13 @@ enum ResolutionAccess {
   physical,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension ResolutionAccessWire on ResolutionAccess {
+  String get wireValue => const {
+    ResolutionAccess.remote: 'Remote',
+    ResolutionAccess.physical: 'Physical',
+  }[this] ?? '';
 }
 
 enum ResolutionAction {
@@ -213,6 +354,13 @@ enum ResolutionAction {
   $unknown,
 }
 
+extension ResolutionActionWire on ResolutionAction {
+  String get wireValue => const {
+    ResolutionAction.link: 'Link',
+    ResolutionAction.linkAdditionalAsset: 'LinkAdditionalAsset',
+  }[this] ?? '';
+}
+
 enum ResolutionAgent {
   @JsonValue('User')
   user,
@@ -222,6 +370,13 @@ enum ResolutionAgent {
   $unknown,
 }
 
+extension ResolutionAgentWire on ResolutionAgent {
+  String get wireValue => const {
+    ResolutionAgent.user: 'User',
+    ResolutionAgent.thirdParty: 'ThirdParty',
+  }[this] ?? '';
+}
+
 enum SortOrderEnum {
   @JsonValue('asc')
   asc,
@@ -229,6 +384,13 @@ enum SortOrderEnum {
   desc,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension SortOrderEnumWire on SortOrderEnum {
+  String get wireValue => const {
+    SortOrderEnum.asc: 'asc',
+    SortOrderEnum.desc: 'desc',
+  }[this] ?? '';
 }
 
 enum Weekday {
@@ -248,5 +410,17 @@ enum Weekday {
   sunday,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension WeekdayWire on Weekday {
+  String get wireValue => const {
+    Weekday.monday: 'Monday',
+    Weekday.tuesday: 'Tuesday',
+    Weekday.wednesday: 'Wednesday',
+    Weekday.thursday: 'Thursday',
+    Weekday.friday: 'Friday',
+    Weekday.saturday: 'Saturday',
+    Weekday.sunday: 'Sunday',
+  }[this] ?? '';
 }
 

@@ -19,10 +19,7 @@ final class _$NewapiService extends NewapiService {
   final Type definitionType = NewapiService;
 
   @override
-  Future<Response<List<ApiRequest>>> getApiActivity({
-    int limit = 50,
-    int offset = 0,
-  }) {
+  Future<Response<List<ApiRequest>>> getApiActivity({int? limit, int? offset}) {
     final Uri $url = Uri.parse('/activity');
     final Map<String, dynamic> $params = <String, dynamic>{
       'limit': limit,

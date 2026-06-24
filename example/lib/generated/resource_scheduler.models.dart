@@ -5,6 +5,17 @@ import 'resource_scheduler.enums.dart';
 
 part 'resource_scheduler.models.g.dart';
 
+class DateConverter implements JsonConverter<DateTime, String> {
+  const DateConverter();
+
+  @override
+  DateTime fromJson(String json) => DateTime.parse(json);
+
+  @override
+  String toJson(DateTime object) =>
+      object.toIso8601String().split('T').first;
+}
+
 @JsonSerializable()
 class AttachmentInput {
   final String filename;
@@ -649,7 +660,8 @@ class TicketInput {
   final String subject;
   final String description;
   @JsonKey(name: 'occurred_at')
-  final String occurredAt;
+  @DateConverter()
+  final DateTime occurredAt;
   final String email;
 
   TicketInput({

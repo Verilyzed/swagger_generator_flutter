@@ -15,6 +15,15 @@ enum ApiRequestAction {
   $unknown,
 }
 
+extension ApiRequestActionWire on ApiRequestAction {
+  String get wireValue => const {
+    ApiRequestAction.read: 'READ',
+    ApiRequestAction.create: 'CREATE',
+    ApiRequestAction.update: 'UPDATE',
+    ApiRequestAction.delete: 'DELETE',
+  }[this] ?? '';
+}
+
 enum ApiRequestResourceType {
   @JsonValue('ITEM')
   item,
@@ -24,6 +33,13 @@ enum ApiRequestResourceType {
   $unknown,
 }
 
+extension ApiRequestResourceTypeWire on ApiRequestResourceType {
+  String get wireValue => const {
+    ApiRequestResourceType.item: 'ITEM',
+    ApiRequestResourceType.vault: 'VAULT',
+  }[this] ?? '';
+}
+
 enum ApiRequestResult {
   @JsonValue('SUCCESS')
   success,
@@ -31,6 +47,13 @@ enum ApiRequestResult {
   deny,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension ApiRequestResultWire on ApiRequestResult {
+  String get wireValue => const {
+    ApiRequestResult.success: 'SUCCESS',
+    ApiRequestResult.deny: 'DENY',
+  }[this] ?? '';
 }
 
 enum FieldPurpose {
@@ -44,6 +67,15 @@ enum FieldPurpose {
   notes,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension FieldPurposeWire on FieldPurpose {
+  String get wireValue => const {
+    FieldPurpose.empty: '',
+    FieldPurpose.username: 'USERNAME',
+    FieldPurpose.password: 'PASSWORD',
+    FieldPurpose.notes: 'NOTES',
+  }[this] ?? '';
 }
 
 enum FieldType {
@@ -67,6 +99,19 @@ enum FieldType {
   $unknown,
 }
 
+extension FieldTypeWire on FieldType {
+  String get wireValue => const {
+    FieldType.string: 'STRING',
+    FieldType.email: 'EMAIL',
+    FieldType.concealed: 'CONCEALED',
+    FieldType.url: 'URL',
+    FieldType.totp: 'TOTP',
+    FieldType.date: 'DATE',
+    FieldType.monthYear: 'MONTH_YEAR',
+    FieldType.menu: 'MENU',
+  }[this] ?? '';
+}
+
 enum GeneratorRecipeCharacterSetsItem {
   @JsonValue('LETTERS')
   letters,
@@ -76,6 +121,14 @@ enum GeneratorRecipeCharacterSetsItem {
   symbols,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension GeneratorRecipeCharacterSetsItemWire on GeneratorRecipeCharacterSetsItem {
+  String get wireValue => const {
+    GeneratorRecipeCharacterSetsItem.letters: 'LETTERS',
+    GeneratorRecipeCharacterSetsItem.digits: 'DIGITS',
+    GeneratorRecipeCharacterSetsItem.symbols: 'SYMBOLS',
+  }[this] ?? '';
 }
 
 enum ItemCategory {
@@ -127,6 +180,33 @@ enum ItemCategory {
   $unknown,
 }
 
+extension ItemCategoryWire on ItemCategory {
+  String get wireValue => const {
+    ItemCategory.login: 'LOGIN',
+    ItemCategory.password: 'PASSWORD',
+    ItemCategory.apiCredential: 'API_CREDENTIAL',
+    ItemCategory.server: 'SERVER',
+    ItemCategory.database: 'DATABASE',
+    ItemCategory.creditCard: 'CREDIT_CARD',
+    ItemCategory.membership: 'MEMBERSHIP',
+    ItemCategory.passport: 'PASSPORT',
+    ItemCategory.softwareLicense: 'SOFTWARE_LICENSE',
+    ItemCategory.outdoorLicense: 'OUTDOOR_LICENSE',
+    ItemCategory.secureNote: 'SECURE_NOTE',
+    ItemCategory.wirelessRouter: 'WIRELESS_ROUTER',
+    ItemCategory.bankAccount: 'BANK_ACCOUNT',
+    ItemCategory.driverLicense: 'DRIVER_LICENSE',
+    ItemCategory.identity: 'IDENTITY',
+    ItemCategory.rewardProgram: 'REWARD_PROGRAM',
+    ItemCategory.document: 'DOCUMENT',
+    ItemCategory.emailAccount: 'EMAIL_ACCOUNT',
+    ItemCategory.socialSecurityNumber: 'SOCIAL_SECURITY_NUMBER',
+    ItemCategory.medicalRecord: 'MEDICAL_RECORD',
+    ItemCategory.sshKey: 'SSH_KEY',
+    ItemCategory.custom: 'CUSTOM',
+  }[this] ?? '';
+}
+
 enum ItemState {
   @JsonValue('ARCHIVED')
   archived,
@@ -134,6 +214,13 @@ enum ItemState {
   deleted,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension ItemStateWire on ItemState {
+  String get wireValue => const {
+    ItemState.archived: 'ARCHIVED',
+    ItemState.deleted: 'DELETED',
+  }[this] ?? '';
 }
 
 enum PatchItemOp {
@@ -147,6 +234,14 @@ enum PatchItemOp {
   $unknown,
 }
 
+extension PatchItemOpWire on PatchItemOp {
+  String get wireValue => const {
+    PatchItemOp.add: 'add',
+    PatchItemOp.remove: 'remove',
+    PatchItemOp.replace: 'replace',
+  }[this] ?? '';
+}
+
 enum VaultType {
   @JsonValue('USER_CREATED')
   userCreated,
@@ -158,5 +253,14 @@ enum VaultType {
   transfer,
   // Fallback for values not present in the spec.
   $unknown,
+}
+
+extension VaultTypeWire on VaultType {
+  String get wireValue => const {
+    VaultType.userCreated: 'USER_CREATED',
+    VaultType.personal: 'PERSONAL',
+    VaultType.everyone: 'EVERYONE',
+    VaultType.transfer: 'TRANSFER',
+  }[this] ?? '';
 }
 

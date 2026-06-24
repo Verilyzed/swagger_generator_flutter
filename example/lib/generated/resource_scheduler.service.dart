@@ -11,7 +11,7 @@ abstract class ResourceSchedulerService extends ChopperService {
   @GET(path: '/assets/{asset_id}/schedule')
   Future<Response<Schedule>> getScheduleForAsset({
     @Path('asset_id') required String assetId,
-    @Query('deadline_filter') DeadlineFilterEnum deadlineFilter = DeadlineFilterEnum.all,
+    @Query('deadline_filter') String? deadlineFilter,
   });
 
   @POST(path: '/assets/{asset_id}/schedule')
@@ -61,10 +61,10 @@ abstract class ResourceSchedulerService extends ChopperService {
   @GET(path: '/assets/{asset_id}/tasks')
   Future<Response<List<Task>>> listTasksForAsset({
     @Path('asset_id') required String assetId,
-    @Query('aggregation') AggregationEnum? aggregation,
+    @Query('aggregation') String? aggregation,
     @Query('period') String? period,
-    @Query('sort') TaskSortFieldEnum? sort,
-    @Query('order') SortOrderEnum order = SortOrderEnum.asc,
+    @Query('sort') String? sort,
+    @Query('order') String? order,
     @Query('limit') int? limit,
   });
 
@@ -117,20 +117,208 @@ abstract class ResourceSchedulerService extends ChopperService {
   @GET(path: '/assets/{asset_id}/runs')
   Future<Response<List<Run>>> listRunsForAsset({
     @Path('asset_id') required String assetId,
-    @Query('limit') int limit = 5,
-    @Query('page') int page = 0,
-    @Query('sort_order') SortOrderEnum sortOrder = SortOrderEnum.desc,
-    @Query('state') RunStateEnum? state,
+    @Query('limit') int? limit,
+    @Query('page') int? page,
+    @Query('sort_order') String? sortOrder,
+    @Query('state') String? state,
   });
 
   @GET(path: '/assets/{asset_id}/runs/metrics')
   Future<Response<RunMetrics>> getRunMetrics({
     @Path('asset_id') required String assetId,
-    @Query('aggregation') required AggregationEnum aggregation,
+    @Query('aggregation') required String aggregation,
     @Query('period') String? period,
   });
 
   static ResourceSchedulerService create([ChopperClient? client]) =>
       _$ResourceSchedulerService(client);
+}
+
+class ResourceSchedulerApi {
+  final ResourceSchedulerService _service;
+
+  ResourceSchedulerApi(ChopperClient client) : _service = ResourceSchedulerService.create(client);
+
+  Future<Response<Schedule>> getScheduleForAsset({
+    required String assetId,
+    DeadlineFilterEnum? deadlineFilter,
+  }) =>
+      _service.getScheduleForAsset(
+        assetId: assetId,
+        deadlineFilter: (deadlineFilter ?? DeadlineFilterEnum.all).wireValue,
+      );
+
+  Future<Response<Schedule>> createSchedule({
+    required String assetId,
+    required ScheduleCreateRequest body,
+  }) =>
+      _service.createSchedule(
+        assetId: assetId,
+        body: body,
+      );
+
+  Future<Response<Schedule>> updateSchedule({
+    required String assetId,
+    required String scheduleId,
+    required ScheduleUpdateRequest body,
+  }) =>
+      _service.updateSchedule(
+        assetId: assetId,
+        scheduleId: scheduleId,
+        body: body,
+      );
+
+  Future<Response<List<Asset>>> listAssets({
+    required int accountId,
+  }) =>
+      _service.listAssets(
+        accountId: accountId,
+      );
+
+  Future<Response<Asset>> getAsset({
+    required String assetId,
+  }) =>
+      _service.getAsset(
+        assetId: assetId,
+      );
+
+  Future<Response<ActivityStatus>> getAssetActivityStatus({
+    required String assetId,
+  }) =>
+      _service.getAssetActivityStatus(
+        assetId: assetId,
+      );
+
+  Future<Response<dynamic>> refreshAsset({
+    required String assetId,
+  }) =>
+      _service.refreshAsset(
+        assetId: assetId,
+      );
+
+  Future<Response<AssetPolicy>> getAssetPolicy({
+    required String assetId,
+  }) =>
+      _service.getAssetPolicy(
+        assetId: assetId,
+      );
+
+  Future<Response<dynamic>> patchAssetPolicy({
+    required String assetId,
+    required AssetPolicyRequest body,
+  }) =>
+      _service.patchAssetPolicy(
+        assetId: assetId,
+        body: body,
+      );
+
+  Future<Response<List<Task>>> listTasksForAsset({
+    required String assetId,
+    AggregationEnum? aggregation,
+    String? period,
+    TaskSortFieldEnum? sort,
+    SortOrderEnum? order,
+    int? limit,
+  }) =>
+      _service.listTasksForAsset(
+        assetId: assetId,
+        aggregation: aggregation?.wireValue,
+        period: period,
+        sort: sort?.wireValue,
+        order: (order ?? SortOrderEnum.asc).wireValue,
+        limit: limit,
+      );
+
+  Future<Response<StreamTokenResponse>> getStreamTokenForAsset({
+    required String assetId,
+  }) =>
+      _service.getStreamTokenForAsset(
+        assetId: assetId,
+      );
+
+  Future<Response<TicketResponse>> createTicket({
+    required String assetId,
+    required TicketInput body,
+  }) =>
+      _service.createTicket(
+        assetId: assetId,
+        body: body,
+      );
+
+  Future<Response<AttachmentResponse>> attachImageToTicket({
+    required String ticketId,
+    required AttachmentInput body,
+  }) =>
+      _service.attachImageToTicket(
+        ticketId: ticketId,
+        body: body,
+      );
+
+  Future<Response<ProviderLinkResponse>> postAccountLink({
+    required String accountId,
+  }) =>
+      _service.postAccountLink(
+        accountId: accountId,
+      );
+
+  Future<Response<ProviderLinkResponse>> postAccountRelink({
+    required String accountId,
+  }) =>
+      _service.postAccountRelink(
+        accountId: accountId,
+      );
+
+  Future<Response<Account>> getAccount({
+    required String accountId,
+  }) =>
+      _service.getAccount(
+        accountId: accountId,
+      );
+
+  Future<Response<dynamic>> deleteAccount({
+    required String accountId,
+  }) =>
+      _service.deleteAccount(
+        accountId: accountId,
+      );
+
+  Future<Response<Account>> selectAsset({
+    required String accountId,
+    required SelectAssetRequest body,
+  }) =>
+      _service.selectAsset(
+        accountId: accountId,
+        body: body,
+      );
+
+  Future<Response<FeatureFlagConfig>> getFeatures() =>
+      _service.getFeatures();
+
+  Future<Response<List<Run>>> listRunsForAsset({
+    required String assetId,
+    int? limit,
+    int? page,
+    SortOrderEnum? sortOrder,
+    RunStateEnum? state,
+  }) =>
+      _service.listRunsForAsset(
+        assetId: assetId,
+        limit: limit ?? 5,
+        page: page ?? 0,
+        sortOrder: (sortOrder ?? SortOrderEnum.desc).wireValue,
+        state: state?.wireValue,
+      );
+
+  Future<Response<RunMetrics>> getRunMetrics({
+    required String assetId,
+    required AggregationEnum aggregation,
+    String? period,
+  }) =>
+      _service.getRunMetrics(
+        assetId: assetId,
+        aggregation: aggregation.wireValue,
+        period: period,
+      );
+
 }
 

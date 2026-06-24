@@ -21,7 +21,7 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   @override
   Future<Response<Schedule>> getScheduleForAsset({
     required String assetId,
-    DeadlineFilterEnum deadlineFilter = DeadlineFilterEnum.all,
+    String? deadlineFilter,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/schedule');
     final Map<String, dynamic> $params = <String, dynamic>{
@@ -123,10 +123,10 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   @override
   Future<Response<List<Task>>> listTasksForAsset({
     required String assetId,
-    AggregationEnum? aggregation,
+    String? aggregation,
     String? period,
-    TaskSortFieldEnum? sort,
-    SortOrderEnum order = SortOrderEnum.asc,
+    String? sort,
+    String? order,
     int? limit,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/tasks');
@@ -237,10 +237,10 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   @override
   Future<Response<List<Run>>> listRunsForAsset({
     required String assetId,
-    int limit = 5,
-    int page = 0,
-    SortOrderEnum sortOrder = SortOrderEnum.desc,
-    RunStateEnum? state,
+    int? limit,
+    int? page,
+    String? sortOrder,
+    String? state,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/runs');
     final Map<String, dynamic> $params = <String, dynamic>{
@@ -261,7 +261,7 @@ final class _$ResourceSchedulerService extends ResourceSchedulerService {
   @override
   Future<Response<RunMetrics>> getRunMetrics({
     required String assetId,
-    required AggregationEnum aggregation,
+    required String aggregation,
     String? period,
   }) {
     final Uri $url = Uri.parse('/assets/${assetId}/runs/metrics');
