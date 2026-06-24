@@ -170,4 +170,56 @@ void main() {
       ),
     );
   });
+
+  test('emits DateConverter and annotates a date field', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Event',
+          fields: [
+            FieldDef(
+              dartName: 'occurredAt',
+              jsonKey: 'occurred_at',
+              type: DartType('DateTime', isNullable: true, isDateOnly: true),
+              isRequired: false,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(
+      out,
+      contains('class DateConverter implements JsonConverter<DateTime, String> {'),
+    );
+    expect(out, contains("object.toIso8601String().split('T').first"));
+    expect(out, contains('@DateConverter()'));
+    expect(out, contains('final DateTime? occurredAt;'));
+  });
+
+  test('omits DateConverter when no date field exists', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Plain',
+          fields: [
+            FieldDef(
+              dartName: 'id',
+              jsonKey: 'id',
+              type: DartType('String'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, isNot(contains('DateConverter')));
+  });
 }
