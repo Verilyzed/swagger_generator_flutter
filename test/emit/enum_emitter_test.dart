@@ -17,6 +17,8 @@ void main() {
     expect(out, contains('enum AggregationEnum {'));
     expect(out, contains("@JsonValue('month')"));
     expect(out, contains('month,'));
+    expect(out, contains(r'  $unknown,'));
+    expect(out, contains('// Fallback for values not present in the spec.'));
     expect(out, contains("import 'package:json_annotation/json_annotation.dart';"));
   });
 }

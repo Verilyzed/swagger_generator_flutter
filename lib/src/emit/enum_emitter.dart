@@ -21,6 +21,8 @@ class EnumEmitter {
           ..writeln('  ${v.dartName},');
       }
       buffer
+        ..writeln('  // Fallback for values not present in the spec.')
+        ..writeln(r'  $unknown,')
         ..writeln('}')
         ..writeln();
     }
