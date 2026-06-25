@@ -34,6 +34,8 @@ class SwaggerBuilder implements Builder {
       path: input.path,
       baseName: baseName,
       nameFromPath: config.nameFromPath,
+      overridesImport: config.overridesImport,
+      overrideSchemas: config.overrideSchemas,
     );
 
     for (final entry in sources.entries) {
@@ -51,6 +53,8 @@ Map<String, String> generateSources(
   required String path,
   required String baseName,
   bool nameFromPath = false,
+  String? overridesImport,
+  Set<String> overrideSchemas = const {},
 }) {
   final names = NameGiver();
   final loaded = SpecLoader().load(content, path: path);
@@ -64,14 +68,35 @@ Map<String, String> generateSources(
     normalized['openapi'] as String?,
     names,
     schemas: schemas,
+    overrides: overrideSchemas,
   );
-  final spec = SpecParser(names, resolver, nameFromPath: nameFromPath)
-      .parse(normalized, name: baseName);
+  final spec = SpecParser(
+    names,
+    resolver,
+    nameFromPath: nameFromPath,
+    overrideSchemas: overrideSchemas,
+  ).parse(normalized, name: baseName);
 
   final enumsFile = '$baseName.enums.dart';
   final modelsFile = '$baseName.models.dart';
   final serviceFile = '$baseName.service.dart';
   final clientFile = '$baseName.client.dart';
+
+  final overrideTypes = overrideSchemas.map(names.className).toSet();
+  final referenced = <String>{};
+  final idRe = RegExp(r'[A-Za-z_][A-Za-z0-9_]*');
+  for (final model in spec.models) {
+    for (final field in model.fields) {
+      referenced.addAll(idRe.allMatches(field.type.name).map((m) => m[0]!));
+    }
+  }
+  for (final op in spec.service.operations) {
+    referenced.addAll(idRe.allMatches(op.responseType.name).map((m) => m[0]!));
+    for (final p in op.parameters) {
+      referenced.addAll(idRe.allMatches(p.type.name).map((m) => m[0]!));
+    }
+  }
+  final usedOverrides = overrideTypes.where(referenced.contains).toSet();
 
   final emitter = ClientEmitter();
 
@@ -82,6 +107,8 @@ Map<String, String> generateSources(
       partFileName: '$baseName.models.g.dart',
       enumsImport: enumsFile,
       enumNames: spec.enums.map((e) => e.name).toSet(),
+      overrideTypes: overrideTypes,
+      overridesImport: overridesImport,
     ),
     '.service.dart': ServiceEmitter().emit(
       spec.service,
@@ -89,12 +116,16 @@ Map<String, String> generateSources(
       modelsImport: modelsFile,
       enumsImport: enumsFile,
       enumNames: spec.enums.map((e) => e.name).toSet(),
+      overrideTypes: overrideTypes,
+      overridesImport: overridesImport,
     ),
     '.client.dart': emitter.emitClient(
       spec.service,
       serviceImport: serviceFile,
       modelsImport: modelsFile,
       models: spec.models,
+      overrideTypes: usedOverrides,
+      overridesImport: overridesImport,
     ),
     '.api.dart': emitter.emitBarrel(
       enumsImport: enumsFile,

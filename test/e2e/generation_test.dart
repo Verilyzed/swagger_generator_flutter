@@ -95,6 +95,56 @@ void main() {
     );
   });
 
+  test('uses an override type for an overridden schema', () {
+    const spec = '''
+{
+  "openapi": "3.0.0",
+  "info": {"title": "t", "version": "1"},
+  "components": {
+    "schemas": {
+      "OneOfThing": {
+        "oneOf": [
+          {"type": "string"},
+          {"type": "integer"}
+        ]
+      },
+      "Holder": {
+        "type": "object",
+        "properties": {
+          "thing": {"\$ref": "#/components/schemas/OneOfThing"}
+        }
+      }
+    }
+  },
+  "paths": {}
+}
+''';
+
+    final sources = generateSources(
+      spec,
+      path: 'h.json',
+      baseName: 'h',
+      overridesImport: 'package:example/overrides.dart',
+      overrideSchemas: const {'OneOfThing'},
+    );
+
+    expect(sources['.enums.dart'], isNot(contains('OneOfThing')));
+    expect(sources['.models.dart'], isNot(contains('class OneOfThing')));
+    expect(sources['.models.dart'], contains('final OneOfThing? thing;'));
+    expect(
+      sources['.models.dart'],
+      contains("import 'package:example/overrides.dart';"),
+    );
+    expect(
+      sources['.client.dart'],
+      contains('OneOfThing: OneOfThing.fromJson,'),
+    );
+    expect(
+      sources['.client.dart'],
+      contains("import 'package:example/overrides.dart';"),
+    );
+  });
+
   test('creates a named enum for an inline enum parameter', () {
     const spec = '''
 {
