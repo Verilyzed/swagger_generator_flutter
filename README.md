@@ -57,9 +57,20 @@ targets:
 | `input_folder` | package sources | Folder holding the spec files. |
 | `output_folder` | same as `input_folder` (co-located) | Folder the generated Dart is written to. Must be under `lib/`. |
 | `method_names` | `operationId` | How service method names are derived: `operationId` (default) or `path` (from the HTTP verb and request path). |
+| `overrides_import` | _(none)_ | Import URI of a single file holding override types. Required when `override_schemas` is set. |
+| `override_schemas` | _(empty)_ | List of component schema keys to replace with a hand-written type named `className(key)` from `overrides_import`. |
 
 Each spec generates a `<name>.api.dart` barrel that exports its enums, models,
 service, and client.
+
+Use overrides for schemas that cannot be generated usefully, such as a `oneOf`.
+List the schema keys in `override_schemas` and provide their types in the single
+`overrides_import` file. Each override type must be named `className(key)` (for
+example schema `payment_method` -> class `PaymentMethod`) and expose
+`factory Type.fromJson(Map<String, dynamic> json)` and
+`Map<String, dynamic> toJson()`, so it nests and decodes like a generated model.
+The generator emits nothing for an overridden schema and uses the type wherever
+the schema is referenced.
 
 With `method_names: path`, `GET /vaults/{vaultUuid}/items` generates
 `getVaultsVaultUuidItems`. The path form includes parameter segments so names
