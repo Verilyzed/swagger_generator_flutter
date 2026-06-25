@@ -7,9 +7,14 @@ import 'name_giver.dart';
 abstract class DartTypeResolver {
   final NameGiver _names;
   final Map<String, dynamic> _schemas;
+  final Set<String> _overrides;
 
-  DartTypeResolver(this._names, {Map<String, dynamic> schemas = const {}})
-      : _schemas = schemas;
+  DartTypeResolver(
+    this._names, {
+    Map<String, dynamic> schemas = const {},
+    Set<String> overrides = const {},
+  })  : _schemas = schemas,
+        _overrides = overrides;
 
   DartType resolve(Map<String, dynamic> schema) {
     final core = coreSchema(schema);
@@ -30,6 +35,7 @@ abstract class DartTypeResolver {
     final ref = schema[r'$ref'];
     if (ref is String) {
       final name = ref.split('/').last;
+      if (_overrides.contains(name)) return DartType(_names.className(name));
       final target = _schemas[name];
       if (target is Map<String, dynamic> && _isAlias(target)) {
         return resolve(target);
@@ -86,7 +92,7 @@ abstract class DartTypeResolver {
 
 /// OpenAPI 3.0: nullability via `nullable: true`.
 class OpenApi30TypeResolver extends DartTypeResolver {
-  OpenApi30TypeResolver(super.names, {super.schemas});
+  OpenApi30TypeResolver(super.names, {super.schemas, super.overrides});
 
   @override
   Map<String, dynamic> coreSchema(Map<String, dynamic> schema) => schema;
@@ -97,7 +103,7 @@ class OpenApi30TypeResolver extends DartTypeResolver {
 
 /// OpenAPI 3.1: nullability via `anyOf` null or a `type` array containing null.
 class OpenApi31TypeResolver extends DartTypeResolver {
-  OpenApi31TypeResolver(super.names, {super.schemas});
+  OpenApi31TypeResolver(super.names, {super.schemas, super.overrides});
 
   @override
   Map<String, dynamic> coreSchema(Map<String, dynamic> schema) {

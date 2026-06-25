@@ -51,6 +51,26 @@ void main() {
     expect(t.isDateOnly, isFalse);
   });
 
+  test('resolves a ref to an override to its Dart type', () {
+    final r = OpenApi31TypeResolver(
+      NameGiver(),
+      schemas: {
+        'OneOfThing': {
+          'oneOf': [
+            {r'$ref': '#/components/schemas/A'},
+            {r'$ref': '#/components/schemas/B'},
+          ],
+        },
+      },
+      overrides: {'OneOfThing'},
+    );
+
+    expect(
+      r.resolve({r'$ref': '#/components/schemas/OneOfThing'}).name,
+      'OneOfThing',
+    );
+  });
+
   test('resolves a ref to the class name', () {
     expect(
       resolver.resolve({r'$ref': '#/components/schemas/Task'}).display,
