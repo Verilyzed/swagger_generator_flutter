@@ -60,23 +60,7 @@ void main() {
     expect(out, contains("@Query('status') StatusEnum? status,"));
     expect(out, contains("@Path('gadget_id') required String gadgetId,"));
     expect(out, isNot(contains('listGadgets(@Query')));
-
-    expect(out, contains('class DemoApi {'));
-    expect(out, contains('final DemoService _service;'));
-    expect(
-      out,
-      contains(
-        'DemoApi(ChopperClient client) : _service = DemoService.create(client);',
-      ),
-    );
-    expect(out, contains('Future<Response<List<Gadget>>> listGadgets({'));
-    expect(out, contains('    int? limit,'));
-    expect(out, contains('    StatusEnum? status,'));
-    expect(out, contains('      limit: limit ?? 50,'));
-    expect(out, contains('      status: status,'));
-    expect(out, contains('  Future<Response<Gadget>> getGadget({'));
-    expect(out, contains('    required String gadgetId,'));
-    expect(out, contains('      gadgetId: gadgetId,'));
+    expect(out, isNot(contains('class DemoApi')));
   });
 
   test('omits the enums import when no operation references an enum', () {

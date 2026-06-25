@@ -25,6 +25,12 @@ void main() {
     for (final source in sources.values) {
       expect(source, startsWith('// GENERATED CODE'));
     }
+
+    expect(sources['.client.dart'], contains('class ResourceSchedulerApi {'));
+    expect(
+      sources['.service.dart'],
+      isNot(contains('class ResourceSchedulerApi')),
+    );
   });
 
   test('keeps a date field with an example as a String', () {
