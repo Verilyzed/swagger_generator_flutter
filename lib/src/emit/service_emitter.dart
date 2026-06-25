@@ -9,6 +9,8 @@ class ServiceEmitter {
     required String modelsImport,
     required String enumsImport,
     required Set<String> enumNames,
+    Set<String> overrideTypes = const {},
+    String? overridesImport,
   }) {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
@@ -19,6 +21,9 @@ class ServiceEmitter {
     buffer.writeln(SourceWriter.importLine(modelsImport));
     if (_usesEnum(service, enumNames)) {
       buffer.writeln(SourceWriter.importLine(enumsImport));
+    }
+    if (overridesImport != null && _usesOverride(service, overrideTypes)) {
+      buffer.writeln(SourceWriter.importLine(overridesImport));
     }
     buffer
       ..writeln()
@@ -159,6 +164,21 @@ class ServiceEmitter {
       }
     }
     return used.any(enumNames.contains);
+  }
+
+  bool _usesOverride(ServiceDef service, Set<String> overrideTypes) {
+    if (overrideTypes.isEmpty) return false;
+    for (final op in service.operations) {
+      for (final id in _identifiers(op.responseType.name)) {
+        if (overrideTypes.contains(id)) return true;
+      }
+      for (final p in op.parameters) {
+        for (final id in _identifiers(p.type.name)) {
+          if (overrideTypes.contains(id)) return true;
+        }
+      }
+    }
+    return false;
   }
 
   Iterable<String> _identifiers(String type) =>

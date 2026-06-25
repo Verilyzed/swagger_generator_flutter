@@ -110,6 +110,31 @@ void main() {
     expect(out, isNot(contains("import 'demo.enums.dart';")));
   });
 
+  test('imports the overrides file when a response uses an override type', () {
+    final out = ServiceEmitter().emit(
+      const ServiceDef(
+        name: 'DemoService',
+        operations: [
+          OperationDef(
+            methodName: 'getThing',
+            httpMethod: 'GET',
+            path: '/thing',
+            parameters: [],
+            responseType: DartType('OneOfThing'),
+          ),
+        ],
+      ),
+      partFileName: 'demo.service.chopper.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+      overrideTypes: const {'OneOfThing'},
+      overridesImport: 'package:example/overrides.dart',
+    );
+
+    expect(out, contains("import 'package:example/overrides.dart';"));
+  });
+
   test('emits multipart parts', () {
     final out = ServiceEmitter().emit(
       const ServiceDef(

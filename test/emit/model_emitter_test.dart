@@ -200,6 +200,57 @@ void main() {
     expect(out, contains('final DateTime? occurredAt;'));
   });
 
+  test('imports the overrides file when a field uses an override type', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Foo',
+          fields: [
+            FieldDef(
+              dartName: 'thing',
+              jsonKey: 'thing',
+              type: DartType('OneOfThing'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+      overrideTypes: const {'OneOfThing'},
+      overridesImport: 'package:example/overrides.dart',
+    );
+
+    expect(out, contains("import 'package:example/overrides.dart';"));
+    expect(out, contains('final OneOfThing thing;'));
+  });
+
+  test('omits the overrides import when no field uses an override', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Foo',
+          fields: [
+            FieldDef(
+              dartName: 'id',
+              jsonKey: 'id',
+              type: DartType('String'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+      overrideTypes: const {'OneOfThing'},
+      overridesImport: 'package:example/overrides.dart',
+    );
+
+    expect(out, isNot(contains('package:example/overrides.dart')));
+  });
+
   test('omits DateConverter when no date field exists', () {
     final out = ModelEmitter().emit(
       const [

@@ -31,6 +31,20 @@ void main() {
     expect(out, contains('services: [DemoService.create()],'));
   });
 
+  test('registers an override type in the factory map', () {
+    final out = emitter.emitClient(
+      const ServiceDef(name: 'DemoService', operations: []),
+      serviceImport: 'demo.service.dart',
+      modelsImport: 'demo.models.dart',
+      models: const [],
+      overrideTypes: const {'OneOfThing'},
+      overridesImport: 'package:example/overrides.dart',
+    );
+
+    expect(out, contains("import 'package:example/overrides.dart';"));
+    expect(out, contains('OneOfThing: OneOfThing.fromJson,'));
+  });
+
   test('emits a barrel of exports', () {
     final out = emitter.emitBarrel(
       enumsImport: 'demo.enums.dart',

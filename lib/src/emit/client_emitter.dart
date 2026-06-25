@@ -8,12 +8,18 @@ class ClientEmitter {
     required String serviceImport,
     required String modelsImport,
     required List<ModelDef> models,
+    Set<String> overrideTypes = const {},
+    String? overridesImport,
   }) {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
       ..writeln(SourceWriter.importLine('package:chopper/chopper.dart'))
       ..writeln(SourceWriter.importLine(serviceImport))
-      ..writeln(SourceWriter.importLine(modelsImport))
+      ..writeln(SourceWriter.importLine(modelsImport));
+    if (overridesImport != null && overrideTypes.isNotEmpty) {
+      buffer.writeln(SourceWriter.importLine(overridesImport));
+    }
+    buffer
       ..writeln()
       ..writeln('typedef JsonFactory = dynamic Function(Map<String, dynamic> json);')
       ..writeln()
@@ -63,6 +69,9 @@ class ClientEmitter {
       ..writeln('    converter: const JsonSerializableConverter({');
     for (final model in models) {
       buffer.writeln('      ${model.name}: ${model.name}.fromJson,');
+    }
+    for (final type in overrideTypes) {
+      buffer.writeln('      $type: $type.fromJson,');
     }
     buffer
       ..writeln('    }),')

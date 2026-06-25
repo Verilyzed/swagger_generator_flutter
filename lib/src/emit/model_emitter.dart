@@ -8,6 +8,8 @@ class ModelEmitter {
     required String partFileName,
     required String enumsImport,
     required Set<String> enumNames,
+    Set<String> overrideTypes = const {},
+    String? overridesImport,
   }) {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
@@ -16,7 +18,11 @@ class ModelEmitter {
           'package:json_annotation/json_annotation.dart',
         ),
       )
-      ..writeln(SourceWriter.importLine(enumsImport))
+      ..writeln(SourceWriter.importLine(enumsImport));
+    if (overridesImport != null && _usesOverride(models, overrideTypes)) {
+      buffer.writeln(SourceWriter.importLine(overridesImport));
+    }
+    buffer
       ..writeln()
       ..writeln("part '$partFileName';")
       ..writeln();
@@ -94,11 +100,24 @@ class ModelEmitter {
   }
 
   String? _enumOf(String typeName, Set<String> enumNames) {
-    for (final id in RegExp(r'[A-Za-z_][A-Za-z0-9_]*')
-        .allMatches(typeName)
-        .map((m) => m[0]!)) {
+    for (final id in _identifiers(typeName)) {
       if (enumNames.contains(id)) return id;
     }
     return null;
   }
+
+  bool _usesOverride(List<ModelDef> models, Set<String> overrideTypes) {
+    if (overrideTypes.isEmpty) return false;
+    for (final model in models) {
+      for (final field in model.fields) {
+        for (final id in _identifiers(field.type.name)) {
+          if (overrideTypes.contains(id)) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  Iterable<String> _identifiers(String type) =>
+      RegExp(r'[A-Za-z_][A-Za-z0-9_]*').allMatches(type).map((m) => m[0]!);
 }
