@@ -8,11 +8,15 @@ class BuilderConfig {
   final String inputFolder;
   final String outputFolder;
   final bool nameFromPath;
+  final String? overridesImport;
+  final Set<String> overrideSchemas;
 
   const BuilderConfig({
     required this.inputFolder,
     required this.outputFolder,
     this.nameFromPath = false,
+    this.overridesImport,
+    this.overrideSchemas = const {},
   });
 
   factory BuilderConfig.fromOptions(BuilderOptions options) {
@@ -32,10 +36,27 @@ class BuilderConfig {
       );
     }
     final nameFromPath = options.config['method_names'] == 'path';
+    final rawImport = options.config['overrides_import'];
+    final overridesImport = rawImport is String && rawImport.trim().isNotEmpty
+        ? rawImport.trim()
+        : null;
+    final rawSchemas = options.config['override_schemas'];
+    final overrideSchemas = rawSchemas is List
+        ? rawSchemas.map((e) => e.toString()).toSet()
+        : <String>{};
+    if (overrideSchemas.isNotEmpty && overridesImport == null) {
+      throw ArgumentError.value(
+        rawSchemas,
+        'override_schemas',
+        'override_schemas requires overrides_import to be set',
+      );
+    }
     return BuilderConfig(
       inputFolder: input,
       outputFolder: output,
       nameFromPath: nameFromPath,
+      overridesImport: overridesImport,
+      overrideSchemas: overrideSchemas,
     );
   }
 

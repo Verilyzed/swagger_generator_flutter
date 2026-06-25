@@ -141,4 +141,39 @@ void main() {
       'lib/demo.enums.dart',
     );
   });
+
+  test('reads override options', () {
+    final config = BuilderConfig.fromOptions(
+      const BuilderOptions({
+        'input_folder': 'lib/specs',
+        'output_folder': 'lib/generated',
+        'overrides_import': 'package:example/overrides.dart',
+        'override_schemas': ['OneOfThing', 'payment_method'],
+      }),
+    );
+
+    expect(config.overridesImport, 'package:example/overrides.dart');
+    expect(config.overrideSchemas, {'OneOfThing', 'payment_method'});
+  });
+
+  test('defaults overrides to empty', () {
+    final config = BuilderConfig.fromOptions(
+      const BuilderOptions({'input_folder': 'lib/specs'}),
+    );
+
+    expect(config.overridesImport, isNull);
+    expect(config.overrideSchemas, isEmpty);
+  });
+
+  test('throws when override_schemas is set without overrides_import', () {
+    expect(
+      () => BuilderConfig.fromOptions(
+        const BuilderOptions({
+          'input_folder': 'lib/specs',
+          'override_schemas': ['OneOfThing'],
+        }),
+      ),
+      throwsArgumentError,
+    );
+  });
 }
