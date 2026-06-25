@@ -14,6 +14,7 @@ class ClientEmitter {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
       ..writeln(SourceWriter.importLine('package:chopper/chopper.dart'))
+      ..writeln("import 'package:http/http.dart' show Client;")
       ..writeln(SourceWriter.importLine(serviceImport))
       ..writeln(SourceWriter.importLine(modelsImport));
     if (overridesImport != null && overrideTypes.isNotEmpty) {
@@ -62,10 +63,13 @@ class ClientEmitter {
       ..writeln()
       ..writeln('ChopperClient createClient({')
       ..writeln('  required Uri baseUrl,')
+      ..writeln('  Client? httpClient,')
       ..writeln('  List<Interceptor>? interceptors,')
+      ..writeln('  Authenticator? authenticator,')
       ..writeln('}) {')
       ..writeln('  return ChopperClient(')
       ..writeln('    baseUrl: baseUrl,')
+      ..writeln('    client: httpClient,')
       ..writeln('    converter: const JsonSerializableConverter({');
     for (final model in models) {
       buffer.writeln('      ${model.name}: ${model.name}.fromJson,');
@@ -76,6 +80,7 @@ class ClientEmitter {
     buffer
       ..writeln('    }),')
       ..writeln('    interceptors: interceptors ?? const [],')
+      ..writeln('    authenticator: authenticator,')
       ..writeln('    services: [${service.name}.create()],')
       ..writeln('  );')
       ..writeln('}')

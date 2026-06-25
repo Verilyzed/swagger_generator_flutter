@@ -29,6 +29,11 @@ void main() {
     expect(out, contains('Gadget: Gadget.fromJson,'));
     expect(out, contains('GadgetContainer: GadgetContainer.fromJson,'));
     expect(out, contains('services: [DemoService.create()],'));
+    expect(out, contains("import 'package:http/http.dart' show Client;"));
+    expect(out, contains('  Client? httpClient,'));
+    expect(out, contains('  Authenticator? authenticator,'));
+    expect(out, contains('    client: httpClient,'));
+    expect(out, contains('    authenticator: authenticator,'));
   });
 
   test('registers an override type in the factory map', () {
