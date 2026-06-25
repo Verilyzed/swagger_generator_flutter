@@ -479,4 +479,44 @@ void main() {
 
     expect(spec.service.operations.single.responseType.display, 'String');
   });
+
+  test('skips generating an overridden schema', () {
+    final names = NameGiver();
+    final resolver = OpenApi31TypeResolver(
+      names,
+      schemas: {
+        'OneOfThing': {
+          'oneOf': [
+            {r'$ref': '#/components/schemas/A'},
+          ],
+        },
+      },
+      overrides: {'OneOfThing'},
+    );
+    final spec = SpecParser(names, resolver, overrideSchemas: {'OneOfThing'})
+        .parse({
+      'components': {
+        'schemas': {
+          'OneOfThing': {
+            'oneOf': [
+              {r'$ref': '#/components/schemas/A'},
+            ],
+          },
+          'Foo': {
+            'type': 'object',
+            'properties': {
+              'thing': {r'$ref': '#/components/schemas/OneOfThing'},
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    expect(spec.models.map((m) => m.name), isNot(contains('OneOfThing')));
+    expect(spec.models.map((m) => m.name), contains('Foo'));
+    expect(spec.enums.map((e) => e.name), isNot(contains('OneOfThing')));
+    final foo = spec.models.firstWhere((m) => m.name == 'Foo');
+    expect(foo.fields.single.type.name, 'OneOfThing');
+  });
 }

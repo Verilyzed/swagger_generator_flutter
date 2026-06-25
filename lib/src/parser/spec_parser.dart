@@ -20,9 +20,15 @@ class SpecParser {
   final NameGiver _names;
   final DartTypeResolver _resolver;
   final bool _nameFromPath;
+  final Set<String> _overrideSchemas;
 
-  SpecParser(this._names, this._resolver, {bool nameFromPath = false})
-      : _nameFromPath = nameFromPath;
+  SpecParser(
+    this._names,
+    this._resolver, {
+    bool nameFromPath = false,
+    Set<String> overrideSchemas = const {},
+  })  : _nameFromPath = nameFromPath,
+        _overrideSchemas = overrideSchemas;
 
   Map<String, dynamic> _schemasCache = const {};
 
@@ -35,6 +41,7 @@ class SpecParser {
     // Collect enum Dart names first so model field defaults can reference them.
     final enumNames = <String>{};
     for (final entry in schemas.entries) {
+      if (_overrideSchemas.contains(entry.key)) continue;
       final schema = entry.value;
       if (schema is Map<String, dynamic> && schema['enum'] is List) {
         enumNames.add(_names.className(entry.key));
@@ -42,6 +49,7 @@ class SpecParser {
     }
 
     for (final entry in schemas.entries) {
+      if (_overrideSchemas.contains(entry.key)) continue;
       final schema = entry.value;
       if (schema is! Map<String, dynamic>) continue;
       if (schema['enum'] is List) {
