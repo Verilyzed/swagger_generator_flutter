@@ -54,6 +54,47 @@ void main() {
     expect(models, contains('final DateTime? createdAt;'));
   });
 
+  test('keeps a date parameter with a parameter-level example as a String', () {
+    const spec = '''
+{
+  "openapi": "3.0.0",
+  "info": {"title": "t", "version": "1"},
+  "paths": {
+    "/x": {
+      "get": {
+        "operationId": "getX",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "startDatum",
+            "schema": {"type": "string", "format": "date"},
+            "example": "2026-06-24",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "endDatum",
+            "schema": {"type": "string", "format": "date"},
+            "required": true
+          }
+        ],
+        "responses": {"200": {"description": "ok"}}
+      }
+    }
+  }
+}
+''';
+
+    final service = generateSources(spec, path: 'x.json', baseName: 'x')[
+        '.service.dart'];
+
+    expect(service, contains("@Query('startDatum') required String startDatum,"));
+    expect(
+      service,
+      contains("@Query('endDatum') required DateTime endDatum,"),
+    );
+  });
+
   test('creates a named enum for an inline enum parameter', () {
     const spec = '''
 {

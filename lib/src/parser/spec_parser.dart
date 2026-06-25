@@ -229,9 +229,13 @@ class SpecParser {
     for (final raw in (op['parameters'] as List?) ?? const []) {
       final p = (raw as Map).cast<String, dynamic>();
       final isPath = p['in'] == 'path';
-      final schema = p['schema'] is Map
+      var schema = p['schema'] is Map
           ? (p['schema'] as Map).cast<String, dynamic>()
           : const <String, dynamic>{};
+      // A parameter-level example counts the same as a schema-level one.
+      if (p['example'] != null && schema['example'] == null) {
+        schema = {...schema, 'example': p['example']};
+      }
       final type = _resolver.resolve(schema);
       params.add(ParamDef(
         dartName: _names.memberName(p['name'] as String),
