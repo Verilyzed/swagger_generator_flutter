@@ -36,6 +36,7 @@ dependencies:
 
   json_annotation: ^4.12.0
   chopper: ^8.0.0
+  http: ^1.0.0
 
 dev_dependencies:
   flutter_test:

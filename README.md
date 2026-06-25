@@ -80,6 +80,24 @@ When you set `output_folder`, also set `input_folder` so the spec's directory
 prefix is stripped; otherwise the generated files nest under the captured path
 (for example `lib/generated/lib/...`).
 
+## Using the generated client
+
+Each spec generates a uniquely named `<Name>Api` facade. Construct it directly
+with the connection parameters:
+
+```dart
+final api = NewapiApi(
+  baseUrl: Uri.parse('https://api.example.com'),
+  authenticator: myAuthenticator,
+  interceptors: [HttpLoggingInterceptor()],
+);
+```
+
+The facade names are unique per spec, so multiple specs do not collide. To reuse
+an existing `ChopperClient`, use `NewapiApi.fromClient(chopperClient)`. The
+generated client depends on `package:http` (for the `httpClient` parameter), so
+add `http` to your `dependencies`.
+
 ## Contributing
 
 Contributions are welcome. Open an issue to discuss larger changes before
