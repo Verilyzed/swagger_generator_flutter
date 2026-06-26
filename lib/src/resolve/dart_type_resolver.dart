@@ -31,6 +31,29 @@ abstract class DartTypeResolver {
   /// Whether the schema is nullable (version-specific).
   bool isNullable(Map<String, dynamic> schema);
 
+  /// The single non-null member of an `anyOf`, or `null` when the schema is not
+  /// an `anyOf`. An `anyOf` without exactly one non-null member resolves to an
+  /// empty schema (`dynamic`). Shared by both dialects because real 3.0 specs
+  /// sometimes use `anyOf` with a `type: null` member.
+  static Map<String, dynamic>? anyOfCore(Map<String, dynamic> schema) {
+    final anyOf = schema['anyOf'];
+    if (anyOf is! List) return null;
+    final nonNull = anyOf
+        .whereType<Map<dynamic, dynamic>>()
+        .map(Map<String, dynamic>.from)
+        .where((s) => s['type'] != 'null')
+        .toList();
+    return nonNull.length == 1 ? nonNull.single : const <String, dynamic>{};
+  }
+
+  static bool anyOfHasNull(Map<String, dynamic> schema) {
+    final anyOf = schema['anyOf'];
+    if (anyOf is! List) return false;
+    return anyOf
+        .whereType<Map<dynamic, dynamic>>()
+        .any((e) => e['type'] == 'null');
+  }
+
   DartType _resolveCore(Map<String, dynamic> schema) {
     final ref = schema[r'$ref'];
     if (ref is String) {
@@ -95,10 +118,12 @@ class OpenApi30TypeResolver extends DartTypeResolver {
   OpenApi30TypeResolver(super.names, {super.schemas, super.overrides});
 
   @override
-  Map<String, dynamic> coreSchema(Map<String, dynamic> schema) => schema;
+  Map<String, dynamic> coreSchema(Map<String, dynamic> schema) =>
+      DartTypeResolver.anyOfCore(schema) ?? schema;
 
   @override
-  bool isNullable(Map<String, dynamic> schema) => schema['nullable'] == true;
+  bool isNullable(Map<String, dynamic> schema) =>
+      schema['nullable'] == true || DartTypeResolver.anyOfHasNull(schema);
 }
 
 /// OpenAPI 3.1: nullability via `anyOf` null or a `type` array containing null.
@@ -107,15 +132,8 @@ class OpenApi31TypeResolver extends DartTypeResolver {
 
   @override
   Map<String, dynamic> coreSchema(Map<String, dynamic> schema) {
-    final anyOf = schema['anyOf'];
-    if (anyOf is List) {
-      final nonNull = anyOf
-          .whereType<Map<dynamic, dynamic>>()
-          .map(Map<String, dynamic>.from)
-          .where((s) => s['type'] != 'null')
-          .toList();
-      return nonNull.length == 1 ? nonNull.single : const <String, dynamic>{};
-    }
+    final anyOf = DartTypeResolver.anyOfCore(schema);
+    if (anyOf != null) return anyOf;
     final type = schema['type'];
     if (type is List) {
       final nonNull = type.where((t) => t != 'null').toList();
@@ -129,12 +147,7 @@ class OpenApi31TypeResolver extends DartTypeResolver {
 
   @override
   bool isNullable(Map<String, dynamic> schema) {
-    final anyOf = schema['anyOf'];
-    if (anyOf is List) {
-      return anyOf
-          .whereType<Map<dynamic, dynamic>>()
-          .any((e) => e['type'] == 'null');
-    }
+    if (DartTypeResolver.anyOfHasNull(schema)) return true;
     final type = schema['type'];
     if (type is List) return type.contains('null');
     return false;

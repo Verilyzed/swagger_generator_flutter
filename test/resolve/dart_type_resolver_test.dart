@@ -51,6 +51,26 @@ void main() {
     expect(t.isDateOnly, isFalse);
   });
 
+  test('OpenApi30 treats anyOf ref+null as a nullable type', () {
+    final r = OpenApi30TypeResolver(
+      NameGiver(),
+      schemas: {
+        'Bar': {
+          'type': 'object',
+          'properties': {'x': {'type': 'string'}},
+        },
+      },
+    );
+    final t = r.resolve({
+      'anyOf': [
+        {r'$ref': '#/components/schemas/Bar'},
+        {'type': 'null'},
+      ],
+    });
+    expect(t.name, 'Bar');
+    expect(t.isNullable, isTrue);
+  });
+
   test('resolves a ref to an override to its Dart type', () {
     final r = OpenApi31TypeResolver(
       NameGiver(),

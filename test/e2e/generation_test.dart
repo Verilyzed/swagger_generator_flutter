@@ -151,6 +151,28 @@ void main() {
     );
   });
 
+  test('handles a 3.0 anyOf ref-or-null property', () {
+    const spec = '''
+{
+  "openapi": "3.0.1",
+  "info": {"title": "t", "version": "1"},
+  "components": {"schemas": {
+    "Bar": {"type": "object", "properties": {"x": {"type": "string"}}},
+    "Foo": {"type": "object", "properties": {
+      "bar": {"anyOf": [{"\$ref": "#/components/schemas/Bar"}, {"type": "null"}]}
+    }}
+  }},
+  "paths": {}
+}
+''';
+
+    final models = generateSources(spec, path: 'f.json', baseName: 'f')[
+        '.models.dart'];
+
+    expect(models, contains('final Bar? bar;'));
+    expect(models, isNot(contains('dynamic bar')));
+  });
+
   test('creates a named enum for an inline enum parameter', () {
     const spec = '''
 {
