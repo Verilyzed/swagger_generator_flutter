@@ -51,6 +51,17 @@ void main() {
     expect(t.isDateOnly, isFalse);
   });
 
+  test('resolves a single-item allOf to that item', () {
+    expect(
+      resolver.resolve({
+        'allOf': [
+          {r'$ref': '#/components/schemas/Bar'},
+        ],
+      }).name,
+      'Bar',
+    );
+  });
+
   test('OpenApi30 treats anyOf ref+null as a nullable type', () {
     final r = OpenApi30TypeResolver(
       NameGiver(),

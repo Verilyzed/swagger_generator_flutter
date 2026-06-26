@@ -66,6 +66,12 @@ abstract class DartTypeResolver {
       return DartType(_names.className(name));
     }
 
+    final allOf = schema['allOf'];
+    if (allOf is List && allOf.length == 1) {
+      final only = allOf.single;
+      if (only is Map) return resolve(only.cast<String, dynamic>());
+    }
+
     final type = schema['type'];
     switch (type) {
       case 'string':

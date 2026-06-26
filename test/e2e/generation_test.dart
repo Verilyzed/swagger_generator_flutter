@@ -151,6 +151,28 @@ void main() {
     );
   });
 
+  test('uses the single member of an allOf property', () {
+    const spec = '''
+{
+  "openapi": "3.0.1",
+  "info": {"title": "t", "version": "1"},
+  "components": {"schemas": {
+    "Bar": {"type": "object", "properties": {"x": {"type": "string"}}},
+    "Foo": {"type": "object", "properties": {
+      "child": {"allOf": [{"\$ref": "#/components/schemas/Bar"}]}
+    }}
+  }},
+  "paths": {}
+}
+''';
+
+    final models = generateSources(spec, path: 'f.json', baseName: 'f')[
+        '.models.dart'];
+
+    expect(models, contains('final Bar? child;'));
+    expect(models, isNot(contains('dynamic child')));
+  });
+
   test('handles a 3.0 anyOf ref-or-null property', () {
     const spec = '''
 {
