@@ -121,6 +121,31 @@ void main() {
     expect(out, isNot(contains('required this.mode')));
   });
 
+  test('a required field that is nullable is not emitted as required', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Thing',
+          fields: [
+            FieldDef(
+              dartName: 'anrede',
+              jsonKey: 'anrede',
+              type: DartType('KundeAnrede', isNullable: true),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains('final KundeAnrede? anrede;'));
+    expect(out, contains('this.anrede,'));
+    expect(out, isNot(contains('required this.anrede')));
+  });
+
   test('adds unknownEnumValue to an enum field', () {
     final out = ModelEmitter().emit(
       const [

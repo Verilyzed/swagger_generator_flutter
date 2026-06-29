@@ -107,17 +107,17 @@ class AssetState {
   final ConnectionState connectionState;
 
   const AssetState({
-    required this.level,
-    required this.range,
-    required this.isConnected,
-    required this.isActive,
-    required this.isComplete,
-    required this.capacity,
-    required this.levelLimit,
-    required this.throughput,
-    required this.timeRemaining,
-    required this.lastUpdated,
-    required this.maxRate,
+    this.level,
+    this.range,
+    this.isConnected,
+    this.isActive,
+    this.isComplete,
+    this.capacity,
+    this.levelLimit,
+    this.throughput,
+    this.timeRemaining,
+    this.lastUpdated,
+    this.maxRate,
     required this.connectionState,
   });
 
@@ -346,7 +346,7 @@ class ErrorResponse {
 
   const ErrorResponse({
     required this.detail,
-    required this.errorId,
+    this.errorId,
     this.errorCode = ErrorCode.internalServerError,
   });
 
@@ -473,9 +473,9 @@ class Location {
   final bool atBase;
 
   const Location({
-    required this.longitude,
-    required this.latitude,
-    required this.lastUpdated,
+    this.longitude,
+    this.latitude,
+    this.lastUpdated,
     required this.atBase,
   });
 
@@ -549,8 +549,8 @@ class UsageCounter {
   final DateTime? lastUpdated;
 
   const UsageCounter({
-    required this.reading,
-    required this.lastUpdated,
+    this.reading,
+    this.lastUpdated,
   });
 
   factory UsageCounter.fromJson(Map<String, dynamic> json) =>
@@ -798,7 +798,7 @@ class Asset {
   const Asset({
     required this.assetId,
     required this.lastSeen,
-    required this.isReachable,
+    this.isReachable,
     required this.assetInformation,
     required this.resourceState,
     required this.odometer,
@@ -823,11 +823,11 @@ class AssetInformation {
   final String? displayName;
 
   const AssetInformation({
-    required this.serialNumber,
-    required this.manufacturer,
-    required this.model,
-    required this.year,
-    required this.displayName,
+    this.serialNumber,
+    this.manufacturer,
+    this.model,
+    this.year,
+    this.displayName,
   });
 
   factory AssetInformation.fromJson(Map<String, dynamic> json) =>
@@ -856,7 +856,7 @@ class AssetPolicy {
     required this.activityState,
     this.activityStateReason,
     required this.minLevel,
-    required this.runImmediatelyConfig,
+    this.runImmediatelyConfig,
   });
 
   factory AssetPolicy.fromJson(Map<String, dynamic> json) =>

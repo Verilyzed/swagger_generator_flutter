@@ -78,8 +78,10 @@ class ModelEmitter {
       ..writeln()
       ..writeln('  const ${model.name}({');
     for (final field in model.fields) {
-      final makeRequired = field.defaultValue == null &&
-          (field.isRequired || !field.type.isNullable);
+      // A constructor parameter is required only when it cannot be null and has
+      // no default. A nullable field is always optional (it defaults to null),
+      // even if the schema lists it as required.
+      final makeRequired = field.defaultValue == null && !field.type.isNullable;
       final prefix = makeRequired ? 'required ' : '';
       final suffix = field.defaultValue != null ? ' = ${field.defaultValue}' : '';
       buffer.writeln('    ${prefix}this.${field.dartName}$suffix,');

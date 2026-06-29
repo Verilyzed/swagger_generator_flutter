@@ -187,6 +187,38 @@ void main() {
     );
   });
 
+  test('3.0 propagates nullable through a ref to a nullable schema', () {
+    final r = OpenApi30TypeResolver(
+      NameGiver(),
+      schemas: {
+        'KundeTitel': {
+          'type': 'string',
+          'enum': ['Prof.', 'Dr.'],
+          'nullable': true,
+        },
+      },
+    );
+    final t = r.resolve({r'$ref': '#/components/schemas/KundeTitel'});
+    expect(t.name, 'KundeTitel');
+    expect(t.isNullable, isTrue);
+    expect(t.display, 'KundeTitel?');
+  });
+
+  test('a ref to a non-nullable schema stays non-nullable', () {
+    final r = OpenApi30TypeResolver(
+      NameGiver(),
+      schemas: {
+        'KundeAnrede': {
+          'type': 'string',
+          'enum': ['Herr', 'Frau'],
+        },
+      },
+    );
+    final t = r.resolve({r'$ref': '#/components/schemas/KundeAnrede'});
+    expect(t.isNullable, isFalse);
+    expect(t.display, 'KundeAnrede');
+  });
+
   test('keeps a ref to an object schema as a class name', () {
     final r = OpenApi31TypeResolver(
       NameGiver(),

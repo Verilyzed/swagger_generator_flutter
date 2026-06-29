@@ -60,8 +60,12 @@ abstract class DartTypeResolver {
       final name = ref.split('/').last;
       if (_overrides.contains(name)) return DartType(_names.className(name));
       final target = _schemas[name];
-      if (target is Map<String, dynamic> && _isAlias(target)) {
-        return resolve(target);
+      if (target is Map<String, dynamic>) {
+        if (_isAlias(target)) return resolve(target);
+        // A named schema marked nullable is nullable wherever it is referenced.
+        if (isNullable(target)) {
+          return DartType(_names.className(name), isNullable: true);
+        }
       }
       return DartType(_names.className(name));
     }

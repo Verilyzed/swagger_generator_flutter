@@ -195,6 +195,30 @@ void main() {
     expect(models, isNot(contains('dynamic bar')));
   });
 
+  test('a required ref to a nullable enum becomes an optional nullable field',
+      () {
+    const spec = '''
+{
+  "openapi": "3.0.0",
+  "info": {"title": "t", "version": "1"},
+  "components": {"schemas": {
+    "Salutation": {"type": "string", "enum": ["Mr", "Mrs"], "nullable": true},
+    "Customer": {"type": "object", "required": ["salutation"], "properties": {
+      "salutation": {"\$ref": "#/components/schemas/Salutation"}
+    }}
+  }},
+  "paths": {}
+}
+''';
+
+    final models = generateSources(spec, path: 'c.json', baseName: 'c')[
+        '.models.dart'];
+
+    expect(models, contains('final Salutation? salutation;'));
+    expect(models, contains('this.salutation,'));
+    expect(models, isNot(contains('required this.salutation')));
+  });
+
   test('creates a named enum for an inline enum parameter', () {
     const spec = '''
 {
