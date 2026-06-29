@@ -101,10 +101,15 @@ class ModelEmitter {
       ..writeln();
   }
 
+  // json_serializable accepts unknownEnumValue only on an enum field or a
+  // List/Set/Iterable of an enum, not on an enum used as a map key or value.
+  static final _enumCollection =
+      RegExp(r'^(?:List|Set|Iterable)<([A-Za-z_][A-Za-z0-9_]*)>$');
+
   String? _enumOf(String typeName, Set<String> enumNames) {
-    for (final id in _identifiers(typeName)) {
-      if (enumNames.contains(id)) return id;
-    }
+    if (enumNames.contains(typeName)) return typeName;
+    final inner = _enumCollection.firstMatch(typeName)?.group(1);
+    if (inner != null && enumNames.contains(inner)) return inner;
     return null;
   }
 

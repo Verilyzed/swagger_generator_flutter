@@ -104,12 +104,30 @@ abstract class DartTypeResolver {
         final additional = schema['additionalProperties'];
         if (additional is Map) {
           final value = resolve(Map<String, dynamic>.from(additional));
-          return DartType('Map<String, ${value.display}>');
+          final key = _mapKeyType(schema['propertyNames']);
+          return DartType('Map<$key, ${value.display}>');
         }
         return const DartType('Map<String, dynamic>');
       default:
         return const DartType('dynamic');
     }
+  }
+
+  /// The Dart key type for a map. Defaults to `String`; when `propertyNames` is
+  /// a `$ref` to an enum, that enum is used so the keys are type-checked (JSON
+  /// object keys are strings, and json_serializable encodes enum keys by value).
+  String _mapKeyType(dynamic propertyNames) {
+    if (propertyNames is Map) {
+      final ref = propertyNames[r'$ref'];
+      if (ref is String) {
+        final name = ref.split('/').last;
+        final target = _schemas[name];
+        if (target is Map<String, dynamic> && target['enum'] is List) {
+          return _names.className(name);
+        }
+      }
+    }
+    return 'String';
   }
 
   /// A named schema becomes a Dart class only when it is an object, an enum, or

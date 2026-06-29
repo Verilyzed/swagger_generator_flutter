@@ -169,6 +169,56 @@ void main() {
     expect(out, contains(r'@JsonKey(unknownEnumValue: ItemCategory.$unknown)'));
   });
 
+  test('adds unknownEnumValue to a list of enums', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Item',
+          fields: [
+            FieldDef(
+              dartName: 'tags',
+              jsonKey: 'tags',
+              type: DartType('List<Tag>'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {'Tag'},
+    );
+
+    expect(out, contains(r'@JsonKey(unknownEnumValue: Tag.$unknown)'));
+  });
+
+  test('omits unknownEnumValue when an enum is only a map key', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Timetable',
+          fields: [
+            FieldDef(
+              dartName: 'departureSchedule',
+              jsonKey: 'departure_schedule',
+              type: DartType('Map<Weekday, List<DepartureSchedule>>'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {'Weekday'},
+    );
+
+    expect(
+      out,
+      contains('final Map<Weekday, List<DepartureSchedule>> departureSchedule;'),
+    );
+    expect(out, isNot(contains('unknownEnumValue')));
+  });
+
   test('merges name and unknownEnumValue for a renamed enum field', () {
     final out = ModelEmitter().emit(
       const [

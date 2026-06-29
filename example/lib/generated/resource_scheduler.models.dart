@@ -707,7 +707,7 @@ class Schedule {
   @JsonKey(name: 'asset_id')
   final String assetId;
   @JsonKey(name: 'deadline_schedule')
-  final Map<String, List<DeadlineSlot>> deadlineSchedule;
+  final Map<Weekday, List<DeadlineSlot>> deadlineSchedule;
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
   @JsonKey(name: 'updated_at')
@@ -730,7 +730,7 @@ class Schedule {
 @JsonSerializable()
 class ScheduleCreateRequest {
   @JsonKey(name: 'deadline_schedule')
-  final Map<String, List<DeadlineSlot>> deadlineSchedule;
+  final Map<Weekday, List<DeadlineSlot>> deadlineSchedule;
 
   const ScheduleCreateRequest({
     required this.deadlineSchedule,
@@ -745,7 +745,7 @@ class ScheduleCreateRequest {
 @JsonSerializable()
 class ScheduleUpdateRequest {
   @JsonKey(name: 'deadline_schedule')
-  final Map<String, List<DeadlineSlot>> deadlineSchedule;
+  final Map<Weekday, List<DeadlineSlot>> deadlineSchedule;
 
   const ScheduleUpdateRequest({
     required this.deadlineSchedule,

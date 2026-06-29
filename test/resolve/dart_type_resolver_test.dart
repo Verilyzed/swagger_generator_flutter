@@ -154,6 +154,37 @@ void main() {
     expect(resolver.resolve({'type': 'object'}).display, 'Map<String, dynamic>');
   });
 
+  test('uses a propertyNames enum ref as the map key type', () {
+    final r = OpenApi31TypeResolver(
+      NameGiver(),
+      schemas: {
+        'Weekday': {'type': 'string', 'enum': ['Monday', 'Tuesday']},
+        'DepartureSchedule': {
+          'type': 'object',
+          'properties': {'targetTime': {'type': 'string'}},
+        },
+      },
+    );
+    final t = r.resolve({
+      'type': 'object',
+      'additionalProperties': {
+        'type': 'array',
+        'items': {r'$ref': '#/components/schemas/DepartureSchedule'},
+      },
+      'propertyNames': {r'$ref': '#/components/schemas/Weekday'},
+    });
+    expect(t.display, 'Map<Weekday, List<DepartureSchedule>>');
+  });
+
+  test('keeps a String map key when propertyNames is not an enum ref', () {
+    final t = resolver.resolve({
+      'type': 'object',
+      'additionalProperties': {'type': 'string'},
+      'propertyNames': {'type': 'string', 'pattern': r'^[a-z]+$'},
+    });
+    expect(t.display, 'Map<String, String>');
+  });
+
   test('3.1 resolver maps type array with null to nullable', () {
     expect(
       OpenApi31TypeResolver(NameGiver())

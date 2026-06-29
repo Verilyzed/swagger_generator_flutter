@@ -704,7 +704,7 @@ Schedule _$ScheduleFromJson(Map<String, dynamic> json) => Schedule(
   assetId: json['asset_id'] as String,
   deadlineSchedule: (json['deadline_schedule'] as Map<String, dynamic>).map(
     (k, e) => MapEntry(
-      k,
+      $enumDecode(_$WeekdayEnumMap, k),
       (e as List<dynamic>)
           .map((e) => DeadlineSlot.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -717,9 +717,22 @@ Schedule _$ScheduleFromJson(Map<String, dynamic> json) => Schedule(
 Map<String, dynamic> _$ScheduleToJson(Schedule instance) => <String, dynamic>{
   'id': instance.id,
   'asset_id': instance.assetId,
-  'deadline_schedule': instance.deadlineSchedule,
+  'deadline_schedule': instance.deadlineSchedule.map(
+    (k, e) => MapEntry(_$WeekdayEnumMap[k]!, e),
+  ),
   'created_at': instance.createdAt.toIso8601String(),
   'updated_at': instance.updatedAt.toIso8601String(),
+};
+
+const _$WeekdayEnumMap = {
+  Weekday.monday: 'Monday',
+  Weekday.tuesday: 'Tuesday',
+  Weekday.wednesday: 'Wednesday',
+  Weekday.thursday: 'Thursday',
+  Weekday.friday: 'Friday',
+  Weekday.saturday: 'Saturday',
+  Weekday.sunday: 'Sunday',
+  Weekday.$unknown: r'$unknown',
 };
 
 ScheduleCreateRequest _$ScheduleCreateRequestFromJson(
@@ -727,7 +740,7 @@ ScheduleCreateRequest _$ScheduleCreateRequestFromJson(
 ) => ScheduleCreateRequest(
   deadlineSchedule: (json['deadline_schedule'] as Map<String, dynamic>).map(
     (k, e) => MapEntry(
-      k,
+      $enumDecode(_$WeekdayEnumMap, k),
       (e as List<dynamic>)
           .map((e) => DeadlineSlot.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -737,14 +750,18 @@ ScheduleCreateRequest _$ScheduleCreateRequestFromJson(
 
 Map<String, dynamic> _$ScheduleCreateRequestToJson(
   ScheduleCreateRequest instance,
-) => <String, dynamic>{'deadline_schedule': instance.deadlineSchedule};
+) => <String, dynamic>{
+  'deadline_schedule': instance.deadlineSchedule.map(
+    (k, e) => MapEntry(_$WeekdayEnumMap[k]!, e),
+  ),
+};
 
 ScheduleUpdateRequest _$ScheduleUpdateRequestFromJson(
   Map<String, dynamic> json,
 ) => ScheduleUpdateRequest(
   deadlineSchedule: (json['deadline_schedule'] as Map<String, dynamic>).map(
     (k, e) => MapEntry(
-      k,
+      $enumDecode(_$WeekdayEnumMap, k),
       (e as List<dynamic>)
           .map((e) => DeadlineSlot.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -754,7 +771,11 @@ ScheduleUpdateRequest _$ScheduleUpdateRequestFromJson(
 
 Map<String, dynamic> _$ScheduleUpdateRequestToJson(
   ScheduleUpdateRequest instance,
-) => <String, dynamic>{'deadline_schedule': instance.deadlineSchedule};
+) => <String, dynamic>{
+  'deadline_schedule': instance.deadlineSchedule.map(
+    (k, e) => MapEntry(_$WeekdayEnumMap[k]!, e),
+  ),
+};
 
 ValidationError _$ValidationErrorFromJson(Map<String, dynamic> json) =>
     ValidationError(
