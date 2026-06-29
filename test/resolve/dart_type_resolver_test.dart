@@ -8,7 +8,7 @@ void main() {
   test('maps primitive types', () {
     expect(resolver.resolve({'type': 'string'}).display, 'String');
     expect(resolver.resolve({'type': 'integer'}).display, 'int');
-    expect(resolver.resolve({'type': 'number'}).display, 'num');
+    expect(resolver.resolve({'type': 'number'}).display, 'double');
     expect(resolver.resolve({'type': 'boolean'}).display, 'bool');
   });
 
@@ -126,7 +126,7 @@ void main() {
         {'type': 'null'},
       ],
     });
-    expect(t.display, 'num?');
+    expect(t.display, 'double?');
     expect(t.isNullable, isTrue);
   });
 

@@ -68,26 +68,26 @@ const _$ErrorCodeEnumMap = {
 
 RunImmediatelyConfig _$RunImmediatelyConfigFromJson(
   Map<String, dynamic> json,
-) => RunImmediatelyConfig(maxLevel: json['max_level'] as num?);
+) => RunImmediatelyConfig(maxLevel: (json['max_level'] as num?)?.toDouble());
 
 Map<String, dynamic> _$RunImmediatelyConfigToJson(
   RunImmediatelyConfig instance,
 ) => <String, dynamic>{'max_level': instance.maxLevel};
 
 AssetState _$AssetStateFromJson(Map<String, dynamic> json) => AssetState(
-  level: json['level'] as num?,
-  range: json['range'] as num?,
+  level: (json['level'] as num?)?.toDouble(),
+  range: (json['range'] as num?)?.toDouble(),
   isConnected: json['is_connected'] as bool?,
   isActive: json['is_active'] as bool?,
   isComplete: json['is_complete'] as bool?,
-  capacity: json['capacity'] as num?,
-  levelLimit: json['level_limit'] as num?,
-  throughput: json['throughput'] as num?,
-  timeRemaining: json['time_remaining'] as num?,
+  capacity: (json['capacity'] as num?)?.toDouble(),
+  levelLimit: (json['level_limit'] as num?)?.toDouble(),
+  throughput: (json['throughput'] as num?)?.toDouble(),
+  timeRemaining: (json['time_remaining'] as num?)?.toDouble(),
   lastUpdated: json['last_updated'] == null
       ? null
       : DateTime.parse(json['last_updated'] as String),
-  maxRate: json['max_rate'] as num?,
+  maxRate: (json['max_rate'] as num?)?.toDouble(),
   connectionState: $enumDecode(
     _$ConnectionStateEnumMap,
     json['connection_state'],
@@ -147,10 +147,10 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
     json['end_trigger'],
     unknownValue: TaskEndTriggerEnum.$unknown,
   ),
-  targetLevel: json['target_level'] as num?,
-  costs: json['costs'] as num?,
-  totalQuantity: json['total_quantity'] as num?,
-  pricePerUnit: json['price_per_unit'] as num?,
+  targetLevel: (json['target_level'] as num?)?.toDouble(),
+  costs: (json['costs'] as num?)?.toDouble(),
+  totalQuantity: (json['total_quantity'] as num?)?.toDouble(),
+  pricePerUnit: (json['price_per_unit'] as num?)?.toDouble(),
   failureReason: json['failure_reason'] == null
       ? null
       : FailureReason.fromJson(json['failure_reason'] as Map<String, dynamic>),
@@ -285,8 +285,8 @@ const _$ActivityReasonEnumMap = {
 Account _$AccountFromJson(Map<String, dynamic> json) => Account(
   providerUserId: json['provider_user_id'] as String,
   accountId: json['account_id'] as String,
-  latitude: json['latitude'] as num,
-  longitude: json['longitude'] as num,
+  latitude: (json['latitude'] as num).toDouble(),
+  longitude: (json['longitude'] as num).toDouble(),
   createdAt: DateTime.parse(json['created_at'] as String),
   selectedAsset: json['selected_asset'] == null
       ? null
@@ -503,7 +503,7 @@ const _$ResolutionActionEnumMap = {
 };
 
 Quantity _$QuantityFromJson(Map<String, dynamic> json) => Quantity(
-  value: json['value'] as num?,
+  value: (json['value'] as num?)?.toDouble(),
   unit: json['unit'] as String? ?? 'units',
 );
 
@@ -513,8 +513,8 @@ Map<String, dynamic> _$QuantityToJson(Quantity instance) => <String, dynamic>{
 };
 
 Location _$LocationFromJson(Map<String, dynamic> json) => Location(
-  longitude: json['longitude'] as num?,
-  latitude: json['latitude'] as num?,
+  longitude: (json['longitude'] as num?)?.toDouble(),
+  latitude: (json['latitude'] as num?)?.toDouble(),
   lastUpdated: json['last_updated'] == null
       ? null
       : DateTime.parse(json['last_updated'] as String),
@@ -582,7 +582,7 @@ Map<String, dynamic> _$NotFoundResponseToJson(NotFoundResponse instance) =>
     };
 
 UsageCounter _$UsageCounterFromJson(Map<String, dynamic> json) => UsageCounter(
-  reading: json['reading'] as num?,
+  reading: (json['reading'] as num?)?.toDouble(),
   lastUpdated: json['last_updated'] == null
       ? null
       : DateTime.parse(json['last_updated'] as String),
@@ -594,8 +594,10 @@ Map<String, dynamic> _$UsageCounterToJson(UsageCounter instance) =>
       'last_updated': instance.lastUpdated?.toIso8601String(),
     };
 
-Percent _$PercentFromJson(Map<String, dynamic> json) =>
-    Percent(value: json['value'] as num?, unit: json['unit'] as String? ?? '%');
+Percent _$PercentFromJson(Map<String, dynamic> json) => Percent(
+  value: (json['value'] as num?)?.toDouble(),
+  unit: json['unit'] as String? ?? '%',
+);
 
 Map<String, dynamic> _$PercentToJson(Percent instance) => <String, dynamic>{
   'value': instance.value,
@@ -831,7 +833,7 @@ AssetPolicy _$AssetPolicyFromJson(Map<String, dynamic> json) => AssetPolicy(
     json['activity_state_reason'],
     unknownValue: ActivityStateReason.$unknown,
   ),
-  minLevel: json['min_level'] as num,
+  minLevel: (json['min_level'] as num).toDouble(),
   runImmediatelyConfig: json['run_immediately_config'] == null
       ? null
       : RunImmediatelyConfig.fromJson(
@@ -866,7 +868,7 @@ const _$ActivityStateReasonEnumMap = {
 AssetPolicyRequest _$AssetPolicyRequestFromJson(Map<String, dynamic> json) =>
     AssetPolicyRequest(
       schedulingActive: json['scheduling_active'] as bool?,
-      minLevel: json['min_level'] as num?,
+      minLevel: (json['min_level'] as num?)?.toDouble(),
       runImmediatelyConfig: json['run_immediately_config'] == null
           ? null
           : RunImmediatelyConfig.fromJson(

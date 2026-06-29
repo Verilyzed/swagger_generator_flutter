@@ -49,7 +49,7 @@ class ErrorResponse {
 
 @JsonSerializable()
 class FieldModel {
-  final num? entropy;
+  final double? entropy;
   final bool generate;
   final String id;
   final String? label;

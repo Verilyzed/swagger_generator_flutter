@@ -60,6 +60,7 @@ void main() {
 
     expect(id.isRequired, isTrue);
     expect(costs.type.isNullable, isTrue);
+    expect(costs.type.display, 'double?');
     expect(assetId.dartName, 'assetId');
   });
 
