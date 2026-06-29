@@ -25,6 +25,24 @@ class ApiRequest {
     this.timestamp,
   });
 
+  ApiRequest copyWith({
+    ApiRequestAction? action,
+    ApiRequestActor? actor,
+    String? requestId,
+    ApiRequestResource? resource,
+    ApiRequestResult? result,
+    DateTime? timestamp,
+  }) {
+    return ApiRequest(
+      action: action ?? this.action,
+      actor: actor ?? this.actor,
+      requestId: requestId ?? this.requestId,
+      resource: resource ?? this.resource,
+      result: result ?? this.result,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
+
   factory ApiRequest.fromJson(Map<String, dynamic> json) =>
       _$ApiRequestFromJson(json);
 
@@ -40,6 +58,16 @@ class ErrorResponse {
     this.message,
     this.status,
   });
+
+  ErrorResponse copyWith({
+    String? message,
+    int? status,
+  }) {
+    return ErrorResponse(
+      message: message ?? this.message,
+      status: status ?? this.status,
+    );
+  }
 
   factory ErrorResponse.fromJson(Map<String, dynamic> json) =>
       _$ErrorResponseFromJson(json);
@@ -73,6 +101,30 @@ class FieldModel {
     this.value,
   });
 
+  FieldModel copyWith({
+    double? entropy,
+    bool? generate,
+    String? id,
+    String? label,
+    FieldPurpose? purpose,
+    GeneratorRecipe? recipe,
+    FieldSection? section,
+    FieldType? type,
+    String? value,
+  }) {
+    return FieldModel(
+      entropy: entropy ?? this.entropy,
+      generate: generate ?? this.generate,
+      id: id ?? this.id,
+      label: label ?? this.label,
+      purpose: purpose ?? this.purpose,
+      recipe: recipe ?? this.recipe,
+      section: section ?? this.section,
+      type: type ?? this.type,
+      value: value ?? this.value,
+    );
+  }
+
   factory FieldModel.fromJson(Map<String, dynamic> json) =>
       _$FieldModelFromJson(json);
 
@@ -97,6 +149,24 @@ class File {
     this.section,
     this.size,
   });
+
+  File copyWith({
+    String? content,
+    String? contentPath,
+    String? id,
+    String? name,
+    FileSection? section,
+    int? size,
+  }) {
+    return File(
+      content: content ?? this.content,
+      contentPath: contentPath ?? this.contentPath,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      section: section ?? this.section,
+      size: size ?? this.size,
+    );
+  }
 
   factory File.fromJson(Map<String, dynamic> json) =>
       _$FileFromJson(json);
@@ -142,6 +212,42 @@ class FullItem {
     this.sections,
   });
 
+  FullItem copyWith({
+    ItemCategory? category,
+    DateTime? createdAt,
+    bool? favorite,
+    String? id,
+    String? lastEditedBy,
+    ItemState? state,
+    List<String>? tags,
+    String? title,
+    DateTime? updatedAt,
+    List<ItemUrlsItem>? urls,
+    ItemVault? vault,
+    int? version,
+    List<FieldModel>? fields,
+    List<File>? files,
+    List<FullItemSectionsItem>? sections,
+  }) {
+    return FullItem(
+      category: category ?? this.category,
+      createdAt: createdAt ?? this.createdAt,
+      favorite: favorite ?? this.favorite,
+      id: id ?? this.id,
+      lastEditedBy: lastEditedBy ?? this.lastEditedBy,
+      state: state ?? this.state,
+      tags: tags ?? this.tags,
+      title: title ?? this.title,
+      updatedAt: updatedAt ?? this.updatedAt,
+      urls: urls ?? this.urls,
+      vault: vault ?? this.vault,
+      version: version ?? this.version,
+      fields: fields ?? this.fields,
+      files: files ?? this.files,
+      sections: sections ?? this.sections,
+    );
+  }
+
   factory FullItem.fromJson(Map<String, dynamic> json) =>
       _$FullItemFromJson(json);
 
@@ -160,6 +266,18 @@ class GeneratorRecipe {
     this.excludeCharacters,
     this.length = 32,
   });
+
+  GeneratorRecipe copyWith({
+    List<GeneratorRecipeCharacterSetsItem>? characterSets,
+    String? excludeCharacters,
+    int? length,
+  }) {
+    return GeneratorRecipe(
+      characterSets: characterSets ?? this.characterSets,
+      excludeCharacters: excludeCharacters ?? this.excludeCharacters,
+      length: length ?? this.length,
+    );
+  }
 
   factory GeneratorRecipe.fromJson(Map<String, dynamic> json) =>
       _$GeneratorRecipeFromJson(json);
@@ -199,6 +317,36 @@ class Item {
     this.version,
   });
 
+  Item copyWith({
+    ItemCategory? category,
+    DateTime? createdAt,
+    bool? favorite,
+    String? id,
+    String? lastEditedBy,
+    ItemState? state,
+    List<String>? tags,
+    String? title,
+    DateTime? updatedAt,
+    List<ItemUrlsItem>? urls,
+    ItemVault? vault,
+    int? version,
+  }) {
+    return Item(
+      category: category ?? this.category,
+      createdAt: createdAt ?? this.createdAt,
+      favorite: favorite ?? this.favorite,
+      id: id ?? this.id,
+      lastEditedBy: lastEditedBy ?? this.lastEditedBy,
+      state: state ?? this.state,
+      tags: tags ?? this.tags,
+      title: title ?? this.title,
+      updatedAt: updatedAt ?? this.updatedAt,
+      urls: urls ?? this.urls,
+      vault: vault ?? this.vault,
+      version: version ?? this.version,
+    );
+  }
+
   factory Item.fromJson(Map<String, dynamic> json) =>
       _$ItemFromJson(json);
 
@@ -216,6 +364,18 @@ class ServiceDependency {
     this.service,
     this.status,
   });
+
+  ServiceDependency copyWith({
+    String? message,
+    String? service,
+    String? status,
+  }) {
+    return ServiceDependency(
+      message: message ?? this.message,
+      service: service ?? this.service,
+      status: status ?? this.status,
+    );
+  }
 
   factory ServiceDependency.fromJson(Map<String, dynamic> json) =>
       _$ServiceDependencyFromJson(json);
@@ -248,6 +408,30 @@ class Vault {
     this.updatedAt,
   });
 
+  Vault copyWith({
+    int? attributeVersion,
+    int? contentVersion,
+    DateTime? createdAt,
+    String? description,
+    String? id,
+    int? items,
+    String? name,
+    VaultType? type,
+    DateTime? updatedAt,
+  }) {
+    return Vault(
+      attributeVersion: attributeVersion ?? this.attributeVersion,
+      contentVersion: contentVersion ?? this.contentVersion,
+      createdAt: createdAt ?? this.createdAt,
+      description: description ?? this.description,
+      id: id ?? this.id,
+      items: items ?? this.items,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   factory Vault.fromJson(Map<String, dynamic> json) =>
       _$VaultFromJson(json);
 
@@ -270,6 +454,22 @@ class ApiRequestActor {
     this.userAgent,
   });
 
+  ApiRequestActor copyWith({
+    String? account,
+    String? id,
+    String? jti,
+    String? requestIp,
+    String? userAgent,
+  }) {
+    return ApiRequestActor(
+      account: account ?? this.account,
+      id: id ?? this.id,
+      jti: jti ?? this.jti,
+      requestIp: requestIp ?? this.requestIp,
+      userAgent: userAgent ?? this.userAgent,
+    );
+  }
+
   factory ApiRequestActor.fromJson(Map<String, dynamic> json) =>
       _$ApiRequestActorFromJson(json);
 
@@ -284,6 +484,14 @@ class ApiRequestResourceItem {
     this.id,
   });
 
+  ApiRequestResourceItem copyWith({
+    String? id,
+  }) {
+    return ApiRequestResourceItem(
+      id: id ?? this.id,
+    );
+  }
+
   factory ApiRequestResourceItem.fromJson(Map<String, dynamic> json) =>
       _$ApiRequestResourceItemFromJson(json);
 
@@ -297,6 +505,14 @@ class ApiRequestResourceVault {
   const ApiRequestResourceVault({
     this.id,
   });
+
+  ApiRequestResourceVault copyWith({
+    String? id,
+  }) {
+    return ApiRequestResourceVault(
+      id: id ?? this.id,
+    );
+  }
 
   factory ApiRequestResourceVault.fromJson(Map<String, dynamic> json) =>
       _$ApiRequestResourceVaultFromJson(json);
@@ -319,6 +535,20 @@ class ApiRequestResource {
     this.vault,
   });
 
+  ApiRequestResource copyWith({
+    ApiRequestResourceItem? item,
+    int? itemVersion,
+    ApiRequestResourceType? type,
+    ApiRequestResourceVault? vault,
+  }) {
+    return ApiRequestResource(
+      item: item ?? this.item,
+      itemVersion: itemVersion ?? this.itemVersion,
+      type: type ?? this.type,
+      vault: vault ?? this.vault,
+    );
+  }
+
   factory ApiRequestResource.fromJson(Map<String, dynamic> json) =>
       _$ApiRequestResourceFromJson(json);
 
@@ -333,6 +563,14 @@ class FieldSection {
     this.id,
   });
 
+  FieldSection copyWith({
+    String? id,
+  }) {
+    return FieldSection(
+      id: id ?? this.id,
+    );
+  }
+
   factory FieldSection.fromJson(Map<String, dynamic> json) =>
       _$FieldSectionFromJson(json);
 
@@ -346,6 +584,14 @@ class FileSection {
   const FileSection({
     this.id,
   });
+
+  FileSection copyWith({
+    String? id,
+  }) {
+    return FileSection(
+      id: id ?? this.id,
+    );
+  }
 
   factory FileSection.fromJson(Map<String, dynamic> json) =>
       _$FileSectionFromJson(json);
@@ -362,6 +608,16 @@ class FullItemSectionsItem {
     this.id,
     this.label,
   });
+
+  FullItemSectionsItem copyWith({
+    String? id,
+    String? label,
+  }) {
+    return FullItemSectionsItem(
+      id: id ?? this.id,
+      label: label ?? this.label,
+    );
+  }
 
   factory FullItemSectionsItem.fromJson(Map<String, dynamic> json) =>
       _$FullItemSectionsItemFromJson(json);
@@ -381,6 +637,18 @@ class ItemUrlsItem {
     this.primary,
   });
 
+  ItemUrlsItem copyWith({
+    String? href,
+    String? label,
+    bool? primary,
+  }) {
+    return ItemUrlsItem(
+      href: href ?? this.href,
+      label: label ?? this.label,
+      primary: primary ?? this.primary,
+    );
+  }
+
   factory ItemUrlsItem.fromJson(Map<String, dynamic> json) =>
       _$ItemUrlsItemFromJson(json);
 
@@ -394,6 +662,14 @@ class ItemVault {
   const ItemVault({
     required this.id,
   });
+
+  ItemVault copyWith({
+    String? id,
+  }) {
+    return ItemVault(
+      id: id ?? this.id,
+    );
+  }
 
   factory ItemVault.fromJson(Map<String, dynamic> json) =>
       _$ItemVaultFromJson(json);
@@ -414,6 +690,18 @@ class PatchItem {
     this.value,
   });
 
+  PatchItem copyWith({
+    PatchItemOp? op,
+    String? path,
+    Map<String, dynamic>? value,
+  }) {
+    return PatchItem(
+      op: op ?? this.op,
+      path: path ?? this.path,
+      value: value ?? this.value,
+    );
+  }
+
   factory PatchItem.fromJson(Map<String, dynamic> json) =>
       _$PatchItemFromJson(json);
 
@@ -431,6 +719,18 @@ class GetServerHealthResponse {
     required this.name,
     required this.version,
   });
+
+  GetServerHealthResponse copyWith({
+    List<ServiceDependency>? dependencies,
+    String? name,
+    String? version,
+  }) {
+    return GetServerHealthResponse(
+      dependencies: dependencies ?? this.dependencies,
+      name: name ?? this.name,
+      version: version ?? this.version,
+    );
+  }
 
   factory GetServerHealthResponse.fromJson(Map<String, dynamic> json) =>
       _$GetServerHealthResponseFromJson(json);

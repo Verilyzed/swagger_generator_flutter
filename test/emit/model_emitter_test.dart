@@ -48,6 +48,65 @@ void main() {
     expect(out, contains('Map<String, dynamic> toJson() => _\$TaskToJson(this);'));
   });
 
+  test('generates a copyWith with a nullable parameter for each field', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Thing',
+          fields: [
+            FieldDef(
+              dartName: 'name',
+              jsonKey: 'name',
+              type: DartType('String'),
+              isRequired: true,
+            ),
+            FieldDef(
+              dartName: 'firma',
+              jsonKey: 'firma',
+              type: DartType('String', isNullable: true),
+              isRequired: false,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains('Thing copyWith({'));
+    expect(out, contains('String? name,'));
+    expect(out, contains('String? firma,'));
+    expect(out, contains('return Thing('));
+    expect(out, contains('name: name ?? this.name,'));
+    expect(out, contains('firma: firma ?? this.firma,'));
+  });
+
+  test('copyWith keeps a dynamic field untyped', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Holder',
+          fields: [
+            FieldDef(
+              dartName: 'meta',
+              jsonKey: 'meta',
+              type: DartType('dynamic'),
+              isRequired: false,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains('dynamic meta,'));
+    expect(out, isNot(contains('dynamic? meta')));
+    expect(out, contains('meta: meta ?? this.meta,'));
+  });
+
   test('non-nullable non-required field without default becomes required', () {
     final out = ModelEmitter().emit(
       const [

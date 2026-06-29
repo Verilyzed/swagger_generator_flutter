@@ -88,7 +88,9 @@ class ModelEmitter {
     }
     buffer
       ..writeln('  });')
-      ..writeln()
+      ..writeln();
+    _emitCopyWith(buffer, model);
+    buffer
       ..writeln(
         '  factory ${model.name}.fromJson(Map<String, dynamic> json) =>',
       )
@@ -105,6 +107,29 @@ class ModelEmitter {
   // List/Set/Iterable of an enum, not on an enum used as a map key or value.
   static final _enumCollection =
       RegExp(r'^(?:List|Set|Iterable)<([A-Za-z_][A-Za-z0-9_]*)>$');
+
+  // Each parameter is the field's type made nullable so an omitted argument
+  // keeps the current value (`dynamic` is already nullable). Passing null to a
+  // nullable field keeps it; rebuild via the constructor to clear one.
+  void _emitCopyWith(StringBuffer buffer, ModelDef model) {
+    buffer.writeln('  ${model.name} copyWith({');
+    for (final field in model.fields) {
+      final paramType =
+          field.type.name == 'dynamic' ? 'dynamic' : '${field.type.name}?';
+      buffer.writeln('    $paramType ${field.dartName},');
+    }
+    buffer
+      ..writeln('  }) {')
+      ..writeln('    return ${model.name}(');
+    for (final field in model.fields) {
+      final name = field.dartName;
+      buffer.writeln('      $name: $name ?? this.$name,');
+    }
+    buffer
+      ..writeln('    );')
+      ..writeln('  }')
+      ..writeln();
+  }
 
   String? _enumOf(String typeName, Set<String> enumNames) {
     if (enumNames.contains(typeName)) return typeName;

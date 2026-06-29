@@ -151,6 +151,35 @@ void main() {
     );
   });
 
+  test('generates a copyWith on a model class', () {
+    const spec = '''
+{
+  "openapi": "3.0.0",
+  "info": {"title": "t", "version": "1"},
+  "components": {"schemas": {
+    "Customer": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"type": "string"},
+        "nickname": {"type": "string", "nullable": true}
+      }
+    }
+  }},
+  "paths": {}
+}
+''';
+
+    final models = generateSources(spec, path: 'c.json', baseName: 'c')[
+        '.models.dart'];
+
+    expect(models, contains('Customer copyWith({'));
+    expect(models, contains('String? id,'));
+    expect(models, contains('String? nickname,'));
+    expect(models, contains('id: id ?? this.id,'));
+    expect(models, contains('nickname: nickname ?? this.nickname,'));
+  });
+
   test('uses the single member of an allOf property', () {
     const spec = '''
 {
