@@ -43,6 +43,7 @@ void main() {
     expect(out, contains('final String assetId;'));
     expect(out, contains('final double? costs;'));
     expect(out, contains('required this.id'));
+    expect(out, contains('const Task({'));
     expect(out, contains('factory Task.fromJson(Map<String, dynamic> json) =>'));
     expect(out, contains('Map<String, dynamic> toJson() => _\$TaskToJson(this);'));
   });

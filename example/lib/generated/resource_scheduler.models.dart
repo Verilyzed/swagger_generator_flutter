@@ -21,7 +21,7 @@ class AttachmentInput {
   final String filename;
   final String content;
 
-  AttachmentInput({
+  const AttachmentInput({
     required this.filename,
     required this.content,
   });
@@ -39,7 +39,7 @@ class AttachmentResponse {
   final String filename;
   final int size;
 
-  AttachmentResponse({
+  const AttachmentResponse({
     required this.attachmentId,
     required this.filename,
     required this.size,
@@ -57,7 +57,7 @@ class BadInputResponse {
   @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
 
-  BadInputResponse({
+  const BadInputResponse({
     required this.detail,
     this.errorCode = ErrorCode.badInput,
   });
@@ -73,7 +73,7 @@ class RunImmediatelyConfig {
   @JsonKey(name: 'max_level')
   final double? maxLevel;
 
-  RunImmediatelyConfig({
+  const RunImmediatelyConfig({
     this.maxLevel,
   });
 
@@ -106,7 +106,7 @@ class AssetState {
   @JsonKey(name: 'connection_state', unknownEnumValue: ConnectionState.$unknown)
   final ConnectionState connectionState;
 
-  AssetState({
+  const AssetState({
     required this.level,
     required this.range,
     required this.isConnected,
@@ -154,7 +154,7 @@ class Task {
   @JsonKey(name: 'failure_reason')
   final FailureReason? failureReason;
 
-  Task({
+  const Task({
     required this.id,
     required this.assetId,
     required this.calculatedStart,
@@ -204,7 +204,7 @@ class Run {
   @JsonKey(name: 'savings_pct')
   final Percent? savingsPct;
 
-  Run({
+  const Run({
     required this.id,
     required this.assetId,
     required this.createdAt,
@@ -234,7 +234,7 @@ class ActivityStatus {
   @JsonKey(name: 'activity_reason', unknownEnumValue: ActivityReason.$unknown)
   final ActivityReason? activityReason;
 
-  ActivityStatus({
+  const ActivityStatus({
     required this.assetId,
     this.activityReason,
   });
@@ -262,7 +262,7 @@ class Account {
   @JsonKey(name: 'updated_at')
   final DateTime? updatedAt;
 
-  Account({
+  const Account({
     required this.providerUserId,
     required this.accountId,
     required this.latitude,
@@ -285,7 +285,7 @@ class DeadlineSlot {
   final String targetTime;
   final bool active;
 
-  DeadlineSlot({
+  const DeadlineSlot({
     required this.targetTime,
     this.active = true,
   });
@@ -307,7 +307,7 @@ class DiscoveredAsset {
   @JsonKey(name: 'has_interventions')
   final bool hasInterventions;
 
-  DiscoveredAsset({
+  const DiscoveredAsset({
     required this.assetId,
     required this.assetInformation,
     required this.capability,
@@ -325,7 +325,7 @@ class ProviderLinkResponse {
   final String linkUrl;
   final String linkToken;
 
-  ProviderLinkResponse({
+  const ProviderLinkResponse({
     required this.linkUrl,
     required this.linkToken,
   });
@@ -344,7 +344,7 @@ class ErrorResponse {
   @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
 
-  ErrorResponse({
+  const ErrorResponse({
     required this.detail,
     required this.errorId,
     this.errorCode = ErrorCode.internalServerError,
@@ -361,7 +361,7 @@ class Money {
   final String? value;
   final String unit;
 
-  Money({
+  const Money({
     this.value,
     this.unit = 'USD',
   });
@@ -378,7 +378,7 @@ class FailureReason {
   final FailureReasonTypeEnum type;
   final String detail;
 
-  FailureReason({
+  const FailureReason({
     required this.type,
     required this.detail,
   });
@@ -393,7 +393,7 @@ class FailureReason {
 class FeatureFlagConfig {
   final SchedulingStatus scheduling;
 
-  FeatureFlagConfig({
+  const FeatureFlagConfig({
     required this.scheduling,
   });
 
@@ -407,7 +407,7 @@ class FeatureFlagConfig {
 class HttpValidationError {
   final List<ValidationError>? detail;
 
-  HttpValidationError({
+  const HttpValidationError({
     this.detail,
   });
 
@@ -431,7 +431,7 @@ class Intervention {
   @JsonKey(unknownEnumValue: ResolutionAction.$unknown)
   final ResolutionAction? action;
 
-  Intervention({
+  const Intervention({
     required this.id,
     required this.title,
     required this.description,
@@ -452,7 +452,7 @@ class Quantity {
   final double? value;
   final String unit;
 
-  Quantity({
+  const Quantity({
     this.value,
     this.unit = 'units',
   });
@@ -472,7 +472,7 @@ class Location {
   @JsonKey(name: 'at_base')
   final bool atBase;
 
-  Location({
+  const Location({
     required this.longitude,
     required this.latitude,
     required this.lastUpdated,
@@ -492,7 +492,7 @@ class MetricValue {
   final int previousValue;
   final Percent trend;
 
-  MetricValue({
+  const MetricValue({
     required this.value,
     required this.previousValue,
     required this.trend,
@@ -510,7 +510,7 @@ class NotAllowedResponse {
   @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
 
-  NotAllowedResponse({
+  const NotAllowedResponse({
     required this.detail,
     this.errorCode = ErrorCode.notAllowed,
   });
@@ -529,7 +529,7 @@ class NotFoundResponse {
   final String? entity;
   final String? id;
 
-  NotFoundResponse({
+  const NotFoundResponse({
     this.detail = 'Ressource not found',
     this.errorCode = ErrorCode.resourceNotFound,
     this.entity,
@@ -548,7 +548,7 @@ class UsageCounter {
   @JsonKey(name: 'last_updated')
   final DateTime? lastUpdated;
 
-  UsageCounter({
+  const UsageCounter({
     required this.reading,
     required this.lastUpdated,
   });
@@ -564,7 +564,7 @@ class Percent {
   final double? value;
   final String unit;
 
-  Percent({
+  const Percent({
     this.value,
     this.unit = '%',
   });
@@ -582,7 +582,7 @@ class PriceMetric {
   final Percent pct;
   final Percent trend;
 
-  PriceMetric({
+  const PriceMetric({
     this.value,
     this.unit = 'USD',
     required this.pct,
@@ -600,7 +600,7 @@ class SelectAssetRequest {
   @JsonKey(name: 'asset_id')
   final String assetId;
 
-  SelectAssetRequest({
+  const SelectAssetRequest({
     required this.assetId,
   });
 
@@ -625,7 +625,7 @@ class RunMetrics {
   @JsonKey(name: 'weighted_avg_price_per_unit')
   final PriceMetric weightedAvgPricePerUnit;
 
-  RunMetrics({
+  const RunMetrics({
     required this.period,
     required this.aggregation,
     required this.sessionCount,
@@ -645,7 +645,7 @@ class RunMetrics {
 class SchedulingStatus {
   final bool enabled;
 
-  SchedulingStatus({
+  const SchedulingStatus({
     required this.enabled,
   });
 
@@ -664,7 +664,7 @@ class TicketInput {
   final DateTime occurredAt;
   final String email;
 
-  TicketInput({
+  const TicketInput({
     required this.subject,
     required this.description,
     required this.occurredAt,
@@ -687,7 +687,7 @@ class TicketResponse {
   final String message;
   final bool success;
 
-  TicketResponse({
+  const TicketResponse({
     required this.ticketId,
     required this.requestUrl,
     required this.status,
@@ -713,7 +713,7 @@ class Schedule {
   @JsonKey(name: 'updated_at')
   final DateTime updatedAt;
 
-  Schedule({
+  const Schedule({
     required this.id,
     required this.assetId,
     required this.deadlineSchedule,
@@ -732,7 +732,7 @@ class ScheduleCreateRequest {
   @JsonKey(name: 'deadline_schedule')
   final Map<String, List<DeadlineSlot>> deadlineSchedule;
 
-  ScheduleCreateRequest({
+  const ScheduleCreateRequest({
     required this.deadlineSchedule,
   });
 
@@ -747,7 +747,7 @@ class ScheduleUpdateRequest {
   @JsonKey(name: 'deadline_schedule')
   final Map<String, List<DeadlineSlot>> deadlineSchedule;
 
-  ScheduleUpdateRequest({
+  const ScheduleUpdateRequest({
     required this.deadlineSchedule,
   });
 
@@ -765,7 +765,7 @@ class ValidationError {
   final dynamic input;
   final Map<String, dynamic>? ctx;
 
-  ValidationError({
+  const ValidationError({
     required this.loc,
     required this.msg,
     required this.type,
@@ -795,7 +795,7 @@ class Asset {
   final Location location;
   final List<Intervention>? interventions;
 
-  Asset({
+  const Asset({
     required this.assetId,
     required this.lastSeen,
     required this.isReachable,
@@ -822,7 +822,7 @@ class AssetInformation {
   @JsonKey(name: 'display_name')
   final String? displayName;
 
-  AssetInformation({
+  const AssetInformation({
     required this.serialNumber,
     required this.manufacturer,
     required this.model,
@@ -850,7 +850,7 @@ class AssetPolicy {
   @JsonKey(name: 'run_immediately_config')
   final RunImmediatelyConfig? runImmediatelyConfig;
 
-  AssetPolicy({
+  const AssetPolicy({
     required this.id,
     required this.schedulingActive,
     required this.activityState,
@@ -874,7 +874,7 @@ class AssetPolicyRequest {
   @JsonKey(name: 'run_immediately_config')
   final RunImmediatelyConfig? runImmediatelyConfig;
 
-  AssetPolicyRequest({
+  const AssetPolicyRequest({
     this.schedulingActive,
     this.minLevel,
     this.runImmediatelyConfig,
@@ -890,7 +890,7 @@ class AssetPolicyRequest {
 class StreamTokenResponse {
   final String token;
 
-  StreamTokenResponse({
+  const StreamTokenResponse({
     required this.token,
   });
 

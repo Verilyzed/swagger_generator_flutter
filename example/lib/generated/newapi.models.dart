@@ -16,7 +16,7 @@ class ApiRequest {
   final ApiRequestResult? result;
   final DateTime? timestamp;
 
-  ApiRequest({
+  const ApiRequest({
     this.action,
     this.actor,
     this.requestId,
@@ -36,7 +36,7 @@ class ErrorResponse {
   final String? message;
   final int? status;
 
-  ErrorResponse({
+  const ErrorResponse({
     this.message,
     this.status,
   });
@@ -61,7 +61,7 @@ class FieldModel {
   final FieldType type;
   final String? value;
 
-  FieldModel({
+  const FieldModel({
     this.entropy,
     this.generate = false,
     required this.id,
@@ -89,7 +89,7 @@ class File {
   final FileSection? section;
   final int? size;
 
-  File({
+  const File({
     this.content,
     this.contentPath,
     this.id,
@@ -124,7 +124,7 @@ class FullItem {
   final List<File>? files;
   final List<FullItemSectionsItem>? sections;
 
-  FullItem({
+  const FullItem({
     required this.category,
     this.createdAt,
     this.favorite = false,
@@ -155,7 +155,7 @@ class GeneratorRecipe {
   final String? excludeCharacters;
   final int length;
 
-  GeneratorRecipe({
+  const GeneratorRecipe({
     this.characterSets,
     this.excludeCharacters,
     this.length = 32,
@@ -184,7 +184,7 @@ class Item {
   final ItemVault vault;
   final int? version;
 
-  Item({
+  const Item({
     required this.category,
     this.createdAt,
     this.favorite = false,
@@ -211,7 +211,7 @@ class ServiceDependency {
   final String? service;
   final String? status;
 
-  ServiceDependency({
+  const ServiceDependency({
     this.message,
     this.service,
     this.status,
@@ -236,7 +236,7 @@ class Vault {
   final VaultType? type;
   final DateTime? updatedAt;
 
-  Vault({
+  const Vault({
     this.attributeVersion,
     this.contentVersion,
     this.createdAt,
@@ -262,7 +262,7 @@ class ApiRequestActor {
   final String? requestIp;
   final String? userAgent;
 
-  ApiRequestActor({
+  const ApiRequestActor({
     this.account,
     this.id,
     this.jti,
@@ -280,7 +280,7 @@ class ApiRequestActor {
 class ApiRequestResourceItem {
   final String? id;
 
-  ApiRequestResourceItem({
+  const ApiRequestResourceItem({
     this.id,
   });
 
@@ -294,7 +294,7 @@ class ApiRequestResourceItem {
 class ApiRequestResourceVault {
   final String? id;
 
-  ApiRequestResourceVault({
+  const ApiRequestResourceVault({
     this.id,
   });
 
@@ -312,7 +312,7 @@ class ApiRequestResource {
   final ApiRequestResourceType? type;
   final ApiRequestResourceVault? vault;
 
-  ApiRequestResource({
+  const ApiRequestResource({
     this.item,
     this.itemVersion,
     this.type,
@@ -329,7 +329,7 @@ class ApiRequestResource {
 class FieldSection {
   final String? id;
 
-  FieldSection({
+  const FieldSection({
     this.id,
   });
 
@@ -343,7 +343,7 @@ class FieldSection {
 class FileSection {
   final String? id;
 
-  FileSection({
+  const FileSection({
     this.id,
   });
 
@@ -358,7 +358,7 @@ class FullItemSectionsItem {
   final String? id;
   final String? label;
 
-  FullItemSectionsItem({
+  const FullItemSectionsItem({
     this.id,
     this.label,
   });
@@ -375,7 +375,7 @@ class ItemUrlsItem {
   final String? label;
   final bool? primary;
 
-  ItemUrlsItem({
+  const ItemUrlsItem({
     required this.href,
     this.label,
     this.primary,
@@ -391,7 +391,7 @@ class ItemUrlsItem {
 class ItemVault {
   final String id;
 
-  ItemVault({
+  const ItemVault({
     required this.id,
   });
 
@@ -408,7 +408,7 @@ class PatchItem {
   final String path;
   final Map<String, dynamic>? value;
 
-  PatchItem({
+  const PatchItem({
     required this.op,
     required this.path,
     this.value,
@@ -426,7 +426,7 @@ class GetServerHealthResponse {
   final String name;
   final String version;
 
-  GetServerHealthResponse({
+  const GetServerHealthResponse({
     this.dependencies,
     required this.name,
     required this.version,

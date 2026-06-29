@@ -76,7 +76,7 @@ class ModelEmitter {
 
     buffer
       ..writeln()
-      ..writeln('  ${model.name}({');
+      ..writeln('  const ${model.name}({');
     for (final field in model.fields) {
       final makeRequired = field.defaultValue == null &&
           (field.isRequired || !field.type.isNullable);
