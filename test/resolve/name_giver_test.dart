@@ -16,9 +16,26 @@ void main() {
     expect(names.memberName('target-date'), 'targetDate');
   });
 
-  test('memberName escapes reserved words', () {
-    expect(names.memberName('class'), 'class_');
-    expect(names.memberName('default'), 'default_');
+  test('memberName escapes reserved words with a dollar prefix', () {
+    expect(names.memberName('class'), r'$class');
+    expect(names.memberName('default'), r'$default');
+  });
+
+  test('memberName escapes Object member names with a dollar prefix', () {
+    expect(names.memberName('hashCode'), r'$hashCode');
+    expect(names.memberName('runtime_type'), r'$runtimeType');
+  });
+
+  test('memberName leaves enum-only collisions untouched', () {
+    expect(names.memberName('index'), 'index');
+    expect(names.memberName('values'), 'values');
+  });
+
+  test('enumValueName escapes implicit enum members with a dollar prefix', () {
+    expect(names.enumValueName('index'), r'$index');
+    expect(names.enumValueName('values'), r'$values');
+    expect(names.enumValueName('hashCode'), r'$hashCode');
+    expect(names.enumValueName('runtime_type'), r'$runtimeType');
   });
 
   test('enumValueName handles values that start with a digit', () {

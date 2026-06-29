@@ -10,6 +10,14 @@ const _reserved = {
   'static',
 };
 
+// Implicit members every class carries; a field or param with one of these
+// names collides with the inherited member.
+const _objectMembers = {'hashCode', 'runtimeType'};
+
+// Members the compiler injects into every enum; an enum value with one of
+// these names fails to compile.
+const _enumMembers = {'index', 'values'};
+
 const _chopperTypeNames = {
   'Field', 'Part', 'PartFile', 'Header', 'Body', 'Query', 'QueryMap',
   'Path', 'Response', 'Request', 'Tag', 'Method', 'Converter', 'Interceptor',
@@ -29,12 +37,15 @@ class NameGiver {
     final head = parts.first.toLowerCase();
     final tail = parts.skip(1).map(_capitalize).join();
     final name = '$head$tail';
-    return _reserved.contains(name) ? '${name}_' : name;
+    return _reserved.contains(name) || _objectMembers.contains(name)
+        ? '\$$name'
+        : name;
   }
 
   String enumValueName(String raw) {
     final name = memberName(raw);
     if (name == '_') return 'empty';
+    if (_enumMembers.contains(name)) return '\$$name';
     return RegExp(r'^[0-9]').hasMatch(name) ? '\$$name' : name;
   }
 
