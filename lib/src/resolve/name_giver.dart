@@ -37,16 +37,19 @@ class NameGiver {
     final head = parts.first.toLowerCase();
     final tail = parts.skip(1).map(_capitalize).join();
     final name = '$head$tail';
-    return _reserved.contains(name) || _objectMembers.contains(name)
-        ? '\$$name'
-        : name;
+    if (_reserved.contains(name) ||
+        _objectMembers.contains(name) ||
+        RegExp(r'^[0-9]').hasMatch(name)) {
+      return '\$$name';
+    }
+    return name;
   }
 
   String enumValueName(String raw) {
     final name = memberName(raw);
     if (name == '_') return 'empty';
     if (_enumMembers.contains(name)) return '\$$name';
-    return RegExp(r'^[0-9]').hasMatch(name) ? '\$$name' : name;
+    return name;
   }
 
   List<String> _words(String raw) {
