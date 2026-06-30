@@ -109,5 +109,19 @@ class EdgeCasesV31Api {
         filter: filter,
       );
 
+  Future<Response<dynamic>> postBodies({
+    required List<Cat> body,
+  }) =>
+      _service.postBodies(
+        body: body,
+      );
+
+  Future<Response<String>> postPrim({
+    String? body,
+  }) =>
+      _service.postPrim(
+        body: body,
+      );
+
 }
 

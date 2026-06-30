@@ -40,7 +40,9 @@ void main() {
     });
 
     test('webhooks produce no operation', () {
-      expect(sources['.service.dart'], isNot(contains('@POST')));
+      // the webhook key "ping" never becomes a path/operation (paths use a
+      // leading slash, e.g. '/ping')
+      expect(sources['.service.dart'], isNot(contains("path: 'ping'")));
     });
 
     test('composition: oneOf, discriminator, allOf', () {
@@ -114,6 +116,17 @@ void main() {
       expect(s, contains("@Query('session') String? session,")); // cookie -> query
       expect(s, contains("@Query('tags') List<String>? tags,"));
       expect(s, contains("@Query('filter') Map<String, String>? filter,"));
+    });
+
+    test('bodies and responses', () {
+      final s = sources['.service.dart']!;
+      // array request body
+      expect(s, contains('@Body() required List<Cat> body,'));
+      // 204/default only (no 200) -> dynamic response (gap)
+      expect(s, contains('Future<Response<dynamic>> postBodies({'));
+      // non-JSON content treated as JSON; octet-stream response -> String (gap)
+      expect(s, contains('Future<Response<String>> postPrim({'));
+      expect(s, contains('@Body() String? body,'));
     });
   });
 

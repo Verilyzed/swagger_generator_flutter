@@ -46,6 +46,43 @@
         ],
         "responses": { "200": { "description": "ok" } }
       }
+    },
+    "/bodies": {
+      "post": {
+        "operationId": "postBodies",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/Cat" }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": { "description": "no content" },
+          "default": { "description": "err" }
+        }
+      }
+    },
+    "/prim": {
+      "post": {
+        "operationId": "postPrim",
+        "requestBody": {
+          "content": { "text/plain": { "schema": { "type": "string" } } }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/octet-stream": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

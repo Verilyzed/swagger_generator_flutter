@@ -24,3 +24,5 @@ Each entry is a candidate follow-up brainstorm -> TDD cycle. Not fixed here.
 | 17 | header / cookie parameters | both | emitted as `@Query` (wrong wire location) | `@Header` for header params; handle/skip cookie params | high |
 | 18 | parameter `style` / `explode` (deepObject, form) | both | ignored | honor serialization style for array/object params | medium |
 | 19 | parameter `$ref` (components/parameters) | both | **crashes generation** (`p['name'] as String` on a null name) | resolve the parameter ref; at minimum, don't crash | high |
+| 20 | responses without a `200` (`204`/`default`/`2XX`/multi-success) | both | response type is `dynamic` (only `200` is read) | read `2XX`/`default`; map `204` to no/`void` body | medium |
+| 21 | non-JSON content (`text/plain`, `application/octet-stream`) | both | treated as JSON (first content type used) | distinguish content types; raw String/bytes body | medium |

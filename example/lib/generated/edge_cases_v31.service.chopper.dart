@@ -47,4 +47,20 @@ final class _$EdgeCasesV31Service extends EdgeCasesV31Service {
     );
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> postBodies({required List<Cat> body}) {
+    final Uri $url = Uri.parse('/bodies');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<String>> postPrim({String? body}) {
+    final Uri $url = Uri.parse('/prim');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<String, String>($request);
+  }
 }
