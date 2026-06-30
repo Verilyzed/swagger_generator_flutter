@@ -32,3 +32,33 @@ class Ping {
   Map<String, dynamic> toJson() => _$PingToJson(this);
 }
 
+@JsonSerializable()
+class TypeShapes {
+  final String? strOrNull;
+  final dynamic strOrInt;
+  final String? anyOfNull;
+
+  const TypeShapes({
+    this.strOrNull,
+    required this.strOrInt,
+    this.anyOfNull,
+  });
+
+  TypeShapes copyWith({
+    String? strOrNull,
+    dynamic strOrInt,
+    String? anyOfNull,
+  }) {
+    return TypeShapes(
+      strOrNull: strOrNull ?? this.strOrNull,
+      strOrInt: strOrInt ?? this.strOrInt,
+      anyOfNull: anyOfNull ?? this.anyOfNull,
+    );
+  }
+
+  factory TypeShapes.fromJson(Map<String, dynamic> json) =>
+      _$TypeShapesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TypeShapesToJson(this);
+}
+

@@ -25,3 +25,16 @@ const _$StatusEnumMap = {
   Status.inactive: 'INACTIVE',
   Status.$unknown: r'$unknown',
 };
+
+TypeShapes _$TypeShapesFromJson(Map<String, dynamic> json) => TypeShapes(
+  strOrNull: json['strOrNull'] as String?,
+  strOrInt: json['strOrInt'],
+  anyOfNull: json['anyOfNull'] as String?,
+);
+
+Map<String, dynamic> _$TypeShapesToJson(TypeShapes instance) =>
+    <String, dynamic>{
+      'strOrNull': instance.strOrNull,
+      'strOrInt': instance.strOrInt,
+      'anyOfNull': instance.anyOfNull,
+    };

@@ -28,6 +28,14 @@
           "id": { "type": "string" },
           "status": { "$ref": "#/components/schemas/Status" }
         }
+      },
+      "TypeShapes": {
+        "type": "object",
+        "properties": {
+          "strOrNull": { "type": ["string", "null"] },
+          "strOrInt": { "type": ["string", "integer"] },
+          "anyOfNull": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+        }
       }
     }
   }
