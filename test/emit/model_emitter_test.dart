@@ -48,6 +48,20 @@ void main() {
     expect(out, contains('Map<String, dynamic> toJson() => _\$TaskToJson(this);'));
   });
 
+  test('an empty class emits a valid no-arg constructor and copyWith', () {
+    final out = ModelEmitter().emit(
+      const [ModelDef(name: 'Empty', fields: [])],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains('const Empty();'));
+    expect(out, isNot(contains('Empty({')));
+    expect(out, contains('Empty copyWith() => Empty();'));
+    expect(out, isNot(contains('copyWith({')));
+  });
+
   test('generates a copyWith with a nullable parameter for each field', () {
     final out = ModelEmitter().emit(
       const [
