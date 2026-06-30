@@ -65,6 +65,8 @@ ChopperClient createClient({
       Tree: Tree.fromJson,
       NodeA: NodeA.fromJson,
       NodeB: NodeB.fromJson,
+      Formats: Formats.fromJson,
+      EnumHolder: EnumHolder.fromJson,
     }),
     interceptors: interceptors ?? const [],
     authenticator: authenticator,

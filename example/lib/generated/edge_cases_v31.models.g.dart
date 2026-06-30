@@ -169,3 +169,63 @@ NodeB _$NodeBFromJson(Map<String, dynamic> json) => NodeB(
 Map<String, dynamic> _$NodeBToJson(NodeB instance) => <String, dynamic>{
   'a': instance.a,
 };
+
+Formats _$FormatsFromJson(Map<String, dynamic> json) => Formats(
+  uuid: json['uuid'] as String?,
+  email: json['email'] as String?,
+  uri: json['uri'] as String?,
+  byte: json['byte'] as String?,
+  binary: json['binary'] as String?,
+  i32: (json['i32'] as num?)?.toInt(),
+  i64: (json['i64'] as num?)?.toInt(),
+  flt: (json['flt'] as num?)?.toDouble(),
+  dec: (json['dec'] as num?)?.toDouble(),
+);
+
+Map<String, dynamic> _$FormatsToJson(Formats instance) => <String, dynamic>{
+  'uuid': instance.uuid,
+  'email': instance.email,
+  'uri': instance.uri,
+  'byte': instance.byte,
+  'binary': instance.binary,
+  'i32': instance.i32,
+  'i64': instance.i64,
+  'flt': instance.flt,
+  'dec': instance.dec,
+};
+
+EnumHolder _$EnumHolderFromJson(Map<String, dynamic> json) => EnumHolder(
+  intEnum: $enumDecodeNullable(
+    _$IntEnumEnumMap,
+    json['intEnum'],
+    unknownValue: IntEnum.$unknown,
+  ),
+  weird: $enumDecodeNullable(
+    _$WeirdEnumEnumMap,
+    json['weird'],
+    unknownValue: WeirdEnum.$unknown,
+  ),
+);
+
+Map<String, dynamic> _$EnumHolderToJson(EnumHolder instance) =>
+    <String, dynamic>{
+      'intEnum': _$IntEnumEnumMap[instance.intEnum],
+      'weird': _$WeirdEnumEnumMap[instance.weird],
+    };
+
+const _$IntEnumEnumMap = {
+  IntEnum.$1: '1',
+  IntEnum.$2: '2',
+  IntEnum.$3: '3',
+  IntEnum.$unknown: r'$unknown',
+};
+
+const _$WeirdEnumEnumMap = {
+  WeirdEnum.withSpace: 'with space',
+  WeirdEnum.withHyphen: 'with-hyphen',
+  WeirdEnum.$1leading: '1leading',
+  WeirdEnum.$class: 'class',
+  WeirdEnum.dollar: r'$dollar',
+  WeirdEnum.empty: '',
+  WeirdEnum.$unknown: r'$unknown',
+};

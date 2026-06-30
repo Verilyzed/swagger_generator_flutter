@@ -137,6 +137,33 @@
       "NodeB": {
         "type": "object",
         "properties": { "a": { "$ref": "#/components/schemas/NodeA" } }
+      },
+      "IntEnum": { "type": "integer", "enum": [1, 2, 3] },
+      "WeirdEnum": {
+        "type": "string",
+        "enum": ["with space", "with-hyphen", "1leading", "class", "$dollar", ""]
+      },
+      "SingleEnum": { "type": "string", "enum": ["ONLY"] },
+      "Formats": {
+        "type": "object",
+        "properties": {
+          "uuid": { "type": "string", "format": "uuid" },
+          "email": { "type": "string", "format": "email" },
+          "uri": { "type": "string", "format": "uri" },
+          "byte": { "type": "string", "format": "byte" },
+          "binary": { "type": "string", "format": "binary" },
+          "i32": { "type": "integer", "format": "int32" },
+          "i64": { "type": "integer", "format": "int64" },
+          "flt": { "type": "number", "format": "float" },
+          "dec": { "type": "number", "format": "decimal" }
+        }
+      },
+      "EnumHolder": {
+        "type": "object",
+        "properties": {
+          "intEnum": { "$ref": "#/components/schemas/IntEnum" },
+          "weird": { "$ref": "#/components/schemas/WeirdEnum" }
+        }
       }
     }
   }

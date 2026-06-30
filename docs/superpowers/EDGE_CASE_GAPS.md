@@ -18,3 +18,6 @@ Each entry is a candidate follow-up brainstorm -> TDD cycle. Not fixed here.
 | 11 | optional property that resolves to `dynamic` | both | emitted as a `required` constructor param (nullable-coercion skips `dynamic`) | optional (omittable), since `dynamic` is nullable | low |
 | 12 | `additionalProperties` + `properties` together | both | treated as a class; the `additionalProperties` map is dropped | a class plus an overflow map, or a `Map` | medium |
 | 13 | `additionalProperties`-only object (no `properties`) | both | becomes an empty class | a `Map<String, V>` type alias | medium |
+| 14 | integer/boolean enum | both | values emitted as string `@JsonValue('1')`, not `@JsonValue(1)` | typed `@JsonValue` matching the enum's wire type | medium |
+| 15 | `format: byte` / `binary` | both | -> `String` (no base64 decode) | `Uint8List` with a converter, or document as raw String | low |
+| 16 | `format: int64` | both | -> `int` (unsafe on dart2js/web) | `BigInt` or `String` option for 64-bit ints | low |

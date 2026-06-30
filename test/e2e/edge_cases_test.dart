@@ -72,6 +72,30 @@ void main() {
       expect(m, contains('final NodeB? b;'));
       expect(m, contains('final NodeA? a;'));
     });
+
+    test('formats map to scalar types', () {
+      final m = sources['.models.dart']!;
+      expect(m, contains('final String? uuid;'));
+      expect(m, contains('final String? byte;')); // base64 -> String (gap)
+      expect(m, contains('final int? i64;')); // int64 -> int (web gap)
+      expect(m, contains('final double? flt;'));
+    });
+
+    test('weird enum values are sanitized and escaped', () {
+      final e = sources['.enums.dart']!;
+      expect(e, contains('withSpace,'));
+      expect(e, contains(r'$1leading,')); // leading digit
+      expect(e, contains(r'$class,')); // reserved word
+      expect(e, contains('dollar,')); // $ stripped from the identifier
+      expect(e, contains('empty,')); // empty string
+      expect(e, contains(r"@JsonValue('\$dollar')")); // $ escaped in the value
+    });
+
+    test('integer enum uses string JsonValues (gap)', () {
+      final e = sources['.enums.dart']!;
+      expect(e, contains('enum IntEnum'));
+      expect(e, contains(r"@JsonValue('1')")); // string, not the integer 1
+    });
   });
 
   group('edge_cases_v30', () {

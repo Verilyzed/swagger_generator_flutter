@@ -370,3 +370,85 @@ class NodeB {
   Map<String, dynamic> toJson() => _$NodeBToJson(this);
 }
 
+@JsonSerializable()
+class Formats {
+  final String? uuid;
+  final String? email;
+  final String? uri;
+  final String? byte;
+  final String? binary;
+  final int? i32;
+  final int? i64;
+  final double? flt;
+  final double? dec;
+
+  const Formats({
+    this.uuid,
+    this.email,
+    this.uri,
+    this.byte,
+    this.binary,
+    this.i32,
+    this.i64,
+    this.flt,
+    this.dec,
+  });
+
+  Formats copyWith({
+    String? uuid,
+    String? email,
+    String? uri,
+    String? byte,
+    String? binary,
+    int? i32,
+    int? i64,
+    double? flt,
+    double? dec,
+  }) {
+    return Formats(
+      uuid: uuid ?? this.uuid,
+      email: email ?? this.email,
+      uri: uri ?? this.uri,
+      byte: byte ?? this.byte,
+      binary: binary ?? this.binary,
+      i32: i32 ?? this.i32,
+      i64: i64 ?? this.i64,
+      flt: flt ?? this.flt,
+      dec: dec ?? this.dec,
+    );
+  }
+
+  factory Formats.fromJson(Map<String, dynamic> json) =>
+      _$FormatsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FormatsToJson(this);
+}
+
+@JsonSerializable()
+class EnumHolder {
+  @JsonKey(unknownEnumValue: IntEnum.$unknown)
+  final IntEnum? intEnum;
+  @JsonKey(unknownEnumValue: WeirdEnum.$unknown)
+  final WeirdEnum? weird;
+
+  const EnumHolder({
+    this.intEnum,
+    this.weird,
+  });
+
+  EnumHolder copyWith({
+    IntEnum? intEnum,
+    WeirdEnum? weird,
+  }) {
+    return EnumHolder(
+      intEnum: intEnum ?? this.intEnum,
+      weird: weird ?? this.weird,
+    );
+  }
+
+  factory EnumHolder.fromJson(Map<String, dynamic> json) =>
+      _$EnumHolderFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EnumHolderToJson(this);
+}
+
