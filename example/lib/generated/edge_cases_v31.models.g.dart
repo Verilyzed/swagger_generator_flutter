@@ -29,6 +29,7 @@ const _$StatusEnumMap = {
 TypeShapes _$TypeShapesFromJson(Map<String, dynamic> json) => TypeShapes(
   strOrNull: json['strOrNull'] as String?,
   strOrInt: json['strOrInt'],
+  strOrIntOrNull: json['strOrIntOrNull'],
   anyOfNull: json['anyOfNull'] as String?,
 );
 
@@ -36,5 +37,6 @@ Map<String, dynamic> _$TypeShapesToJson(TypeShapes instance) =>
     <String, dynamic>{
       'strOrNull': instance.strOrNull,
       'strOrInt': instance.strOrInt,
+      'strOrIntOrNull': instance.strOrIntOrNull,
       'anyOfNull': instance.anyOfNull,
     };

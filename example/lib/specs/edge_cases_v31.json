@@ -34,6 +34,7 @@
         "properties": {
           "strOrNull": { "type": ["string", "null"] },
           "strOrInt": { "type": ["string", "integer"] },
+          "strOrIntOrNull": { "type": ["string", "integer", "null"] },
           "anyOfNull": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
         }
       }

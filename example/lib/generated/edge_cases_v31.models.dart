@@ -36,22 +36,26 @@ class Ping {
 class TypeShapes {
   final String? strOrNull;
   final dynamic strOrInt;
+  final dynamic strOrIntOrNull;
   final String? anyOfNull;
 
   const TypeShapes({
     this.strOrNull,
     required this.strOrInt,
+    this.strOrIntOrNull,
     this.anyOfNull,
   });
 
   TypeShapes copyWith({
     String? strOrNull,
     dynamic strOrInt,
+    dynamic strOrIntOrNull,
     String? anyOfNull,
   }) {
     return TypeShapes(
       strOrNull: strOrNull ?? this.strOrNull,
       strOrInt: strOrInt ?? this.strOrInt,
+      strOrIntOrNull: strOrIntOrNull ?? this.strOrIntOrNull,
       anyOfNull: anyOfNull ?? this.anyOfNull,
     );
   }

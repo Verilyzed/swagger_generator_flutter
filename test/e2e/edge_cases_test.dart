@@ -23,28 +23,11 @@ void main() {
     test('type-shape mappings', () {
       final m = sources['.models.dart']!;
       expect(m, contains('final String? strOrNull;'));
-      // multi non-null type array degrades to dynamic (gap)
+      // multi non-null type arrays degrade to dynamic (gap), never dynamic?
       expect(m, contains('final dynamic strOrInt;'));
+      expect(m, contains('final dynamic strOrIntOrNull;'));
+      expect(m, isNot(contains('dynamic?')));
       expect(m, contains('final String? anyOfNull;'));
-    });
-  });
-
-  // Carved out of the example spec: generates analyzer-flagged code. Locked in
-  // here at the source level to track the behavior. See EDGE_CASE_GAPS.md.
-  group('edge_cases_v31 gaps', () {
-    test('multi-type with null produces invalid dynamic?', () {
-      const spec = '''
-{
-  "openapi": "3.1.0",
-  "info": {"title": "t", "version": "1"},
-  "components": {"schemas": {"X": {"type": "object", "properties": {
-    "v": {"type": ["string", "integer", "null"]}
-  }}}},
-  "paths": {}
-}
-''';
-      final m = generateSources(spec, path: 'x.json', baseName: 'x')['.models.dart'];
-      expect(m, contains('final dynamic? v;'));
     });
   });
 
