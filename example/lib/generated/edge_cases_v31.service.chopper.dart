@@ -24,4 +24,27 @@ final class _$EdgeCasesV31Service extends EdgeCasesV31Service {
     final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<Ping, Ping>($request);
   }
+
+  @override
+  Future<Response<dynamic>> getParams({
+    String? xToken,
+    String? session,
+    List<String>? tags,
+    Map<String, String>? filter,
+  }) {
+    final Uri $url = Uri.parse('/params');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'X-Token': xToken,
+      'session': session,
+      'tags': tags,
+      'filter': filter,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
 }

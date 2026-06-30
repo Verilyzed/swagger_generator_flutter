@@ -96,5 +96,18 @@ class EdgeCasesV31Api {
   Future<Response<Ping>> getPing() =>
       _service.getPing();
 
+  Future<Response<dynamic>> getParams({
+    String? xToken,
+    String? session,
+    List<String>? tags,
+    Map<String, String>? filter,
+  }) =>
+      _service.getParams(
+        xToken: xToken,
+        session: session,
+        tags: tags,
+        filter: filter,
+      );
+
 }
 

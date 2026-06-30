@@ -107,6 +107,34 @@ void main() {
       expect(m, contains("@JsonKey(name: '@type')"));
       expect(m, contains('final String? type;'));
     });
+
+    test('header and cookie params become query params (gap)', () {
+      final s = sources['.service.dart']!;
+      expect(s, contains("@Query('X-Token') String? xToken,")); // header -> query
+      expect(s, contains("@Query('session') String? session,")); // cookie -> query
+      expect(s, contains("@Query('tags') List<String>? tags,"));
+      expect(s, contains("@Query('filter') Map<String, String>? filter,"));
+    });
+  });
+
+  group('edge_cases crashes', () {
+    test('a parameter \$ref crashes generation (gap)', () {
+      const spec = '''
+{
+  "openapi": "3.1.0",
+  "info": {"title": "t", "version": "1"},
+  "paths": {"/x": {"get": {"operationId": "getX",
+    "parameters": [{"\$ref": "#/components/parameters/Limit"}],
+    "responses": {"200": {"description": "ok"}}}}},
+  "components": {"parameters": {"Limit":
+    {"in": "query", "name": "limit", "schema": {"type": "integer"}}}}
+}
+''';
+      expect(
+        () => generateSources(spec, path: 'x.json', baseName: 'x'),
+        throwsA(anything),
+      );
+    });
   });
 
   group('edge_cases_v30', () {

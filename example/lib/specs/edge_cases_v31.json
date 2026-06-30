@@ -19,6 +19,33 @@
           }
         }
       }
+    },
+    "/params": {
+      "get": {
+        "operationId": "getParams",
+        "parameters": [
+          { "in": "header", "name": "X-Token", "schema": { "type": "string" } },
+          { "in": "cookie", "name": "session", "schema": { "type": "string" } },
+          {
+            "in": "query",
+            "name": "tags",
+            "schema": { "type": "array", "items": { "type": "string" } },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "style": "deepObject",
+            "explode": true
+          }
+        ],
+        "responses": { "200": { "description": "ok" } }
+      }
     }
   },
   "components": {

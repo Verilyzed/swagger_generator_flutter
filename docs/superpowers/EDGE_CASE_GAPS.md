@@ -21,3 +21,6 @@ Each entry is a candidate follow-up brainstorm -> TDD cycle. Not fixed here.
 | 14 | integer/boolean enum | both | values emitted as string `@JsonValue('1')`, not `@JsonValue(1)` | typed `@JsonValue` matching the enum's wire type | medium |
 | 15 | `format: byte` / `binary` | both | -> `String` (no base64 decode) | `Uint8List` with a converter, or document as raw String | low |
 | 16 | `format: int64` | both | -> `int` (unsafe on dart2js/web) | `BigInt` or `String` option for 64-bit ints | low |
+| 17 | header / cookie parameters | both | emitted as `@Query` (wrong wire location) | `@Header` for header params; handle/skip cookie params | high |
+| 18 | parameter `style` / `explode` (deepObject, form) | both | ignored | honor serialization style for array/object params | medium |
+| 19 | parameter `$ref` (components/parameters) | both | **crashes generation** (`p['name'] as String` on a null name) | resolve the parameter ref; at minimum, don't crash | high |
