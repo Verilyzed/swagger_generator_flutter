@@ -156,5 +156,21 @@ void main() {
     test('generates all files without throwing', () {
       expect(sources['.models.dart'], isNotNull);
     });
+
+    test('3.0 nullability', () {
+      final m = sources['.models.dart']!;
+      expect(m, contains('final String? plain;'));
+      // a `nullable` sibling next to a $ref is honored (pragmatic, not strict 3.0)
+      expect(m, contains('final Cat? refSibling;'));
+      expect(m, contains('final Cat? wrapped;')); // allOf-wrapper nullable
+      expect(m, contains('final Cat? anyOfNull;'));
+    });
+
+    test('3.0 allOf inheritance is flattened', () {
+      final m = sources['.models.dart']!;
+      expect(m, contains('class Derived {'));
+      expect(m, contains('final String id;'));
+      expect(m, contains('final String? extra;'));
+    });
   });
 }
