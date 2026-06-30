@@ -17,7 +17,7 @@ class EnumEmitter {
       buffer.writeln('enum ${e.name} {');
       for (final v in e.values) {
         buffer
-          ..writeln("  @JsonValue('${v.jsonValue}')")
+          ..writeln('  @JsonValue(${SourceWriter.dartString(v.jsonValue)})')
           ..writeln('  ${v.dartName},');
       }
       buffer
@@ -27,7 +27,9 @@ class EnumEmitter {
         ..writeln('  @override')
         ..writeln('  String toString() => const {');
       for (final v in e.values) {
-        buffer.writeln("        ${e.name}.${v.dartName}: '${v.jsonValue}',");
+        buffer.writeln(
+          '        ${e.name}.${v.dartName}: ${SourceWriter.dartString(v.jsonValue)},',
+        );
       }
       buffer
         ..writeln("      }[this] ?? '';")

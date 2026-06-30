@@ -15,4 +15,11 @@ void main() {
       "import 'package:json_annotation/json_annotation.dart';",
     );
   });
+
+  test('dartString escapes special characters in a single-quoted literal', () {
+    expect(SourceWriter.dartString(r'$dollar'), r"'\$dollar'");
+    expect(SourceWriter.dartString("a'b"), r"'a\'b'");
+    expect(SourceWriter.dartString(r'a\b'), r"'a\\b'");
+    expect(SourceWriter.dartString('plain'), "'plain'");
+  });
 }
