@@ -40,3 +40,21 @@ Map<String, dynamic> _$TypeShapesToJson(TypeShapes instance) =>
       'strOrIntOrNull': instance.strOrIntOrNull,
       'anyOfNull': instance.anyOfNull,
     };
+
+ThreeOneConstructs _$ThreeOneConstructsFromJson(Map<String, dynamic> json) =>
+    ThreeOneConstructs(
+      tuple: json['tuple'] as List<dynamic>?,
+      constField: json['constField'],
+      constTyped: json['constTyped'] as String?,
+      emptySchema: json['emptySchema'],
+      exampledField: json['exampledField'] as String?,
+    );
+
+Map<String, dynamic> _$ThreeOneConstructsToJson(ThreeOneConstructs instance) =>
+    <String, dynamic>{
+      'tuple': instance.tuple,
+      'constField': instance.constField,
+      'constTyped': instance.constTyped,
+      'emptySchema': instance.emptySchema,
+      'exampledField': instance.exampledField,
+    };

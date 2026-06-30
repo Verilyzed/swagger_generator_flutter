@@ -29,6 +29,19 @@ void main() {
       expect(m, isNot(contains('dynamic?')));
       expect(m, contains('final String? anyOfNull;'));
     });
+
+    test('3.1-only constructs degrade or are ignored', () {
+      final m = sources['.models.dart']!;
+      expect(m, contains('final List<dynamic>? tuple;')); // prefixItems ignored
+      expect(m, contains('final dynamic constField;')); // const, no type
+      expect(m, contains('final String? constTyped;')); // const ignored, type kept
+      expect(m, contains('final dynamic emptySchema;')); // {} -> dynamic
+      expect(m, contains('final String? exampledField;')); // examples ignored
+    });
+
+    test('webhooks produce no operation', () {
+      expect(sources['.service.dart'], isNot(contains('@POST')));
+    });
   });
 
   group('edge_cases_v30', () {

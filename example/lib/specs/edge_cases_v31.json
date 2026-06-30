@@ -1,6 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": { "title": "Edge Cases 3.1", "version": "1.0.0" },
+  "webhooks": {
+    "ping": { "post": { "responses": { "204": { "description": "ok" } } } }
+  },
   "paths": {
     "/ping": {
       "get": {
@@ -36,6 +39,19 @@
           "strOrInt": { "type": ["string", "integer"] },
           "strOrIntOrNull": { "type": ["string", "integer", "null"] },
           "anyOfNull": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+        }
+      },
+      "ThreeOneConstructs": {
+        "type": "object",
+        "properties": {
+          "tuple": {
+            "type": "array",
+            "prefixItems": [{ "type": "string" }, { "type": "integer" }]
+          },
+          "constField": { "const": "FIXED" },
+          "constTyped": { "type": "string", "const": "FIXED" },
+          "emptySchema": {},
+          "exampledField": { "type": "string", "examples": ["a", "b"] }
         }
       }
     }

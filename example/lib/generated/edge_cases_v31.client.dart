@@ -52,6 +52,7 @@ ChopperClient createClient({
     converter: const JsonSerializableConverter({
       Ping: Ping.fromJson,
       TypeShapes: TypeShapes.fromJson,
+      ThreeOneConstructs: ThreeOneConstructs.fromJson,
     }),
     interceptors: interceptors ?? const [],
     authenticator: authenticator,

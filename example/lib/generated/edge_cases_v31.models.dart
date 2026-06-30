@@ -66,3 +66,41 @@ class TypeShapes {
   Map<String, dynamic> toJson() => _$TypeShapesToJson(this);
 }
 
+@JsonSerializable()
+class ThreeOneConstructs {
+  final List<dynamic>? tuple;
+  final dynamic constField;
+  final String? constTyped;
+  final dynamic emptySchema;
+  final String? exampledField;
+
+  const ThreeOneConstructs({
+    this.tuple,
+    required this.constField,
+    this.constTyped,
+    required this.emptySchema,
+    this.exampledField,
+  });
+
+  ThreeOneConstructs copyWith({
+    List<dynamic>? tuple,
+    dynamic constField,
+    String? constTyped,
+    dynamic emptySchema,
+    String? exampledField,
+  }) {
+    return ThreeOneConstructs(
+      tuple: tuple ?? this.tuple,
+      constField: constField ?? this.constField,
+      constTyped: constTyped ?? this.constTyped,
+      emptySchema: emptySchema ?? this.emptySchema,
+      exampledField: exampledField ?? this.exampledField,
+    );
+  }
+
+  factory ThreeOneConstructs.fromJson(Map<String, dynamic> json) =>
+      _$ThreeOneConstructsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ThreeOneConstructsToJson(this);
+}
+
