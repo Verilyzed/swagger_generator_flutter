@@ -96,6 +96,17 @@ void main() {
       expect(e, contains('enum IntEnum'));
       expect(e, contains(r"@JsonValue('1')")); // string, not the integer 1
     });
+
+    test('nasty property names sanitize to valid identifiers', () {
+      final m = sources['.models.dart']!;
+      expect(m, contains("@JsonKey(name: 'kebab-case')"));
+      expect(m, contains('final String? kebabCase;'));
+      expect(m, contains('final String? snakeCase;'));
+      expect(m, contains(r'final String? $1leading;')); // leading digit
+      expect(m, contains(r'final String? $class;')); // reserved word
+      expect(m, contains("@JsonKey(name: '@type')"));
+      expect(m, contains('final String? type;'));
+    });
   });
 
   group('edge_cases_v30', () {

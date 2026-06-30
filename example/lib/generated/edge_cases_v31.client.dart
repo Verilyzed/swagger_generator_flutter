@@ -67,6 +67,7 @@ ChopperClient createClient({
       NodeB: NodeB.fromJson,
       Formats: Formats.fromJson,
       EnumHolder: EnumHolder.fromJson,
+      NastyNames: NastyNames.fromJson,
     }),
     interceptors: interceptors ?? const [],
     authenticator: authenticator,

@@ -229,3 +229,25 @@ const _$WeirdEnumEnumMap = {
   WeirdEnum.empty: '',
   WeirdEnum.$unknown: r'$unknown',
 };
+
+NastyNames _$NastyNamesFromJson(Map<String, dynamic> json) => NastyNames(
+  kebabCase: json['kebab-case'] as String?,
+  snakeCase: json['snake_case'] as String?,
+  $1leading: json['1leading'] as String?,
+  $class: json['class'] as String?,
+  type: json['@type'] as String?,
+  veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed:
+      json['veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed']
+          as String?,
+);
+
+Map<String, dynamic> _$NastyNamesToJson(NastyNames instance) =>
+    <String, dynamic>{
+      'kebab-case': instance.kebabCase,
+      'snake_case': instance.snakeCase,
+      '1leading': instance.$1leading,
+      'class': instance.$class,
+      '@type': instance.type,
+      'veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed':
+          instance.veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed,
+    };

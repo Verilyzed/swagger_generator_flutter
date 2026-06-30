@@ -452,3 +452,50 @@ class EnumHolder {
   Map<String, dynamic> toJson() => _$EnumHolderToJson(this);
 }
 
+@JsonSerializable()
+class NastyNames {
+  @JsonKey(name: 'kebab-case')
+  final String? kebabCase;
+  @JsonKey(name: 'snake_case')
+  final String? snakeCase;
+  @JsonKey(name: '1leading')
+  final String? $1leading;
+  @JsonKey(name: 'class')
+  final String? $class;
+  @JsonKey(name: '@type')
+  final String? type;
+  final String? veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed;
+
+  const NastyNames({
+    this.kebabCase,
+    this.snakeCase,
+    this.$1leading,
+    this.$class,
+    this.type,
+    this.veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed,
+  });
+
+  NastyNames copyWith({
+    String? kebabCase,
+    String? snakeCase,
+    String? $1leading,
+    String? $class,
+    String? type,
+    String? veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed,
+  }) {
+    return NastyNames(
+      kebabCase: kebabCase ?? this.kebabCase,
+      snakeCase: snakeCase ?? this.snakeCase,
+      $1leading: $1leading ?? this.$1leading,
+      $class: $class ?? this.$class,
+      type: type ?? this.type,
+      veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed: veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed ?? this.veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed,
+    );
+  }
+
+  factory NastyNames.fromJson(Map<String, dynamic> json) =>
+      _$NastyNamesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NastyNamesToJson(this);
+}
+

@@ -164,6 +164,19 @@
           "intEnum": { "$ref": "#/components/schemas/IntEnum" },
           "weird": { "$ref": "#/components/schemas/WeirdEnum" }
         }
+      },
+      "NastyNames": {
+        "type": "object",
+        "properties": {
+          "kebab-case": { "type": "string" },
+          "snake_case": { "type": "string" },
+          "1leading": { "type": "string" },
+          "class": { "type": "string" },
+          "@type": { "type": "string" },
+          "veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed": {
+            "type": "string"
+          }
+        }
       }
     }
   }
