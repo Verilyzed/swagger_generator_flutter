@@ -55,6 +55,23 @@ void main() {
       expect(m, contains('final String? extra;'));
       expect(m, contains('final Derived? derived;'));
     });
+
+    test('objects, maps, arrays', () {
+      final m = sources['.models.dart']!;
+      expect(m, contains('final List<dynamic>? untypedArray;'));
+      expect(m, contains('final List<List<String>>? arrayOfArrays;'));
+      expect(m, contains('final Map<String, List<Map<String, String>>>? deep;'));
+      // additionalProperties + properties: kept as a class, map part dropped
+      expect(m, contains('class MapAndProps {'));
+      expect(m, contains('final String? name;'));
+      // additionalProperties-only object becomes an empty class
+      expect(m, contains('class FreeMapTrue {'));
+      expect(m, contains('const FreeMapTrue();'));
+      // recursion and circular refs compile
+      expect(m, contains('final List<Tree>? children;'));
+      expect(m, contains('final NodeB? b;'));
+      expect(m, contains('final NodeA? a;'));
+    });
   });
 
   group('edge_cases_v30', () {

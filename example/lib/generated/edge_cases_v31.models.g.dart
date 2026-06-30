@@ -99,3 +99,73 @@ Map<String, dynamic> _$HolderToJson(Holder instance) => <String, dynamic>{
   'pet': instance.pet,
   'derived': instance.derived,
 };
+
+MapAndProps _$MapAndPropsFromJson(Map<String, dynamic> json) =>
+    MapAndProps(name: json['name'] as String?);
+
+Map<String, dynamic> _$MapAndPropsToJson(MapAndProps instance) =>
+    <String, dynamic>{'name': instance.name};
+
+FreeMapTrue _$FreeMapTrueFromJson(Map<String, dynamic> json) => FreeMapTrue();
+
+Map<String, dynamic> _$FreeMapTrueToJson(FreeMapTrue instance) =>
+    <String, dynamic>{};
+
+FreeMapFalse _$FreeMapFalseFromJson(Map<String, dynamic> json) =>
+    FreeMapFalse();
+
+Map<String, dynamic> _$FreeMapFalseToJson(FreeMapFalse instance) =>
+    <String, dynamic>{};
+
+Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
+  untypedArray: json['untypedArray'] as List<dynamic>?,
+  arrayOfArrays: (json['arrayOfArrays'] as List<dynamic>?)
+      ?.map((e) => (e as List<dynamic>).map((e) => e as String).toList())
+      .toList(),
+  deep: (json['deep'] as Map<String, dynamic>?)?.map(
+    (k, e) => MapEntry(
+      k,
+      (e as List<dynamic>)
+          .map((e) => Map<String, String>.from(e as Map))
+          .toList(),
+    ),
+  ),
+);
+
+Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
+  'untypedArray': instance.untypedArray,
+  'arrayOfArrays': instance.arrayOfArrays,
+  'deep': instance.deep,
+};
+
+Tree _$TreeFromJson(Map<String, dynamic> json) => Tree(
+  value: json['value'] as String?,
+  children: (json['children'] as List<dynamic>?)
+      ?.map((e) => Tree.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+Map<String, dynamic> _$TreeToJson(Tree instance) => <String, dynamic>{
+  'value': instance.value,
+  'children': instance.children,
+};
+
+NodeA _$NodeAFromJson(Map<String, dynamic> json) => NodeA(
+  b: json['b'] == null
+      ? null
+      : NodeB.fromJson(json['b'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$NodeAToJson(NodeA instance) => <String, dynamic>{
+  'b': instance.b,
+};
+
+NodeB _$NodeBFromJson(Map<String, dynamic> json) => NodeB(
+  a: json['a'] == null
+      ? null
+      : NodeA.fromJson(json['a'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$NodeBToJson(NodeB instance) => <String, dynamic>{
+  'a': instance.a,
+};

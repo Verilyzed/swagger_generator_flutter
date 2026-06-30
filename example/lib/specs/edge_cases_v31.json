@@ -92,6 +92,51 @@
           "pet": { "$ref": "#/components/schemas/PetOneOf" },
           "derived": { "$ref": "#/components/schemas/Derived" }
         }
+      },
+      "MapAndProps": {
+        "type": "object",
+        "properties": { "name": { "type": "string" } },
+        "additionalProperties": { "type": "integer" }
+      },
+      "FreeMapTrue": { "type": "object", "additionalProperties": true },
+      "FreeMapFalse": { "type": "object", "additionalProperties": false },
+      "Nested": {
+        "type": "object",
+        "properties": {
+          "untypedArray": { "type": "array" },
+          "arrayOfArrays": {
+            "type": "array",
+            "items": { "type": "array", "items": { "type": "string" } }
+          },
+          "deep": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "Tree": {
+        "type": "object",
+        "properties": {
+          "value": { "type": "string" },
+          "children": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tree" }
+          }
+        }
+      },
+      "NodeA": {
+        "type": "object",
+        "properties": { "b": { "$ref": "#/components/schemas/NodeB" } }
+      },
+      "NodeB": {
+        "type": "object",
+        "properties": { "a": { "$ref": "#/components/schemas/NodeA" } }
       }
     }
   }

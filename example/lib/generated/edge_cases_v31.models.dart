@@ -222,3 +222,151 @@ class Holder {
   Map<String, dynamic> toJson() => _$HolderToJson(this);
 }
 
+@JsonSerializable()
+class MapAndProps {
+  final String? name;
+
+  const MapAndProps({
+    this.name,
+  });
+
+  MapAndProps copyWith({
+    String? name,
+  }) {
+    return MapAndProps(
+      name: name ?? this.name,
+    );
+  }
+
+  factory MapAndProps.fromJson(Map<String, dynamic> json) =>
+      _$MapAndPropsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MapAndPropsToJson(this);
+}
+
+@JsonSerializable()
+class FreeMapTrue {
+
+  const FreeMapTrue();
+
+  FreeMapTrue copyWith() => FreeMapTrue();
+
+  factory FreeMapTrue.fromJson(Map<String, dynamic> json) =>
+      _$FreeMapTrueFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FreeMapTrueToJson(this);
+}
+
+@JsonSerializable()
+class FreeMapFalse {
+
+  const FreeMapFalse();
+
+  FreeMapFalse copyWith() => FreeMapFalse();
+
+  factory FreeMapFalse.fromJson(Map<String, dynamic> json) =>
+      _$FreeMapFalseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FreeMapFalseToJson(this);
+}
+
+@JsonSerializable()
+class Nested {
+  final List<dynamic>? untypedArray;
+  final List<List<String>>? arrayOfArrays;
+  final Map<String, List<Map<String, String>>>? deep;
+
+  const Nested({
+    this.untypedArray,
+    this.arrayOfArrays,
+    this.deep,
+  });
+
+  Nested copyWith({
+    List<dynamic>? untypedArray,
+    List<List<String>>? arrayOfArrays,
+    Map<String, List<Map<String, String>>>? deep,
+  }) {
+    return Nested(
+      untypedArray: untypedArray ?? this.untypedArray,
+      arrayOfArrays: arrayOfArrays ?? this.arrayOfArrays,
+      deep: deep ?? this.deep,
+    );
+  }
+
+  factory Nested.fromJson(Map<String, dynamic> json) =>
+      _$NestedFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NestedToJson(this);
+}
+
+@JsonSerializable()
+class Tree {
+  final String? value;
+  final List<Tree>? children;
+
+  const Tree({
+    this.value,
+    this.children,
+  });
+
+  Tree copyWith({
+    String? value,
+    List<Tree>? children,
+  }) {
+    return Tree(
+      value: value ?? this.value,
+      children: children ?? this.children,
+    );
+  }
+
+  factory Tree.fromJson(Map<String, dynamic> json) =>
+      _$TreeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TreeToJson(this);
+}
+
+@JsonSerializable()
+class NodeA {
+  final NodeB? b;
+
+  const NodeA({
+    this.b,
+  });
+
+  NodeA copyWith({
+    NodeB? b,
+  }) {
+    return NodeA(
+      b: b ?? this.b,
+    );
+  }
+
+  factory NodeA.fromJson(Map<String, dynamic> json) =>
+      _$NodeAFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NodeAToJson(this);
+}
+
+@JsonSerializable()
+class NodeB {
+  final NodeA? a;
+
+  const NodeB({
+    this.a,
+  });
+
+  NodeB copyWith({
+    NodeA? a,
+  }) {
+    return NodeB(
+      a: a ?? this.a,
+    );
+  }
+
+  factory NodeB.fromJson(Map<String, dynamic> json) =>
+      _$NodeBFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NodeBToJson(this);
+}
+

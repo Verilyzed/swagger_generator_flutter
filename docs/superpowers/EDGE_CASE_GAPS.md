@@ -16,3 +16,5 @@ Each entry is a candidate follow-up brainstorm -> TDD cycle. Not fixed here.
 | 9 | `discriminator` + `mapping` | both | ignored | tagged union with `fromJson` dispatch on the discriminator | high |
 | 10 | `allOf` inheritance (base `$ref` + own props) | both | flattened into one class with merged properties; no shared base type | a base class or mixin, or keep flattening by design | medium |
 | 11 | optional property that resolves to `dynamic` | both | emitted as a `required` constructor param (nullable-coercion skips `dynamic`) | optional (omittable), since `dynamic` is nullable | low |
+| 12 | `additionalProperties` + `properties` together | both | treated as a class; the `additionalProperties` map is dropped | a class plus an overflow map, or a `Map` | medium |
+| 13 | `additionalProperties`-only object (no `properties`) | both | becomes an empty class | a `Map<String, V>` type alias | medium |
