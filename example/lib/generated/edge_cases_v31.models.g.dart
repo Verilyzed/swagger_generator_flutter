@@ -58,3 +58,44 @@ Map<String, dynamic> _$ThreeOneConstructsToJson(ThreeOneConstructs instance) =>
       'emptySchema': instance.emptySchema,
       'exampledField': instance.exampledField,
     };
+
+Cat _$CatFromJson(Map<String, dynamic> json) =>
+    Cat(meow: json['meow'] as bool?);
+
+Map<String, dynamic> _$CatToJson(Cat instance) => <String, dynamic>{
+  'meow': instance.meow,
+};
+
+Dog _$DogFromJson(Map<String, dynamic> json) =>
+    Dog(bark: json['bark'] as bool?);
+
+Map<String, dynamic> _$DogToJson(Dog instance) => <String, dynamic>{
+  'bark': instance.bark,
+};
+
+Base _$BaseFromJson(Map<String, dynamic> json) =>
+    Base(id: json['id'] as String);
+
+Map<String, dynamic> _$BaseToJson(Base instance) => <String, dynamic>{
+  'id': instance.id,
+};
+
+Derived _$DerivedFromJson(Map<String, dynamic> json) =>
+    Derived(id: json['id'] as String, extra: json['extra'] as String?);
+
+Map<String, dynamic> _$DerivedToJson(Derived instance) => <String, dynamic>{
+  'id': instance.id,
+  'extra': instance.extra,
+};
+
+Holder _$HolderFromJson(Map<String, dynamic> json) => Holder(
+  pet: json['pet'],
+  derived: json['derived'] == null
+      ? null
+      : Derived.fromJson(json['derived'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$HolderToJson(Holder instance) => <String, dynamic>{
+  'pet': instance.pet,
+  'derived': instance.derived,
+};

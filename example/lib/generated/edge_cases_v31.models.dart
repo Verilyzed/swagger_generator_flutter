@@ -104,3 +104,121 @@ class ThreeOneConstructs {
   Map<String, dynamic> toJson() => _$ThreeOneConstructsToJson(this);
 }
 
+@JsonSerializable()
+class Cat {
+  final bool? meow;
+
+  const Cat({
+    this.meow,
+  });
+
+  Cat copyWith({
+    bool? meow,
+  }) {
+    return Cat(
+      meow: meow ?? this.meow,
+    );
+  }
+
+  factory Cat.fromJson(Map<String, dynamic> json) =>
+      _$CatFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CatToJson(this);
+}
+
+@JsonSerializable()
+class Dog {
+  final bool? bark;
+
+  const Dog({
+    this.bark,
+  });
+
+  Dog copyWith({
+    bool? bark,
+  }) {
+    return Dog(
+      bark: bark ?? this.bark,
+    );
+  }
+
+  factory Dog.fromJson(Map<String, dynamic> json) =>
+      _$DogFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DogToJson(this);
+}
+
+@JsonSerializable()
+class Base {
+  final String id;
+
+  const Base({
+    required this.id,
+  });
+
+  Base copyWith({
+    String? id,
+  }) {
+    return Base(
+      id: id ?? this.id,
+    );
+  }
+
+  factory Base.fromJson(Map<String, dynamic> json) =>
+      _$BaseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BaseToJson(this);
+}
+
+@JsonSerializable()
+class Derived {
+  final String id;
+  final String? extra;
+
+  const Derived({
+    required this.id,
+    this.extra,
+  });
+
+  Derived copyWith({
+    String? id,
+    String? extra,
+  }) {
+    return Derived(
+      id: id ?? this.id,
+      extra: extra ?? this.extra,
+    );
+  }
+
+  factory Derived.fromJson(Map<String, dynamic> json) =>
+      _$DerivedFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DerivedToJson(this);
+}
+
+@JsonSerializable()
+class Holder {
+  final dynamic pet;
+  final Derived? derived;
+
+  const Holder({
+    required this.pet,
+    this.derived,
+  });
+
+  Holder copyWith({
+    dynamic pet,
+    Derived? derived,
+  }) {
+    return Holder(
+      pet: pet ?? this.pet,
+      derived: derived ?? this.derived,
+    );
+  }
+
+  factory Holder.fromJson(Map<String, dynamic> json) =>
+      _$HolderFromJson(json);
+
+  Map<String, dynamic> toJson() => _$HolderToJson(this);
+}
+

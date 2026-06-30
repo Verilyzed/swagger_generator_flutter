@@ -12,3 +12,7 @@ Each entry is a candidate follow-up brainstorm -> TDD cycle. Not fixed here.
 | 5 | empty schema `{}` | 3.1 | -> `dynamic` | `dynamic`/`Object?` (acceptable; documented) | low |
 | 6 | `examples` (plural) | 3.1 | ignored | none needed (metadata) | low |
 | 7 | top-level `webhooks` | 3.1 | ignored; no operations generated | generate webhook operations or skip by design | medium |
+| 8 | `oneOf` (multi-member) | both | no class generated; a `$ref` to it degrades to `dynamic` | sealed/union type, or an override hook | high |
+| 9 | `discriminator` + `mapping` | both | ignored | tagged union with `fromJson` dispatch on the discriminator | high |
+| 10 | `allOf` inheritance (base `$ref` + own props) | both | flattened into one class with merged properties; no shared base type | a base class or mixin, or keep flattening by design | medium |
+| 11 | optional property that resolves to `dynamic` | both | emitted as a `required` constructor param (nullable-coercion skips `dynamic`) | optional (omittable), since `dynamic` is nullable | low |

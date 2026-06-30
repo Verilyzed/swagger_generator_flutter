@@ -53,6 +53,45 @@
           "emptySchema": {},
           "exampledField": { "type": "string", "examples": ["a", "b"] }
         }
+      },
+      "Cat": { "type": "object", "properties": { "meow": { "type": "boolean" } } },
+      "Dog": { "type": "object", "properties": { "bark": { "type": "boolean" } } },
+      "PetOneOf": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/Cat" },
+          { "$ref": "#/components/schemas/Dog" }
+        ]
+      },
+      "PetDiscriminated": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/Cat" },
+          { "$ref": "#/components/schemas/Dog" }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "cat": "#/components/schemas/Cat",
+            "dog": "#/components/schemas/Dog"
+          }
+        }
+      },
+      "Base": {
+        "type": "object",
+        "properties": { "id": { "type": "string" } },
+        "required": ["id"]
+      },
+      "Derived": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Base" },
+          { "type": "object", "properties": { "extra": { "type": "string" } } }
+        ]
+      },
+      "Holder": {
+        "type": "object",
+        "properties": {
+          "pet": { "$ref": "#/components/schemas/PetOneOf" },
+          "derived": { "$ref": "#/components/schemas/Derived" }
+        }
       }
     }
   }

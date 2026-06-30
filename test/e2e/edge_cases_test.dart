@@ -42,6 +42,19 @@ void main() {
     test('webhooks produce no operation', () {
       expect(sources['.service.dart'], isNot(contains('@POST')));
     });
+
+    test('composition: oneOf, discriminator, allOf', () {
+      final m = sources['.models.dart']!;
+      // a oneOf schema produces no class; a ref to it degrades to dynamic
+      expect(m, isNot(contains('class PetOneOf')));
+      expect(m, isNot(contains('class PetDiscriminated')));
+      expect(m, contains('final dynamic pet;'));
+      // allOf inheritance is flattened into one class with merged properties
+      expect(m, contains('class Derived {'));
+      expect(m, contains('final String id;'));
+      expect(m, contains('final String? extra;'));
+      expect(m, contains('final Derived? derived;'));
+    });
   });
 
   group('edge_cases_v30', () {
