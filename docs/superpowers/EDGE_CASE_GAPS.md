@@ -1,7 +1,27 @@
 # Edge-Case Gaps
 
-Gaps surfaced by the edge-case test specs (`example/lib/specs/edge_cases_v3*.json`).
-Each entry is a candidate follow-up brainstorm -> TDD cycle. Not fixed here.
+Gaps surfaced by the edge-case test specs (`example/lib/specs/edge_cases_v3*.json`),
+exercised by `test/e2e/edge_cases_test.dart` and by regenerating the example.
+Each entry is a candidate follow-up brainstorm -> TDD cycle.
+
+21 gaps recorded: 4 high, 9 medium, 8 low. The high-priority ones are #8 `oneOf`,
+#9 `discriminator`, #17 header/cookie params, and #19 parameter `$ref` (which
+crashes generation). Everything else degrades to a compiling-but-imprecise type
+(`dynamic`, `Map<String, dynamic>`, an empty class, or a `@Query`).
+
+## Bugs fixed during characterization
+
+These were trivial output bugs (uncompilable code), fixed inline rather than
+deferred:
+
+- Nullable `dynamic` rendered as the analyzer-flagged `dynamic?`.
+- An empty class emitted `const X({})` / `copyWith({})` (invalid empty braces).
+- Enum/string values containing `$`, a quote, or a backslash were emitted into
+  Dart string literals unescaped.
+- Member names starting with a digit (e.g. `1leading`) were left as invalid
+  identifiers.
+
+## Gaps (deferred)
 
 | # | Construct | Spec | Current behavior | Desired behavior | Priority |
 |---|-----------|------|------------------|------------------|----------|
