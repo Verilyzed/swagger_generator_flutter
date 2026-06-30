@@ -19,36 +19,31 @@ void main() {
     );
   });
 
-  test('maps date format to a date-only DateTime', () {
-    final t = resolver.resolve({'type': 'string', 'format': 'date'});
-    expect(t.name, 'DateTime');
-    expect(t.isDateOnly, isTrue);
+  test('maps date format to String', () {
+    expect(
+      resolver.resolve({'type': 'string', 'format': 'date'}).display,
+      'String',
+    );
   });
 
-  test('keeps a date with an example as a String', () {
-    final t = resolver.resolve({
-      'type': 'string',
-      'format': 'date',
-      'example': '2025-04-20',
-    });
-    expect(t.name, 'String');
-    expect(t.isDateOnly, isFalse);
+  test('maps a date with an example to String', () {
+    expect(
+      resolver.resolve({
+        'type': 'string',
+        'format': 'date',
+        'example': '2025-04-20',
+      }).display,
+      'String',
+    );
   });
 
-  test('keeps isDateOnly when a date field is nullable', () {
+  test('maps a nullable date to a nullable String', () {
     final t = resolver.resolve({
       'type': ['string', 'null'],
       'format': 'date',
     });
-    expect(t.name, 'DateTime');
+    expect(t.display, 'String?');
     expect(t.isNullable, isTrue);
-    expect(t.isDateOnly, isTrue);
-  });
-
-  test('date-time is not flagged date-only', () {
-    final t = resolver.resolve({'type': 'string', 'format': 'date-time'});
-    expect(t.name, 'DateTime');
-    expect(t.isDateOnly, isFalse);
   });
 
   test('resolves a single-item allOf to that item', () {

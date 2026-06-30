@@ -27,23 +27,6 @@ class ModelEmitter {
       ..writeln("part '$partFileName';")
       ..writeln();
 
-    if (models.any((m) => m.fields.any((f) => f.type.isDateOnly))) {
-      buffer
-        ..writeln(
-          'class DateConverter implements JsonConverter<DateTime, String> {',
-        )
-        ..writeln('  const DateConverter();')
-        ..writeln()
-        ..writeln('  @override')
-        ..writeln('  DateTime fromJson(String json) => DateTime.parse(json);')
-        ..writeln()
-        ..writeln('  @override')
-        ..writeln('  String toJson(DateTime object) =>')
-        ..writeln("      object.toIso8601String().split('T').first;")
-        ..writeln('}')
-        ..writeln();
-    }
-
     for (final model in models) {
       _emitClass(buffer, model, enumNames);
     }
@@ -67,9 +50,6 @@ class ModelEmitter {
       }
       if (keyArgs.isNotEmpty) {
         buffer.writeln('  @JsonKey(${keyArgs.join(', ')})');
-      }
-      if (field.type.isDateOnly) {
-        buffer.writeln('  @DateConverter()');
       }
       buffer.writeln('  final ${field.type.display} ${field.dartName};');
     }
