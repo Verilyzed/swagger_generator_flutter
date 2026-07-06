@@ -37,6 +37,15 @@ class ModelDef {
   const ModelDef({required this.name, required this.fields});
 }
 
+/// A named schema that is a simple alias (e.g. a top-level array), emitted as a
+/// Dart `typedef`.
+class TypedefDef {
+  final String name;
+  final DartType aliasType;
+
+  const TypedefDef({required this.name, required this.aliasType});
+}
+
 enum ParamLocation { path, query, body, part, partFile }
 
 class ParamDef {
@@ -87,11 +96,13 @@ class ApiSpec {
   final List<EnumDef> enums;
   final List<ModelDef> models;
   final ServiceDef service;
+  final List<TypedefDef> typedefs;
 
   const ApiSpec({
     required this.name,
     required this.enums,
     required this.models,
     required this.service,
+    this.typedefs = const [],
   });
 }

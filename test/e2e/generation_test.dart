@@ -154,6 +154,28 @@ void main() {
     );
   });
 
+  test('emits a typedef for a top-level array schema', () {
+    const spec = '''
+{
+  "openapi": "3.0.0",
+  "info": {"title": "t", "version": "1"},
+  "components": {"schemas": {
+    "Tags": {"type": "array", "items": {"type": "string"}},
+    "Post": {"type": "object", "properties": {
+      "tags": {"\$ref": "#/components/schemas/Tags"}
+    }}
+  }},
+  "paths": {}
+}
+''';
+
+    final models = generateSources(spec, path: 'p.json', baseName: 'p')[
+        '.models.dart'];
+
+    expect(models, contains('typedef Tags = List<String>;'));
+    expect(models, contains('final Tags? tags;'));
+  });
+
   test('generates a copyWith on a model class', () {
     const spec = '''
 {

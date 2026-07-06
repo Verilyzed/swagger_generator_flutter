@@ -10,6 +10,7 @@ class ModelEmitter {
     required Set<String> enumNames,
     Set<String> overrideTypes = const {},
     String? overridesImport,
+    List<TypedefDef> typedefs = const [],
   }) {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
@@ -26,6 +27,13 @@ class ModelEmitter {
       ..writeln()
       ..writeln("part '$partFileName';")
       ..writeln();
+
+    if (typedefs.isNotEmpty) {
+      for (final t in typedefs) {
+        buffer.writeln('typedef ${t.name} = ${t.aliasType.display};');
+      }
+      buffer.writeln();
+    }
 
     for (final model in models) {
       _emitClass(buffer, model, enumNames);

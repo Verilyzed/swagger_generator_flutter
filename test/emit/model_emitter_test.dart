@@ -48,6 +48,32 @@ void main() {
     expect(out, contains('Map<String, dynamic> toJson() => _\$TaskToJson(this);'));
   });
 
+  test('emits typedefs above the classes', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Thing',
+          fields: [
+            FieldDef(
+              dartName: 'id',
+              jsonKey: 'id',
+              type: DartType('String'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+      typedefs: const [
+        TypedefDef(name: 'Tags', aliasType: DartType('List<String>')),
+      ],
+    );
+
+    expect(out, contains('typedef Tags = List<String>;'));
+  });
+
   test('an empty class emits a valid no-arg constructor and copyWith', () {
     final out = ModelEmitter().emit(
       const [ModelDef(name: 'Empty', fields: [])],

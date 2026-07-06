@@ -37,6 +37,7 @@ class SpecParser {
     _schemasCache = schemas;
     final enums = <EnumDef>[];
     final models = <ModelDef>[];
+    final typedefs = <TypedefDef>[];
 
     // Collect enum Dart names first so model field defaults can reference them.
     final enumNames = <String>{};
@@ -62,6 +63,14 @@ class SpecParser {
           schema,
           enumNames: enumNames,
         ));
+      } else if (schema['type'] == 'array') {
+        // A named array schema becomes a typedef. The alias type is the
+        // non-nullable base (`List<...>`); nullability is applied where it is
+        // referenced.
+        typedefs.add(TypedefDef(
+          name: _names.className(entry.key),
+          aliasType: DartType(_resolver.resolve(schema).name),
+        ));
       }
     }
 
@@ -70,6 +79,7 @@ class SpecParser {
       enums: enums,
       models: models,
       service: _service(spec, name, enumNames),
+      typedefs: typedefs,
     );
   }
 

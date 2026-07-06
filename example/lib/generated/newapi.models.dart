@@ -5,6 +5,8 @@ import 'newapi.enums.dart';
 
 part 'newapi.models.g.dart';
 
+typedef PatchModel = List<PatchItem>;
+
 @JsonSerializable()
 class ApiRequest {
   @JsonKey(unknownEnumValue: ApiRequestAction.$unknown)

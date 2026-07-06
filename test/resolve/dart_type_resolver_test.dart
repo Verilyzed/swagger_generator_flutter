@@ -197,18 +197,46 @@ void main() {
     expect(r.resolve({'type': 'string'}).display, 'String');
   });
 
-  test('resolves a ref to an array alias as a List', () {
+  test('resolves a ref to a named array schema to the typedef name', () {
     final r = OpenApi31TypeResolver(
       NameGiver(),
       schemas: {
-        'Patch': {
+        'Tags': {
           'type': 'array',
           'items': {'type': 'string'},
         },
       },
     );
     expect(
-      r.resolve({r'$ref': '#/components/schemas/Patch'}).display,
+      r.resolve({r'$ref': '#/components/schemas/Tags'}).display,
+      'Tags',
+    );
+  });
+
+  test('resolves a ref to a nullable named array schema to a nullable typedef',
+      () {
+    final r = OpenApi30TypeResolver(
+      NameGiver(),
+      schemas: {
+        'Tags': {
+          'type': 'array',
+          'items': {'type': 'string'},
+          'nullable': true,
+        },
+      },
+    );
+    expect(
+      r.resolve({r'$ref': '#/components/schemas/Tags'}).display,
+      'Tags?',
+    );
+  });
+
+  test('resolves an inline array to a List (not a typedef)', () {
+    expect(
+      resolver.resolve({
+        'type': 'array',
+        'items': {'type': 'string'},
+      }).display,
       'List<String>',
     );
   });

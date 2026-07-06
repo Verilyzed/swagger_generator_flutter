@@ -61,6 +61,11 @@ abstract class DartTypeResolver {
       if (_overrides.contains(name)) return DartType(_names.className(name));
       final target = _schemas[name];
       if (target is Map<String, dynamic>) {
+        // A named array schema is emitted as a typedef, so reference it by name
+        // instead of inlining the `List<...>`.
+        if (target['type'] == 'array') {
+          return DartType(_names.className(name), isNullable: isNullable(target));
+        }
         if (_isAlias(target)) return resolve(target);
         // A named schema marked nullable is nullable wherever it is referenced.
         if (isNullable(target)) {
