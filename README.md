@@ -106,4 +106,4 @@ clean.
 
 ## License
 
-Open source. A LICENSE file will be added.
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).

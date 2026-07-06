@@ -1,3 +1,10 @@
+## 0.0.3
+
+### Added
+
+* Continuous integration workflow that runs `dart analyze` and `dart test`
+  on pull requests.
+
 ## 0.0.2
 
 ### Changed
