@@ -1,0 +1,247 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "Edge Cases 3.1", "version": "1.0.0" },
+  "webhooks": {
+    "ping": { "post": { "responses": { "204": { "description": "ok" } } } }
+  },
+  "paths": {
+    "/ping": {
+      "get": {
+        "operationId": "getPing",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Ping" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/params": {
+      "get": {
+        "operationId": "getParams",
+        "parameters": [
+          { "in": "header", "name": "X-Token", "schema": { "type": "string" } },
+          { "in": "cookie", "name": "session", "schema": { "type": "string" } },
+          {
+            "in": "query",
+            "name": "tags",
+            "schema": { "type": "array", "items": { "type": "string" } },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "style": "deepObject",
+            "explode": true
+          }
+        ],
+        "responses": { "200": { "description": "ok" } }
+      }
+    },
+    "/bodies": {
+      "post": {
+        "operationId": "postBodies",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/Cat" }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": { "description": "no content" },
+          "default": { "description": "err" }
+        }
+      }
+    },
+    "/prim": {
+      "post": {
+        "operationId": "postPrim",
+        "requestBody": {
+          "content": { "text/plain": { "schema": { "type": "string" } } }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/octet-stream": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Status": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] },
+      "Ping": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string" },
+          "status": { "$ref": "#/components/schemas/Status" }
+        }
+      },
+      "TypeShapes": {
+        "type": "object",
+        "properties": {
+          "strOrNull": { "type": ["string", "null"] },
+          "strOrInt": { "type": ["string", "integer"] },
+          "strOrIntOrNull": { "type": ["string", "integer", "null"] },
+          "anyOfNull": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+        }
+      },
+      "ThreeOneConstructs": {
+        "type": "object",
+        "properties": {
+          "tuple": {
+            "type": "array",
+            "prefixItems": [{ "type": "string" }, { "type": "integer" }]
+          },
+          "constField": { "const": "FIXED" },
+          "constTyped": { "type": "string", "const": "FIXED" },
+          "emptySchema": {},
+          "exampledField": { "type": "string", "examples": ["a", "b"] }
+        }
+      },
+      "Cat": { "type": "object", "properties": { "meow": { "type": "boolean" } } },
+      "Dog": { "type": "object", "properties": { "bark": { "type": "boolean" } } },
+      "PetOneOf": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/Cat" },
+          { "$ref": "#/components/schemas/Dog" }
+        ]
+      },
+      "PetDiscriminated": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/Cat" },
+          { "$ref": "#/components/schemas/Dog" }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "cat": "#/components/schemas/Cat",
+            "dog": "#/components/schemas/Dog"
+          }
+        }
+      },
+      "Base": {
+        "type": "object",
+        "properties": { "id": { "type": "string" } },
+        "required": ["id"]
+      },
+      "Derived": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Base" },
+          { "type": "object", "properties": { "extra": { "type": "string" } } }
+        ]
+      },
+      "Holder": {
+        "type": "object",
+        "properties": {
+          "pet": { "$ref": "#/components/schemas/PetOneOf" },
+          "derived": { "$ref": "#/components/schemas/Derived" }
+        }
+      },
+      "MapAndProps": {
+        "type": "object",
+        "properties": { "name": { "type": "string" } },
+        "additionalProperties": { "type": "integer" }
+      },
+      "FreeMapTrue": { "type": "object", "additionalProperties": true },
+      "FreeMapFalse": { "type": "object", "additionalProperties": false },
+      "Nested": {
+        "type": "object",
+        "properties": {
+          "untypedArray": { "type": "array" },
+          "arrayOfArrays": {
+            "type": "array",
+            "items": { "type": "array", "items": { "type": "string" } }
+          },
+          "deep": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "Tree": {
+        "type": "object",
+        "properties": {
+          "value": { "type": "string" },
+          "children": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tree" }
+          }
+        }
+      },
+      "NodeA": {
+        "type": "object",
+        "properties": { "b": { "$ref": "#/components/schemas/NodeB" } }
+      },
+      "NodeB": {
+        "type": "object",
+        "properties": { "a": { "$ref": "#/components/schemas/NodeA" } }
+      },
+      "IntEnum": { "type": "integer", "enum": [1, 2, 3] },
+      "WeirdEnum": {
+        "type": "string",
+        "enum": ["with space", "with-hyphen", "1leading", "class", "$dollar", ""]
+      },
+      "SingleEnum": { "type": "string", "enum": ["ONLY"] },
+      "Formats": {
+        "type": "object",
+        "properties": {
+          "uuid": { "type": "string", "format": "uuid" },
+          "email": { "type": "string", "format": "email" },
+          "uri": { "type": "string", "format": "uri" },
+          "byte": { "type": "string", "format": "byte" },
+          "binary": { "type": "string", "format": "binary" },
+          "i32": { "type": "integer", "format": "int32" },
+          "i64": { "type": "integer", "format": "int64" },
+          "flt": { "type": "number", "format": "float" },
+          "dec": { "type": "number", "format": "decimal" }
+        }
+      },
+      "EnumHolder": {
+        "type": "object",
+        "properties": {
+          "intEnum": { "$ref": "#/components/schemas/IntEnum" },
+          "weird": { "$ref": "#/components/schemas/WeirdEnum" }
+        }
+      },
+      "NastyNames": {
+        "type": "object",
+        "properties": {
+          "kebab-case": { "type": "string" },
+          "snake_case": { "type": "string" },
+          "1leading": { "type": "string" },
+          "class": { "type": "string" },
+          "@type": { "type": "string" },
+          "veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

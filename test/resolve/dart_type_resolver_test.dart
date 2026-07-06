@@ -19,36 +19,31 @@ void main() {
     );
   });
 
-  test('maps date format to a date-only DateTime', () {
-    final t = resolver.resolve({'type': 'string', 'format': 'date'});
-    expect(t.name, 'DateTime');
-    expect(t.isDateOnly, isTrue);
+  test('maps date format to String', () {
+    expect(
+      resolver.resolve({'type': 'string', 'format': 'date'}).display,
+      'String',
+    );
   });
 
-  test('keeps a date with an example as a String', () {
-    final t = resolver.resolve({
-      'type': 'string',
-      'format': 'date',
-      'example': '2025-04-20',
-    });
-    expect(t.name, 'String');
-    expect(t.isDateOnly, isFalse);
+  test('maps a date with an example to String', () {
+    expect(
+      resolver.resolve({
+        'type': 'string',
+        'format': 'date',
+        'example': '2025-04-20',
+      }).display,
+      'String',
+    );
   });
 
-  test('keeps isDateOnly when a date field is nullable', () {
+  test('maps a nullable date to a nullable String', () {
     final t = resolver.resolve({
       'type': ['string', 'null'],
       'format': 'date',
     });
-    expect(t.name, 'DateTime');
+    expect(t.display, 'String?');
     expect(t.isNullable, isTrue);
-    expect(t.isDateOnly, isTrue);
-  });
-
-  test('date-time is not flagged date-only', () {
-    final t = resolver.resolve({'type': 'string', 'format': 'date-time'});
-    expect(t.name, 'DateTime');
-    expect(t.isDateOnly, isFalse);
   });
 
   test('resolves a single-item allOf to that item', () {
@@ -202,18 +197,46 @@ void main() {
     expect(r.resolve({'type': 'string'}).display, 'String');
   });
 
-  test('resolves a ref to an array alias as a List', () {
+  test('resolves a ref to a named array schema to the typedef name', () {
     final r = OpenApi31TypeResolver(
       NameGiver(),
       schemas: {
-        'Patch': {
+        'Tags': {
           'type': 'array',
           'items': {'type': 'string'},
         },
       },
     );
     expect(
-      r.resolve({r'$ref': '#/components/schemas/Patch'}).display,
+      r.resolve({r'$ref': '#/components/schemas/Tags'}).display,
+      'Tags',
+    );
+  });
+
+  test('resolves a ref to a nullable named array schema to a nullable typedef',
+      () {
+    final r = OpenApi30TypeResolver(
+      NameGiver(),
+      schemas: {
+        'Tags': {
+          'type': 'array',
+          'items': {'type': 'string'},
+          'nullable': true,
+        },
+      },
+    );
+    expect(
+      r.resolve({r'$ref': '#/components/schemas/Tags'}).display,
+      'Tags?',
+    );
+  });
+
+  test('resolves an inline array to a List (not a typedef)', () {
+    expect(
+      resolver.resolve({
+        'type': 'array',
+        'items': {'type': 'string'},
+      }).display,
       'List<String>',
     );
   });

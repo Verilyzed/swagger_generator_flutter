@@ -48,6 +48,46 @@ void main() {
     expect(out, contains('Map<String, dynamic> toJson() => _\$TaskToJson(this);'));
   });
 
+  test('emits typedefs above the classes', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Thing',
+          fields: [
+            FieldDef(
+              dartName: 'id',
+              jsonKey: 'id',
+              type: DartType('String'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+      typedefs: const [
+        TypedefDef(name: 'Tags', aliasType: DartType('List<String>')),
+      ],
+    );
+
+    expect(out, contains('typedef Tags = List<String>;'));
+  });
+
+  test('an empty class emits a valid no-arg constructor and copyWith', () {
+    final out = ModelEmitter().emit(
+      const [ModelDef(name: 'Empty', fields: [])],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains('const Empty();'));
+    expect(out, isNot(contains('Empty({')));
+    expect(out, contains('Empty copyWith() => Empty();'));
+    expect(out, isNot(contains('copyWith({')));
+  });
+
   test('generates a copyWith with a nullable parameter for each field', () {
     final out = ModelEmitter().emit(
       const [
@@ -306,35 +346,6 @@ void main() {
     );
   });
 
-  test('emits DateConverter and annotates a date field', () {
-    final out = ModelEmitter().emit(
-      const [
-        ModelDef(
-          name: 'Event',
-          fields: [
-            FieldDef(
-              dartName: 'occurredAt',
-              jsonKey: 'occurred_at',
-              type: DartType('DateTime', isNullable: true, isDateOnly: true),
-              isRequired: false,
-            ),
-          ],
-        ),
-      ],
-      partFileName: 'demo.models.g.dart',
-      enumsImport: 'demo.enums.dart',
-      enumNames: const {},
-    );
-
-    expect(
-      out,
-      contains('class DateConverter implements JsonConverter<DateTime, String> {'),
-    );
-    expect(out, contains("object.toIso8601String().split('T').first"));
-    expect(out, contains('@DateConverter()'));
-    expect(out, contains('final DateTime? occurredAt;'));
-  });
-
   test('imports the overrides file when a field uses an override type', () {
     final out = ModelEmitter().emit(
       const [
@@ -384,28 +395,5 @@ void main() {
     );
 
     expect(out, isNot(contains('package:example/overrides.dart')));
-  });
-
-  test('omits DateConverter when no date field exists', () {
-    final out = ModelEmitter().emit(
-      const [
-        ModelDef(
-          name: 'Plain',
-          fields: [
-            FieldDef(
-              dartName: 'id',
-              jsonKey: 'id',
-              type: DartType('String'),
-              isRequired: true,
-            ),
-          ],
-        ),
-      ],
-      partFileName: 'demo.models.g.dart',
-      enumsImport: 'demo.enums.dart',
-      enumNames: const {},
-    );
-
-    expect(out, isNot(contains('DateConverter')));
   });
 }

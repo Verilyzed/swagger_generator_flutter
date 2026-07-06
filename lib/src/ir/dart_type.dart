@@ -2,13 +2,10 @@
 class DartType {
   final String name;
   final bool isNullable;
-  final bool isDateOnly;
 
-  const DartType(
-    this.name, {
-    this.isNullable = false,
-    this.isDateOnly = false,
-  });
+  const DartType(this.name, {this.isNullable = false});
 
-  String get display => isNullable ? '$name?' : name;
+  // `dynamic` is already nullable, so it never takes a `?` suffix.
+  String get display =>
+      isNullable && name != 'dynamic' ? '$name?' : name;
 }

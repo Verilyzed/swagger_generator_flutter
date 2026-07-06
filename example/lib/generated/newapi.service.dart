@@ -60,7 +60,7 @@ abstract class NewapiService extends ChopperService {
   Future<Response<FullItem>> patchVaultItem({
     @Path('vaultUuid') required String vaultUuid,
     @Path('itemUuid') required String itemUuid,
-    @Body() List<PatchItem>? body,
+    @Body() PatchModel? body,
   });
 
   @PUT(path: '/vaults/{vaultUuid}/items/{itemUuid}')

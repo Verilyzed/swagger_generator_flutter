@@ -37,6 +37,7 @@ class SpecParser {
     _schemasCache = schemas;
     final enums = <EnumDef>[];
     final models = <ModelDef>[];
+    final typedefs = <TypedefDef>[];
 
     // Collect enum Dart names first so model field defaults can reference them.
     final enumNames = <String>{};
@@ -62,6 +63,14 @@ class SpecParser {
           schema,
           enumNames: enumNames,
         ));
+      } else if (schema['type'] == 'array') {
+        // A named array schema becomes a typedef. The alias type is the
+        // non-nullable base (`List<...>`); nullability is applied where it is
+        // referenced.
+        typedefs.add(TypedefDef(
+          name: _names.className(entry.key),
+          aliasType: DartType(_resolver.resolve(schema).name),
+        ));
       }
     }
 
@@ -70,6 +79,7 @@ class SpecParser {
       enums: enums,
       models: models,
       service: _service(spec, name, enumNames),
+      typedefs: typedefs,
     );
   }
 
@@ -237,13 +247,9 @@ class SpecParser {
     for (final raw in (op['parameters'] as List?) ?? const []) {
       final p = (raw as Map).cast<String, dynamic>();
       final isPath = p['in'] == 'path';
-      var schema = p['schema'] is Map
+      final schema = p['schema'] is Map
           ? (p['schema'] as Map).cast<String, dynamic>()
           : const <String, dynamic>{};
-      // A parameter-level example counts the same as a schema-level one.
-      if (p['example'] != null && schema['example'] == null) {
-        schema = {...schema, 'example': p['example']};
-      }
       final type = _resolver.resolve(schema);
       params.add(ParamDef(
         dartName: _names.memberName(p['name'] as String),

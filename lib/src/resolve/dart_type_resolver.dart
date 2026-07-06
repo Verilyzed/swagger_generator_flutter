@@ -21,7 +21,7 @@ abstract class DartTypeResolver {
     final nullable = isNullable(schema);
     final inner = _resolveCore(core);
     return nullable || inner.isNullable
-        ? DartType(inner.name, isNullable: true, isDateOnly: inner.isDateOnly)
+        ? DartType(inner.name, isNullable: true)
         : inner;
   }
 
@@ -61,6 +61,11 @@ abstract class DartTypeResolver {
       if (_overrides.contains(name)) return DartType(_names.className(name));
       final target = _schemas[name];
       if (target is Map<String, dynamic>) {
+        // A named array schema is emitted as a typedef, so reference it by name
+        // instead of inlining the `List<...>`.
+        if (target['type'] == 'array') {
+          return DartType(_names.className(name), isNullable: isNullable(target));
+        }
         if (_isAlias(target)) return resolve(target);
         // A named schema marked nullable is nullable wherever it is referenced.
         if (isNullable(target)) {
@@ -80,13 +85,6 @@ abstract class DartTypeResolver {
     switch (type) {
       case 'string':
         if (schema['format'] == 'date-time') return const DartType('DateTime');
-        if (schema['format'] == 'date') {
-          // A date carrying an example is treated as a custom string rather
-          // than a DateTime.
-          return schema['example'] != null
-              ? const DartType('String')
-              : const DartType('DateTime', isDateOnly: true);
-        }
         return const DartType('String');
       case 'integer':
         return const DartType('int');

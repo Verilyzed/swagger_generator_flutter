@@ -26,6 +26,11 @@ void main() {
     expect(names.memberName('runtime_type'), r'$runtimeType');
   });
 
+  test('memberName prefixes a leading-digit name with a dollar', () {
+    expect(names.memberName('1leading'), r'$1leading');
+    expect(names.memberName('123'), r'$123');
+  });
+
   test('memberName leaves enum-only collisions untouched', () {
     expect(names.memberName('index'), 'index');
     expect(names.memberName('values'), 'values');

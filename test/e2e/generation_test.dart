@@ -33,7 +33,7 @@ void main() {
     );
   });
 
-  test('keeps a date field with an example as a String', () {
+  test('maps a date field to String', () {
     const spec = '''
 {
   "openapi": "3.0.0",
@@ -57,10 +57,10 @@ void main() {
     final models = sources['.models.dart'];
 
     expect(models, contains('final String? occurredAt;'));
-    expect(models, contains('final DateTime? createdAt;'));
+    expect(models, contains('final String? createdAt;'));
   });
 
-  test('keeps a date parameter with a parameter-level example as a String', () {
+  test('maps a date parameter to String', () {
     const spec = '''
 {
   "openapi": "3.0.0",
@@ -94,10 +94,13 @@ void main() {
     final service = generateSources(spec, path: 'x.json', baseName: 'x')[
         '.service.dart'];
 
-    expect(service, contains("@Query('startDatum') required String startDatum,"));
     expect(
       service,
-      contains("@Query('endDatum') required DateTime endDatum,"),
+      contains("@Query('startDatum') required String startDatum,"),
+    );
+    expect(
+      service,
+      contains("@Query('endDatum') required String endDatum,"),
     );
   });
 
@@ -149,6 +152,28 @@ void main() {
       sources['.client.dart'],
       contains("import 'package:example/overrides.dart';"),
     );
+  });
+
+  test('emits a typedef for a top-level array schema', () {
+    const spec = '''
+{
+  "openapi": "3.0.0",
+  "info": {"title": "t", "version": "1"},
+  "components": {"schemas": {
+    "Tags": {"type": "array", "items": {"type": "string"}},
+    "Post": {"type": "object", "properties": {
+      "tags": {"\$ref": "#/components/schemas/Tags"}
+    }}
+  }},
+  "paths": {}
+}
+''';
+
+    final models = generateSources(spec, path: 'p.json', baseName: 'p')[
+        '.models.dart'];
+
+    expect(models, contains('typedef Tags = List<String>;'));
+    expect(models, contains('final Tags? tags;'));
   });
 
   test('generates a copyWith on a model class', () {

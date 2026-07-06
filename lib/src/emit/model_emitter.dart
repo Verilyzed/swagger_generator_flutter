@@ -10,6 +10,7 @@ class ModelEmitter {
     required Set<String> enumNames,
     Set<String> overrideTypes = const {},
     String? overridesImport,
+    List<TypedefDef> typedefs = const [],
   }) {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
@@ -27,21 +28,11 @@ class ModelEmitter {
       ..writeln("part '$partFileName';")
       ..writeln();
 
-    if (models.any((m) => m.fields.any((f) => f.type.isDateOnly))) {
-      buffer
-        ..writeln(
-          'class DateConverter implements JsonConverter<DateTime, String> {',
-        )
-        ..writeln('  const DateConverter();')
-        ..writeln()
-        ..writeln('  @override')
-        ..writeln('  DateTime fromJson(String json) => DateTime.parse(json);')
-        ..writeln()
-        ..writeln('  @override')
-        ..writeln('  String toJson(DateTime object) =>')
-        ..writeln("      object.toIso8601String().split('T').first;")
-        ..writeln('}')
-        ..writeln();
+    if (typedefs.isNotEmpty) {
+      for (final t in typedefs) {
+        buffer.writeln('typedef ${t.name} = ${t.aliasType.display};');
+      }
+      buffer.writeln();
     }
 
     for (final model in models) {
@@ -68,27 +59,31 @@ class ModelEmitter {
       if (keyArgs.isNotEmpty) {
         buffer.writeln('  @JsonKey(${keyArgs.join(', ')})');
       }
-      if (field.type.isDateOnly) {
-        buffer.writeln('  @DateConverter()');
-      }
       buffer.writeln('  final ${field.type.display} ${field.dartName};');
     }
 
-    buffer
-      ..writeln()
-      ..writeln('  const ${model.name}({');
-    for (final field in model.fields) {
-      // A constructor parameter is required only when it cannot be null and has
-      // no default. A nullable field is always optional (it defaults to null),
-      // even if the schema lists it as required.
-      final makeRequired = field.defaultValue == null && !field.type.isNullable;
-      final prefix = makeRequired ? 'required ' : '';
-      final suffix = field.defaultValue != null ? ' = ${field.defaultValue}' : '';
-      buffer.writeln('    ${prefix}this.${field.dartName}$suffix,');
+    buffer.writeln();
+    if (model.fields.isEmpty) {
+      buffer
+        ..writeln('  const ${model.name}();')
+        ..writeln();
+    } else {
+      buffer.writeln('  const ${model.name}({');
+      for (final field in model.fields) {
+        // A constructor parameter is required only when it cannot be null and
+        // has no default. A nullable field is always optional (it defaults to
+        // null), even if the schema lists it as required.
+        final makeRequired =
+            field.defaultValue == null && !field.type.isNullable;
+        final prefix = makeRequired ? 'required ' : '';
+        final suffix =
+            field.defaultValue != null ? ' = ${field.defaultValue}' : '';
+        buffer.writeln('    ${prefix}this.${field.dartName}$suffix,');
+      }
+      buffer
+        ..writeln('  });')
+        ..writeln();
     }
-    buffer
-      ..writeln('  });')
-      ..writeln();
     _emitCopyWith(buffer, model);
     buffer
       ..writeln(
@@ -112,6 +107,12 @@ class ModelEmitter {
   // keeps the current value (`dynamic` is already nullable). Passing null to a
   // nullable field keeps it; rebuild via the constructor to clear one.
   void _emitCopyWith(StringBuffer buffer, ModelDef model) {
+    if (model.fields.isEmpty) {
+      buffer
+        ..writeln('  ${model.name} copyWith() => ${model.name}();')
+        ..writeln();
+      return;
+    }
     buffer.writeln('  ${model.name} copyWith({');
     for (final field in model.fields) {
       final paramType =

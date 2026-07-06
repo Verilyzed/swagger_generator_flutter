@@ -30,6 +30,24 @@ void main() {
     );
   });
 
+  test('parses a top-level array schema into a typedef', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Tags': {
+            'type': 'array',
+            'items': {'type': 'string'},
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    expect(spec.models, isEmpty);
+    expect(spec.typedefs.single.name, 'Tags');
+    expect(spec.typedefs.single.aliasType.display, 'List<String>');
+  });
+
   test('parses models with required and nullable fields', () {
     final spec = _parser().parse({
       'components': {

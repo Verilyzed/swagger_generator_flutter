@@ -1,0 +1,75 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Edge Cases 3.0", "version": "1.0.0" },
+  "paths": {
+    "/ping": {
+      "get": {
+        "operationId": "getPing",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Ping" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Status": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] },
+      "Ping": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string" },
+          "status": { "$ref": "#/components/schemas/Status" }
+        }
+      },
+      "Cat": { "type": "object", "properties": { "meow": { "type": "boolean" } } },
+      "Nullable30": {
+        "type": "object",
+        "properties": {
+          "plain": { "type": "string", "nullable": true },
+          "refSibling": { "$ref": "#/components/schemas/Cat", "nullable": true },
+          "wrapped": {
+            "allOf": [{ "$ref": "#/components/schemas/Cat" }],
+            "nullable": true
+          },
+          "anyOfNull": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Cat" },
+              { "type": "null" }
+            ]
+          }
+        }
+      },
+      "PetOneOf": {
+        "oneOf": [{ "$ref": "#/components/schemas/Cat" }, { "type": "string" }]
+      },
+      "Base": {
+        "type": "object",
+        "properties": { "id": { "type": "string" } },
+        "required": ["id"]
+      },
+      "Derived": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Base" },
+          { "type": "object", "properties": { "extra": { "type": "string" } } }
+        ]
+      },
+      "Tree": {
+        "type": "object",
+        "properties": {
+          "children": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tree" }
+          }
+        }
+      }
+    }
+  }
+}

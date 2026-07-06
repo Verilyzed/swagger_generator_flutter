@@ -166,7 +166,7 @@ class NewapiApi {
   Future<Response<FullItem>> patchVaultItem({
     required String vaultUuid,
     required String itemUuid,
-    List<PatchItem>? body,
+    PatchModel? body,
   }) =>
       _service.patchVaultItem(
         vaultUuid: vaultUuid,

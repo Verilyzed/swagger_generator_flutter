@@ -109,6 +109,7 @@ Map<String, String> generateSources(
       enumNames: spec.enums.map((e) => e.name).toSet(),
       overrideTypes: overrideTypes,
       overridesImport: overridesImport,
+      typedefs: spec.typedefs,
     ),
     '.service.dart': ServiceEmitter().emit(
       spec.service,

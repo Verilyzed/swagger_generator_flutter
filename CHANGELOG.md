@@ -1,3 +1,11 @@
+## 0.0.2
+
+* `format: date` now maps to a plain `String` instead of a date-only
+  `DateTime`; `format: date-time` still maps to `DateTime`. A date-only value
+  has no time or timezone, so a `String` preserves the wire value exactly and
+  keeps date fields and query/path parameters consistent. Removes the generated
+  `DateConverter`.
+
 ## 0.0.1
 
 Initial release.

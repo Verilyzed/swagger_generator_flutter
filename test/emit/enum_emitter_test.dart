@@ -24,4 +24,16 @@ void main() {
     expect(out, contains('  String toString() => const {'));
     expect(out, contains("        AggregationEnum.month: 'month',"));
   });
+
+  test('escapes a dollar sign in an enum value', () {
+    final out = EnumEmitter().emit(const [
+      EnumDef(
+        name: 'E',
+        values: [EnumValueDef(dartName: 'dollar', jsonValue: r'$dollar')],
+      ),
+    ]);
+
+    expect(out, contains(r"@JsonValue('\$dollar')"));
+    expect(out, contains(r"E.dollar: '\$dollar',"));
+  });
 }
