@@ -1,10 +1,30 @@
 ## 0.0.2
 
+### Changed
+
 * `format: date` now maps to a plain `String` instead of a date-only
   `DateTime`; `format: date-time` still maps to `DateTime`. A date-only value
   has no time or timezone, so a `String` preserves the wire value exactly and
   keeps date fields and query/path parameters consistent. Removes the generated
   `DateConverter`.
+* A named schema that is a plain array (`type: array` with `items`) is now
+  emitted as a Dart `typedef` (for example `typedef Patch = List<String>;`) and
+  referenced by name, instead of inlining `List<...>` at each use site. Inline
+  arrays are unchanged.
+
+### Fixed
+
+* Member names that begin with a digit (fields, parameters, and enum values)
+  are prefixed with `$` to form a valid Dart identifier. Previously a name like
+  `1leading` was emitted unchanged, producing code that would not compile.
+* Enum values containing `$`, quotes, or backslashes are escaped in the
+  generated string literals. Previously a value such as `$dollar` was treated as
+  string interpolation and broke the generated enum file.
+* A model with no fields now emits `const Name();` and `copyWith() => Name();`.
+  Previously the empty parameter braces (`{}`) were invalid Dart.
+* A nullable `dynamic` is rendered as `dynamic` rather than `dynamic?`, which the
+  analyzer flags. This affected multi-type schemas that include `null` (for
+  example `["string", "integer", "null"]`).
 
 ## 0.0.1
 
