@@ -49,10 +49,9 @@ class ModelEmitter {
 
     for (final field in model.fields) {
       final enumName = _enumOf(field.type.name, enumNames);
-      final keyArgs = <String>[];
-      if (field.jsonKey != field.dartName) {
-        keyArgs.add("name: '${field.jsonKey}'");
-      }
+      // Always pin the wire name so renaming a Dart field cannot silently
+      // change the JSON contract.
+      final keyArgs = <String>["name: '${field.jsonKey}'"];
       if (enumName != null) {
         keyArgs.add('unknownEnumValue: $enumName.\$unknown');
       }

@@ -9,13 +9,17 @@ typedef PatchModel = List<PatchItem>;
 
 @JsonSerializable()
 class ApiRequest {
-  @JsonKey(unknownEnumValue: ApiRequestAction.$unknown)
+  @JsonKey(name: 'action', unknownEnumValue: ApiRequestAction.$unknown)
   final ApiRequestAction? action;
+  @JsonKey(name: 'actor')
   final ApiRequestActor? actor;
+  @JsonKey(name: 'requestId')
   final String? requestId;
+  @JsonKey(name: 'resource')
   final ApiRequestResource? resource;
-  @JsonKey(unknownEnumValue: ApiRequestResult.$unknown)
+  @JsonKey(name: 'result', unknownEnumValue: ApiRequestResult.$unknown)
   final ApiRequestResult? result;
+  @JsonKey(name: 'timestamp')
   final DateTime? timestamp;
 
   const ApiRequest({
@@ -53,7 +57,9 @@ class ApiRequest {
 
 @JsonSerializable()
 class ErrorResponse {
+  @JsonKey(name: 'message')
   final String? message;
+  @JsonKey(name: 'status')
   final int? status;
 
   const ErrorResponse({
@@ -79,16 +85,23 @@ class ErrorResponse {
 
 @JsonSerializable()
 class FieldModel {
+  @JsonKey(name: 'entropy')
   final double? entropy;
+  @JsonKey(name: 'generate')
   final bool generate;
+  @JsonKey(name: 'id')
   final String id;
+  @JsonKey(name: 'label')
   final String? label;
-  @JsonKey(unknownEnumValue: FieldPurpose.$unknown)
+  @JsonKey(name: 'purpose', unknownEnumValue: FieldPurpose.$unknown)
   final FieldPurpose? purpose;
+  @JsonKey(name: 'recipe')
   final GeneratorRecipe? recipe;
+  @JsonKey(name: 'section')
   final FieldSection? section;
-  @JsonKey(unknownEnumValue: FieldType.$unknown)
+  @JsonKey(name: 'type', unknownEnumValue: FieldType.$unknown)
   final FieldType type;
+  @JsonKey(name: 'value')
   final String? value;
 
   const FieldModel({
@@ -135,12 +148,17 @@ class FieldModel {
 
 @JsonSerializable()
 class File {
+  @JsonKey(name: 'content')
   final String? content;
   @JsonKey(name: 'content_path')
   final String? contentPath;
+  @JsonKey(name: 'id')
   final String? id;
+  @JsonKey(name: 'name')
   final String? name;
+  @JsonKey(name: 'section')
   final FileSection? section;
+  @JsonKey(name: 'size')
   final int? size;
 
   const File({
@@ -178,22 +196,35 @@ class File {
 
 @JsonSerializable()
 class FullItem {
-  @JsonKey(unknownEnumValue: ItemCategory.$unknown)
+  @JsonKey(name: 'category', unknownEnumValue: ItemCategory.$unknown)
   final ItemCategory category;
+  @JsonKey(name: 'createdAt')
   final DateTime? createdAt;
+  @JsonKey(name: 'favorite')
   final bool favorite;
+  @JsonKey(name: 'id')
   final String? id;
+  @JsonKey(name: 'lastEditedBy')
   final String? lastEditedBy;
-  @JsonKey(unknownEnumValue: ItemState.$unknown)
+  @JsonKey(name: 'state', unknownEnumValue: ItemState.$unknown)
   final ItemState? state;
+  @JsonKey(name: 'tags')
   final List<String>? tags;
+  @JsonKey(name: 'title')
   final String? title;
+  @JsonKey(name: 'updatedAt')
   final DateTime? updatedAt;
+  @JsonKey(name: 'urls')
   final List<ItemUrlsItem>? urls;
+  @JsonKey(name: 'vault')
   final ItemVault vault;
+  @JsonKey(name: 'version')
   final int? version;
+  @JsonKey(name: 'fields')
   final List<FieldModel>? fields;
+  @JsonKey(name: 'files')
   final List<File>? files;
+  @JsonKey(name: 'sections')
   final List<FullItemSectionsItem>? sections;
 
   const FullItem({
@@ -258,9 +289,11 @@ class FullItem {
 
 @JsonSerializable()
 class GeneratorRecipe {
-  @JsonKey(unknownEnumValue: GeneratorRecipeCharacterSetsItem.$unknown)
+  @JsonKey(name: 'characterSets', unknownEnumValue: GeneratorRecipeCharacterSetsItem.$unknown)
   final List<GeneratorRecipeCharacterSetsItem>? characterSets;
+  @JsonKey(name: 'excludeCharacters')
   final String? excludeCharacters;
+  @JsonKey(name: 'length')
   final int length;
 
   const GeneratorRecipe({
@@ -289,19 +322,29 @@ class GeneratorRecipe {
 
 @JsonSerializable()
 class Item {
-  @JsonKey(unknownEnumValue: ItemCategory.$unknown)
+  @JsonKey(name: 'category', unknownEnumValue: ItemCategory.$unknown)
   final ItemCategory category;
+  @JsonKey(name: 'createdAt')
   final DateTime? createdAt;
+  @JsonKey(name: 'favorite')
   final bool favorite;
+  @JsonKey(name: 'id')
   final String? id;
+  @JsonKey(name: 'lastEditedBy')
   final String? lastEditedBy;
-  @JsonKey(unknownEnumValue: ItemState.$unknown)
+  @JsonKey(name: 'state', unknownEnumValue: ItemState.$unknown)
   final ItemState? state;
+  @JsonKey(name: 'tags')
   final List<String>? tags;
+  @JsonKey(name: 'title')
   final String? title;
+  @JsonKey(name: 'updatedAt')
   final DateTime? updatedAt;
+  @JsonKey(name: 'urls')
   final List<ItemUrlsItem>? urls;
+  @JsonKey(name: 'vault')
   final ItemVault vault;
+  @JsonKey(name: 'version')
   final int? version;
 
   const Item({
@@ -357,8 +400,11 @@ class Item {
 
 @JsonSerializable()
 class ServiceDependency {
+  @JsonKey(name: 'message')
   final String? message;
+  @JsonKey(name: 'service')
   final String? service;
+  @JsonKey(name: 'status')
   final String? status;
 
   const ServiceDependency({
@@ -387,15 +433,23 @@ class ServiceDependency {
 
 @JsonSerializable()
 class Vault {
+  @JsonKey(name: 'attributeVersion')
   final int? attributeVersion;
+  @JsonKey(name: 'contentVersion')
   final int? contentVersion;
+  @JsonKey(name: 'createdAt')
   final DateTime? createdAt;
+  @JsonKey(name: 'description')
   final String? description;
+  @JsonKey(name: 'id')
   final String? id;
+  @JsonKey(name: 'items')
   final int? items;
+  @JsonKey(name: 'name')
   final String? name;
-  @JsonKey(unknownEnumValue: VaultType.$unknown)
+  @JsonKey(name: 'type', unknownEnumValue: VaultType.$unknown)
   final VaultType? type;
+  @JsonKey(name: 'updatedAt')
   final DateTime? updatedAt;
 
   const Vault({
@@ -442,10 +496,15 @@ class Vault {
 
 @JsonSerializable()
 class ApiRequestActor {
+  @JsonKey(name: 'account')
   final String? account;
+  @JsonKey(name: 'id')
   final String? id;
+  @JsonKey(name: 'jti')
   final String? jti;
+  @JsonKey(name: 'requestIp')
   final String? requestIp;
+  @JsonKey(name: 'userAgent')
   final String? userAgent;
 
   const ApiRequestActor({
@@ -480,6 +539,7 @@ class ApiRequestActor {
 
 @JsonSerializable()
 class ApiRequestResourceItem {
+  @JsonKey(name: 'id')
   final String? id;
 
   const ApiRequestResourceItem({
@@ -502,6 +562,7 @@ class ApiRequestResourceItem {
 
 @JsonSerializable()
 class ApiRequestResourceVault {
+  @JsonKey(name: 'id')
   final String? id;
 
   const ApiRequestResourceVault({
@@ -524,10 +585,13 @@ class ApiRequestResourceVault {
 
 @JsonSerializable()
 class ApiRequestResource {
+  @JsonKey(name: 'item')
   final ApiRequestResourceItem? item;
+  @JsonKey(name: 'itemVersion')
   final int? itemVersion;
-  @JsonKey(unknownEnumValue: ApiRequestResourceType.$unknown)
+  @JsonKey(name: 'type', unknownEnumValue: ApiRequestResourceType.$unknown)
   final ApiRequestResourceType? type;
+  @JsonKey(name: 'vault')
   final ApiRequestResourceVault? vault;
 
   const ApiRequestResource({
@@ -559,6 +623,7 @@ class ApiRequestResource {
 
 @JsonSerializable()
 class FieldSection {
+  @JsonKey(name: 'id')
   final String? id;
 
   const FieldSection({
@@ -581,6 +646,7 @@ class FieldSection {
 
 @JsonSerializable()
 class FileSection {
+  @JsonKey(name: 'id')
   final String? id;
 
   const FileSection({
@@ -603,7 +669,9 @@ class FileSection {
 
 @JsonSerializable()
 class FullItemSectionsItem {
+  @JsonKey(name: 'id')
   final String? id;
+  @JsonKey(name: 'label')
   final String? label;
 
   const FullItemSectionsItem({
@@ -629,8 +697,11 @@ class FullItemSectionsItem {
 
 @JsonSerializable()
 class ItemUrlsItem {
+  @JsonKey(name: 'href')
   final String href;
+  @JsonKey(name: 'label')
   final String? label;
+  @JsonKey(name: 'primary')
   final bool? primary;
 
   const ItemUrlsItem({
@@ -659,6 +730,7 @@ class ItemUrlsItem {
 
 @JsonSerializable()
 class ItemVault {
+  @JsonKey(name: 'id')
   final String id;
 
   const ItemVault({
@@ -681,9 +753,11 @@ class ItemVault {
 
 @JsonSerializable()
 class PatchItem {
-  @JsonKey(unknownEnumValue: PatchItemOp.$unknown)
+  @JsonKey(name: 'op', unknownEnumValue: PatchItemOp.$unknown)
   final PatchItemOp op;
+  @JsonKey(name: 'path')
   final String path;
+  @JsonKey(name: 'value')
   final Map<String, dynamic>? value;
 
   const PatchItem({
@@ -712,8 +786,11 @@ class PatchItem {
 
 @JsonSerializable()
 class GetServerHealthResponse {
+  @JsonKey(name: 'dependencies')
   final List<ServiceDependency>? dependencies;
+  @JsonKey(name: 'name')
   final String name;
+  @JsonKey(name: 'version')
   final String version;
 
   const GetServerHealthResponse({

@@ -5,6 +5,13 @@
 * Continuous integration workflow that runs `dart analyze` and `dart test`
   on pull requests.
 
+### Changed
+
+* Every generated model field now carries an explicit `@JsonKey(name: ...)`
+  with its wire name, so renaming a Dart field cannot silently change the JSON
+  contract. Previously the annotation was omitted when a field name already
+  matched its JSON key.
+
 ### Fixed
 
 * Response types are now resolved from any 2xx success response (for example

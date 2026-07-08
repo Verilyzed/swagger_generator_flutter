@@ -7,7 +7,9 @@ part 'resource_scheduler.models.g.dart';
 
 @JsonSerializable()
 class AttachmentInput {
+  @JsonKey(name: 'filename')
   final String filename;
+  @JsonKey(name: 'content')
   final String content;
 
   const AttachmentInput({
@@ -35,7 +37,9 @@ class AttachmentInput {
 class AttachmentResponse {
   @JsonKey(name: 'attachment_id')
   final String attachmentId;
+  @JsonKey(name: 'filename')
   final String filename;
+  @JsonKey(name: 'size')
   final int size;
 
   const AttachmentResponse({
@@ -64,6 +68,7 @@ class AttachmentResponse {
 
 @JsonSerializable()
 class BadInputResponse {
+  @JsonKey(name: 'detail')
   final String detail;
   @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
@@ -114,7 +119,9 @@ class RunImmediatelyConfig {
 
 @JsonSerializable()
 class AssetState {
+  @JsonKey(name: 'level')
   final double? level;
+  @JsonKey(name: 'range')
   final double? range;
   @JsonKey(name: 'is_connected')
   final bool? isConnected;
@@ -122,9 +129,11 @@ class AssetState {
   final bool? isActive;
   @JsonKey(name: 'is_complete')
   final bool? isComplete;
+  @JsonKey(name: 'capacity')
   final double? capacity;
   @JsonKey(name: 'level_limit')
   final double? levelLimit;
+  @JsonKey(name: 'throughput')
   final double? throughput;
   @JsonKey(name: 'time_remaining')
   final double? timeRemaining;
@@ -188,6 +197,7 @@ class AssetState {
 
 @JsonSerializable()
 class Task {
+  @JsonKey(name: 'id')
   final String id;
   @JsonKey(name: 'asset_id')
   final String assetId;
@@ -195,16 +205,17 @@ class Task {
   final DateTime calculatedStart;
   @JsonKey(name: 'calculated_end')
   final DateTime calculatedEnd;
-  @JsonKey(unknownEnumValue: TaskStateEnum.$unknown)
+  @JsonKey(name: 'state', unknownEnumValue: TaskStateEnum.$unknown)
   final TaskStateEnum state;
   @JsonKey(name: 'target_date')
   final DateTime targetDate;
-  @JsonKey(unknownEnumValue: TaskTypeEnum.$unknown)
+  @JsonKey(name: 'type', unknownEnumValue: TaskTypeEnum.$unknown)
   final TaskTypeEnum type;
   @JsonKey(name: 'end_trigger', unknownEnumValue: TaskEndTriggerEnum.$unknown)
   final TaskEndTriggerEnum? endTrigger;
   @JsonKey(name: 'target_level')
   final double? targetLevel;
+  @JsonKey(name: 'costs')
   final double? costs;
   @JsonKey(name: 'total_quantity')
   final double? totalQuantity;
@@ -269,6 +280,7 @@ class Task {
 
 @JsonSerializable()
 class Run {
+  @JsonKey(name: 'id')
   final String id;
   @JsonKey(name: 'asset_id')
   final String assetId;
@@ -280,8 +292,9 @@ class Run {
   final DateTime targetDate;
   @JsonKey(name: 'target_level')
   final Percent? targetLevel;
-  @JsonKey(unknownEnumValue: RunStateEnum.$unknown)
+  @JsonKey(name: 'state', unknownEnumValue: RunStateEnum.$unknown)
   final RunStateEnum state;
+  @JsonKey(name: 'tasks')
   final List<Task> tasks;
   @JsonKey(name: 'total_quantity')
   final Quantity? totalQuantity;
@@ -291,6 +304,7 @@ class Run {
   final Money? avgPricePerUnit;
   @JsonKey(name: 'baseline_costs')
   final Money? baselineCosts;
+  @JsonKey(name: 'savings')
   final Money? savings;
   @JsonKey(name: 'savings_pct')
   final Percent? savingsPct;
@@ -386,7 +400,9 @@ class Account {
   final String providerUserId;
   @JsonKey(name: 'account_id')
   final String accountId;
+  @JsonKey(name: 'latitude')
   final double latitude;
+  @JsonKey(name: 'longitude')
   final double longitude;
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
@@ -440,6 +456,7 @@ class Account {
 class DeadlineSlot {
   @JsonKey(name: 'target_time')
   final String targetTime;
+  @JsonKey(name: 'active')
   final bool active;
 
   const DeadlineSlot({
@@ -469,7 +486,7 @@ class DiscoveredAsset {
   final String assetId;
   @JsonKey(name: 'asset_information')
   final AssetInformation assetInformation;
-  @JsonKey(unknownEnumValue: DiscoveredAssetCapability.$unknown)
+  @JsonKey(name: 'capability', unknownEnumValue: DiscoveredAssetCapability.$unknown)
   final DiscoveredAssetCapability capability;
   @JsonKey(name: 'has_interventions')
   final bool hasInterventions;
@@ -503,7 +520,9 @@ class DiscoveredAsset {
 
 @JsonSerializable()
 class ProviderLinkResponse {
+  @JsonKey(name: 'linkUrl')
   final String linkUrl;
+  @JsonKey(name: 'linkToken')
   final String linkToken;
 
   const ProviderLinkResponse({
@@ -529,6 +548,7 @@ class ProviderLinkResponse {
 
 @JsonSerializable()
 class ErrorResponse {
+  @JsonKey(name: 'detail')
   final String detail;
   @JsonKey(name: 'error_id')
   final String? errorId;
@@ -561,7 +581,9 @@ class ErrorResponse {
 
 @JsonSerializable()
 class Money {
+  @JsonKey(name: 'value')
   final String? value;
+  @JsonKey(name: 'unit')
   final String unit;
 
   const Money({
@@ -587,8 +609,9 @@ class Money {
 
 @JsonSerializable()
 class FailureReason {
-  @JsonKey(unknownEnumValue: FailureReasonTypeEnum.$unknown)
+  @JsonKey(name: 'type', unknownEnumValue: FailureReasonTypeEnum.$unknown)
   final FailureReasonTypeEnum type;
+  @JsonKey(name: 'detail')
   final String detail;
 
   const FailureReason({
@@ -614,6 +637,7 @@ class FailureReason {
 
 @JsonSerializable()
 class FeatureFlagConfig {
+  @JsonKey(name: 'scheduling')
   final SchedulingStatus scheduling;
 
   const FeatureFlagConfig({
@@ -636,6 +660,7 @@ class FeatureFlagConfig {
 
 @JsonSerializable()
 class HttpValidationError {
+  @JsonKey(name: 'detail')
   final List<ValidationError>? detail;
 
   const HttpValidationError({
@@ -658,16 +683,19 @@ class HttpValidationError {
 
 @JsonSerializable()
 class Intervention {
+  @JsonKey(name: 'id')
   final String id;
+  @JsonKey(name: 'title')
   final String title;
+  @JsonKey(name: 'description')
   final String description;
-  @JsonKey(unknownEnumValue: Domain.$unknown)
+  @JsonKey(name: 'domain', unknownEnumValue: Domain.$unknown)
   final Domain domain;
-  @JsonKey(unknownEnumValue: ResolutionAccess.$unknown)
+  @JsonKey(name: 'access', unknownEnumValue: ResolutionAccess.$unknown)
   final ResolutionAccess access;
-  @JsonKey(unknownEnumValue: ResolutionAgent.$unknown)
+  @JsonKey(name: 'agent', unknownEnumValue: ResolutionAgent.$unknown)
   final ResolutionAgent agent;
-  @JsonKey(unknownEnumValue: ResolutionAction.$unknown)
+  @JsonKey(name: 'action', unknownEnumValue: ResolutionAction.$unknown)
   final ResolutionAction? action;
 
   const Intervention({
@@ -708,7 +736,9 @@ class Intervention {
 
 @JsonSerializable()
 class Quantity {
+  @JsonKey(name: 'value')
   final double? value;
+  @JsonKey(name: 'unit')
   final String unit;
 
   const Quantity({
@@ -734,7 +764,9 @@ class Quantity {
 
 @JsonSerializable()
 class Location {
+  @JsonKey(name: 'longitude')
   final double? longitude;
+  @JsonKey(name: 'latitude')
   final double? latitude;
   @JsonKey(name: 'last_updated')
   final DateTime? lastUpdated;
@@ -770,9 +802,11 @@ class Location {
 
 @JsonSerializable()
 class MetricValue {
+  @JsonKey(name: 'value')
   final int value;
   @JsonKey(name: 'previous_value')
   final int previousValue;
+  @JsonKey(name: 'trend')
   final Percent trend;
 
   const MetricValue({
@@ -801,6 +835,7 @@ class MetricValue {
 
 @JsonSerializable()
 class NotAllowedResponse {
+  @JsonKey(name: 'detail')
   final String detail;
   @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
@@ -828,10 +863,13 @@ class NotAllowedResponse {
 
 @JsonSerializable()
 class NotFoundResponse {
+  @JsonKey(name: 'detail')
   final String detail;
   @JsonKey(name: 'error_code', unknownEnumValue: ErrorCode.$unknown)
   final ErrorCode errorCode;
+  @JsonKey(name: 'entity')
   final String? entity;
+  @JsonKey(name: 'id')
   final String? id;
 
   const NotFoundResponse({
@@ -863,6 +901,7 @@ class NotFoundResponse {
 
 @JsonSerializable()
 class UsageCounter {
+  @JsonKey(name: 'reading')
   final double? reading;
   @JsonKey(name: 'last_updated')
   final DateTime? lastUpdated;
@@ -890,7 +929,9 @@ class UsageCounter {
 
 @JsonSerializable()
 class Percent {
+  @JsonKey(name: 'value')
   final double? value;
+  @JsonKey(name: 'unit')
   final String unit;
 
   const Percent({
@@ -916,9 +957,13 @@ class Percent {
 
 @JsonSerializable()
 class PriceMetric {
+  @JsonKey(name: 'value')
   final String? value;
+  @JsonKey(name: 'unit')
   final String unit;
+  @JsonKey(name: 'pct')
   final Percent pct;
+  @JsonKey(name: 'trend')
   final Percent trend;
 
   const PriceMetric({
@@ -973,8 +1018,9 @@ class SelectAssetRequest {
 
 @JsonSerializable()
 class RunMetrics {
+  @JsonKey(name: 'period')
   final String period;
-  @JsonKey(unknownEnumValue: AggregationEnum.$unknown)
+  @JsonKey(name: 'aggregation', unknownEnumValue: AggregationEnum.$unknown)
   final AggregationEnum aggregation;
   @JsonKey(name: 'session_count')
   final MetricValue sessionCount;
@@ -982,6 +1028,7 @@ class RunMetrics {
   final Money actualCosts;
   @JsonKey(name: 'baseline_costs')
   final Money baselineCosts;
+  @JsonKey(name: 'savings')
   final PriceMetric savings;
   @JsonKey(name: 'weighted_avg_price_per_unit')
   final PriceMetric weightedAvgPricePerUnit;
@@ -1024,6 +1071,7 @@ class RunMetrics {
 
 @JsonSerializable()
 class SchedulingStatus {
+  @JsonKey(name: 'enabled')
   final bool enabled;
 
   const SchedulingStatus({
@@ -1046,10 +1094,13 @@ class SchedulingStatus {
 
 @JsonSerializable()
 class TicketInput {
+  @JsonKey(name: 'subject')
   final String subject;
+  @JsonKey(name: 'description')
   final String description;
   @JsonKey(name: 'occurred_at')
   final String occurredAt;
+  @JsonKey(name: 'email')
   final String email;
 
   const TicketInput({
@@ -1085,8 +1136,11 @@ class TicketResponse {
   final String ticketId;
   @JsonKey(name: 'request_url')
   final String requestUrl;
+  @JsonKey(name: 'status')
   final String status;
+  @JsonKey(name: 'message')
   final String message;
+  @JsonKey(name: 'success')
   final bool success;
 
   const TicketResponse({
@@ -1121,6 +1175,7 @@ class TicketResponse {
 
 @JsonSerializable()
 class Schedule {
+  @JsonKey(name: 'id')
   final String id;
   @JsonKey(name: 'asset_id')
   final String assetId;
@@ -1209,10 +1264,15 @@ class ScheduleUpdateRequest {
 
 @JsonSerializable()
 class ValidationError {
+  @JsonKey(name: 'loc')
   final List<dynamic> loc;
+  @JsonKey(name: 'msg')
   final String msg;
+  @JsonKey(name: 'type')
   final String type;
+  @JsonKey(name: 'input')
   final dynamic input;
+  @JsonKey(name: 'ctx')
   final Map<String, dynamic>? ctx;
 
   const ValidationError({
@@ -1257,8 +1317,11 @@ class Asset {
   final AssetInformation assetInformation;
   @JsonKey(name: 'resource_state')
   final AssetState resourceState;
+  @JsonKey(name: 'odometer')
   final UsageCounter odometer;
+  @JsonKey(name: 'location')
   final Location location;
+  @JsonKey(name: 'interventions')
   final List<Intervention>? interventions;
 
   const Asset({
@@ -1304,8 +1367,11 @@ class Asset {
 class AssetInformation {
   @JsonKey(name: 'serial_number')
   final String? serialNumber;
+  @JsonKey(name: 'manufacturer')
   final String? manufacturer;
+  @JsonKey(name: 'model')
   final String? model;
+  @JsonKey(name: 'year')
   final int? year;
   @JsonKey(name: 'display_name')
   final String? displayName;
@@ -1342,6 +1408,7 @@ class AssetInformation {
 
 @JsonSerializable()
 class AssetPolicy {
+  @JsonKey(name: 'id')
   final String id;
   @JsonKey(name: 'scheduling_active')
   final bool schedulingActive;
@@ -1422,6 +1489,7 @@ class AssetPolicyRequest {
 
 @JsonSerializable()
 class StreamTokenResponse {
+  @JsonKey(name: 'token')
   final String token;
 
   const StreamTokenResponse({

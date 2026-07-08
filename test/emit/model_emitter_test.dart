@@ -245,6 +245,30 @@ void main() {
     expect(out, isNot(contains('required this.anrede')));
   });
 
+  test('emits an explicit JsonKey name on every field', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Item',
+          fields: [
+            FieldDef(
+              dartName: 'id',
+              jsonKey: 'id',
+              type: DartType('String'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains(r"@JsonKey(name: 'id')"));
+    expect(out, contains('final String id;'));
+  });
+
   test('adds unknownEnumValue to an enum field', () {
     final out = ModelEmitter().emit(
       const [
@@ -265,7 +289,10 @@ void main() {
       enumNames: const {'ItemCategory'},
     );
 
-    expect(out, contains(r'@JsonKey(unknownEnumValue: ItemCategory.$unknown)'));
+    expect(
+      out,
+      contains(r"@JsonKey(name: 'category', unknownEnumValue: ItemCategory.$unknown)"),
+    );
   });
 
   test('adds unknownEnumValue to a list of enums', () {
@@ -288,7 +315,7 @@ void main() {
       enumNames: const {'Tag'},
     );
 
-    expect(out, contains(r'@JsonKey(unknownEnumValue: Tag.$unknown)'));
+    expect(out, contains(r"@JsonKey(name: 'tags', unknownEnumValue: Tag.$unknown)"));
   });
 
   test('omits unknownEnumValue when an enum is only a map key', () {

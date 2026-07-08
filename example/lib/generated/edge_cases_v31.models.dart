@@ -7,8 +7,9 @@ part 'edge_cases_v31.models.g.dart';
 
 @JsonSerializable()
 class Ping {
+  @JsonKey(name: 'id')
   final String id;
-  @JsonKey(unknownEnumValue: Status.$unknown)
+  @JsonKey(name: 'status', unknownEnumValue: Status.$unknown)
   final Status? status;
 
   const Ping({
@@ -34,9 +35,13 @@ class Ping {
 
 @JsonSerializable()
 class TypeShapes {
+  @JsonKey(name: 'strOrNull')
   final String? strOrNull;
+  @JsonKey(name: 'strOrInt')
   final dynamic strOrInt;
+  @JsonKey(name: 'strOrIntOrNull')
   final dynamic strOrIntOrNull;
+  @JsonKey(name: 'anyOfNull')
   final String? anyOfNull;
 
   const TypeShapes({
@@ -68,10 +73,15 @@ class TypeShapes {
 
 @JsonSerializable()
 class ThreeOneConstructs {
+  @JsonKey(name: 'tuple')
   final List<dynamic>? tuple;
+  @JsonKey(name: 'constField')
   final dynamic constField;
+  @JsonKey(name: 'constTyped')
   final String? constTyped;
+  @JsonKey(name: 'emptySchema')
   final dynamic emptySchema;
+  @JsonKey(name: 'exampledField')
   final String? exampledField;
 
   const ThreeOneConstructs({
@@ -106,6 +116,7 @@ class ThreeOneConstructs {
 
 @JsonSerializable()
 class Cat {
+  @JsonKey(name: 'meow')
   final bool? meow;
 
   const Cat({
@@ -128,6 +139,7 @@ class Cat {
 
 @JsonSerializable()
 class Dog {
+  @JsonKey(name: 'bark')
   final bool? bark;
 
   const Dog({
@@ -150,6 +162,7 @@ class Dog {
 
 @JsonSerializable()
 class Base {
+  @JsonKey(name: 'id')
   final String id;
 
   const Base({
@@ -172,7 +185,9 @@ class Base {
 
 @JsonSerializable()
 class Derived {
+  @JsonKey(name: 'id')
   final String id;
+  @JsonKey(name: 'extra')
   final String? extra;
 
   const Derived({
@@ -198,7 +213,9 @@ class Derived {
 
 @JsonSerializable()
 class Holder {
+  @JsonKey(name: 'pet')
   final dynamic pet;
+  @JsonKey(name: 'derived')
   final Derived? derived;
 
   const Holder({
@@ -224,6 +241,7 @@ class Holder {
 
 @JsonSerializable()
 class MapAndProps {
+  @JsonKey(name: 'name')
   final String? name;
 
   const MapAndProps({
@@ -272,8 +290,11 @@ class FreeMapFalse {
 
 @JsonSerializable()
 class Nested {
+  @JsonKey(name: 'untypedArray')
   final List<dynamic>? untypedArray;
+  @JsonKey(name: 'arrayOfArrays')
   final List<List<String>>? arrayOfArrays;
+  @JsonKey(name: 'deep')
   final Map<String, List<Map<String, String>>>? deep;
 
   const Nested({
@@ -302,7 +323,9 @@ class Nested {
 
 @JsonSerializable()
 class Tree {
+  @JsonKey(name: 'value')
   final String? value;
+  @JsonKey(name: 'children')
   final List<Tree>? children;
 
   const Tree({
@@ -328,6 +351,7 @@ class Tree {
 
 @JsonSerializable()
 class NodeA {
+  @JsonKey(name: 'b')
   final NodeB? b;
 
   const NodeA({
@@ -350,6 +374,7 @@ class NodeA {
 
 @JsonSerializable()
 class NodeB {
+  @JsonKey(name: 'a')
   final NodeA? a;
 
   const NodeB({
@@ -372,14 +397,23 @@ class NodeB {
 
 @JsonSerializable()
 class Formats {
+  @JsonKey(name: 'uuid')
   final String? uuid;
+  @JsonKey(name: 'email')
   final String? email;
+  @JsonKey(name: 'uri')
   final String? uri;
+  @JsonKey(name: 'byte')
   final String? byte;
+  @JsonKey(name: 'binary')
   final String? binary;
+  @JsonKey(name: 'i32')
   final int? i32;
+  @JsonKey(name: 'i64')
   final int? i64;
+  @JsonKey(name: 'flt')
   final double? flt;
+  @JsonKey(name: 'dec')
   final double? dec;
 
   const Formats({
@@ -426,9 +460,9 @@ class Formats {
 
 @JsonSerializable()
 class EnumHolder {
-  @JsonKey(unknownEnumValue: IntEnum.$unknown)
+  @JsonKey(name: 'intEnum', unknownEnumValue: IntEnum.$unknown)
   final IntEnum? intEnum;
-  @JsonKey(unknownEnumValue: WeirdEnum.$unknown)
+  @JsonKey(name: 'weird', unknownEnumValue: WeirdEnum.$unknown)
   final WeirdEnum? weird;
 
   const EnumHolder({
@@ -464,6 +498,7 @@ class NastyNames {
   final String? $class;
   @JsonKey(name: '@type')
   final String? type;
+  @JsonKey(name: 'veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed')
   final String? veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed;
 
   const NastyNames({

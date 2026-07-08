@@ -7,8 +7,9 @@ part 'edge_cases_v30.models.g.dart';
 
 @JsonSerializable()
 class Ping {
+  @JsonKey(name: 'id')
   final String id;
-  @JsonKey(unknownEnumValue: Status.$unknown)
+  @JsonKey(name: 'status', unknownEnumValue: Status.$unknown)
   final Status? status;
 
   const Ping({
@@ -34,6 +35,7 @@ class Ping {
 
 @JsonSerializable()
 class Cat {
+  @JsonKey(name: 'meow')
   final bool? meow;
 
   const Cat({
@@ -56,9 +58,13 @@ class Cat {
 
 @JsonSerializable()
 class Nullable30 {
+  @JsonKey(name: 'plain')
   final String? plain;
+  @JsonKey(name: 'refSibling')
   final Cat? refSibling;
+  @JsonKey(name: 'wrapped')
   final Cat? wrapped;
+  @JsonKey(name: 'anyOfNull')
   final Cat? anyOfNull;
 
   const Nullable30({
@@ -90,6 +96,7 @@ class Nullable30 {
 
 @JsonSerializable()
 class Base {
+  @JsonKey(name: 'id')
   final String id;
 
   const Base({
@@ -112,7 +119,9 @@ class Base {
 
 @JsonSerializable()
 class Derived {
+  @JsonKey(name: 'id')
   final String id;
+  @JsonKey(name: 'extra')
   final String? extra;
 
   const Derived({
@@ -138,6 +147,7 @@ class Derived {
 
 @JsonSerializable()
 class Tree {
+  @JsonKey(name: 'children')
   final List<Tree>? children;
 
   const Tree({
