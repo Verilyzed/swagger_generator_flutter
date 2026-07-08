@@ -5,6 +5,12 @@
 * Continuous integration workflow that runs `dart analyze` and `dart test`
   on pull requests.
 
+### Fixed
+
+* Response types are now resolved from any 2xx success response (for example
+  `201`), not only `200`. An operation whose only success response was `201`
+  previously resolved to `dynamic` regardless of its schema.
+
 ## 0.0.2
 
 ### Changed

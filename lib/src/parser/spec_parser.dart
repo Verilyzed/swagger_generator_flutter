@@ -303,12 +303,12 @@ class SpecParser {
       }
     }
 
-    final responses = (op['responses'] as Map?)?.cast<String, dynamic>();
-    final okSchema = _contentSchema(
-      (responses?['200'] as Map?)?.cast<String, dynamic>(),
+    final responseSchema = _responseSchema(
+      (op['responses'] as Map?)?.cast<String, dynamic>(),
     );
-    final responseType =
-        okSchema == null ? const DartType('dynamic') : _resolver.resolve(okSchema);
+    final responseType = responseSchema == null
+        ? const DartType('dynamic')
+        : _resolver.resolve(responseSchema);
 
     return OperationDef(
       methodName: _names.memberName(
@@ -325,6 +325,24 @@ class SpecParser {
       requestBodyType: bodyType,
       responseType: responseType,
     );
+  }
+
+  /// The schema of the response the client returns: the first success (2xx)
+  /// response that carries a content schema, preferring numeric codes in
+  /// ascending order (so `200` wins over `201`), then a `2XX` range, then
+  /// `default`.
+  Map<String, dynamic>? _responseSchema(Map<String, dynamic>? responses) {
+    if (responses == null) return null;
+    final successCodes = responses.keys
+        .where((k) => k.startsWith('2') && int.tryParse(k) != null)
+        .toList()
+      ..sort((a, b) => int.parse(a).compareTo(int.parse(b)));
+    for (final code in [...successCodes, '2XX', '2xx', 'default']) {
+      final schema =
+          _contentSchema((responses[code] as Map?)?.cast<String, dynamic>());
+      if (schema != null) return schema;
+    }
+    return null;
   }
 
   Map<String, dynamic>? _contentSchema(Map<String, dynamic>? container) {

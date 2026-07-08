@@ -120,6 +120,115 @@ void main() {
     expect(spec.service.name, 'DemoService');
   });
 
+  test('resolves a 201 response whose schema is an array of refs', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Item': {
+            'type': 'object',
+            'properties': {
+              'id': {'type': 'string'},
+            },
+          },
+        },
+      },
+      'paths': {
+        '/items': {
+          'post': {
+            'operationId': 'create_items',
+            'responses': {
+              '201': {
+                'content': {
+                  'application/json': {
+                    'schema': {
+                      'type': 'array',
+                      'items': {r'$ref': '#/components/schemas/Item'},
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.responseType.name, 'List<Item>');
+  });
+
+  test('resolves a 201 response whose schema is a direct ref', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/items': {
+          'post': {
+            'operationId': 'create_item',
+            'responses': {
+              '201': {
+                'content': {
+                  'application/json': {
+                    'schema': {r'$ref': '#/components/schemas/Item'},
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.responseType.name, 'Item');
+  });
+
+  test('prefers the 200 response schema when both 200 and 201 are present', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/items': {
+          'post': {
+            'operationId': 'create_item',
+            'responses': {
+              '201': {
+                'content': {
+                  'application/json': {
+                    'schema': {r'$ref': '#/components/schemas/Created'},
+                  },
+                },
+              },
+              '200': {
+                'content': {
+                  'application/json': {
+                    'schema': {r'$ref': '#/components/schemas/Ok'},
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.responseType.name, 'Ok');
+  });
+
+  test('resolves a 204 response with no content to dynamic', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/items/{id}': {
+          'delete': {
+            'operationId': 'delete_item',
+            'responses': {
+              '204': {'description': 'No Content'},
+            },
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.responseType.name, 'dynamic');
+  });
+
   test('enum-typed field with string default yields enum-member default', () {
     final spec = _parser().parse({
       'components': {
