@@ -4,6 +4,8 @@
 
 * Continuous integration workflow that runs `dart analyze` and `dart test`
   on pull requests.
+* Publishing workflow that releases to pub.dev when a `v*` version tag is
+  pushed.
 * `include_if_null` build option (default `true`). Set it to `false` to add
   `includeIfNull: false` to every generated model field's `@JsonKey`, so null
   values are omitted from the serialized JSON instead of sent as `null`.

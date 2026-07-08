@@ -1,0 +1,27 @@
+# Replaces .gitignore during publishing; keep its exclusions covered here.
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+*.iml
+*.ipr
+*.iws
+.idea/
+/pubspec.lock
+**/doc/api/
+.dart_tool/
+.flutter-plugins-dependencies
+/build/
+/coverage/
+
+# Internal development files not part of the published package.
+CLAUDE.md
+docs/
+.claude/
+.github/
