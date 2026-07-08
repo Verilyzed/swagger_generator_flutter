@@ -11,6 +11,7 @@ class ModelEmitter {
     Set<String> overrideTypes = const {},
     String? overridesImport,
     List<TypedefDef> typedefs = const [],
+    bool includeIfNull = true,
   }) {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
@@ -36,13 +37,18 @@ class ModelEmitter {
     }
 
     for (final model in models) {
-      _emitClass(buffer, model, enumNames);
+      _emitClass(buffer, model, enumNames, includeIfNull);
     }
 
     return buffer.toString();
   }
 
-  void _emitClass(StringBuffer buffer, ModelDef model, Set<String> enumNames) {
+  void _emitClass(
+    StringBuffer buffer,
+    ModelDef model,
+    Set<String> enumNames,
+    bool includeIfNull,
+  ) {
     buffer
       ..writeln('@JsonSerializable()')
       ..writeln('class ${model.name} {');
@@ -54,6 +60,9 @@ class ModelEmitter {
       final keyArgs = <String>["name: '${field.jsonKey}'"];
       if (enumName != null) {
         keyArgs.add('unknownEnumValue: $enumName.\$unknown');
+      }
+      if (!includeIfNull) {
+        keyArgs.add('includeIfNull: false');
       }
       if (keyArgs.isNotEmpty) {
         buffer.writeln('  @JsonKey(${keyArgs.join(', ')})');

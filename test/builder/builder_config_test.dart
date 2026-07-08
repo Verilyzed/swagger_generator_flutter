@@ -9,6 +9,18 @@ void main() {
     expect(config.outputFolder, '');
   });
 
+  test('include_if_null defaults to true', () {
+    final config = BuilderConfig.fromOptions(const BuilderOptions({}));
+    expect(config.includeIfNull, isTrue);
+  });
+
+  test('reads include_if_null when set to false', () {
+    final config = BuilderConfig.fromOptions(
+      const BuilderOptions({'include_if_null': false}),
+    );
+    expect(config.includeIfNull, isFalse);
+  });
+
   test('output_folder defaults to input_folder when only input is set', () {
     final config = BuilderConfig.fromOptions(
       const BuilderOptions({'input_folder': 'api_specs'}),

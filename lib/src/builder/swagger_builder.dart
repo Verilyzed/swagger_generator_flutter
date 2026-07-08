@@ -36,6 +36,7 @@ class SwaggerBuilder implements Builder {
       nameFromPath: config.nameFromPath,
       overridesImport: config.overridesImport,
       overrideSchemas: config.overrideSchemas,
+      includeIfNull: config.includeIfNull,
     );
 
     for (final entry in sources.entries) {
@@ -55,6 +56,7 @@ Map<String, String> generateSources(
   bool nameFromPath = false,
   String? overridesImport,
   Set<String> overrideSchemas = const {},
+  bool includeIfNull = true,
 }) {
   final names = NameGiver();
   final loaded = SpecLoader().load(content, path: path);
@@ -110,6 +112,7 @@ Map<String, String> generateSources(
       overrideTypes: overrideTypes,
       overridesImport: overridesImport,
       typedefs: spec.typedefs,
+      includeIfNull: includeIfNull,
     ),
     '.service.dart': ServiceEmitter().emit(
       spec.service,

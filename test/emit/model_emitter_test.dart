@@ -48,6 +48,62 @@ void main() {
     expect(out, contains('Map<String, dynamic> toJson() => _\$TaskToJson(this);'));
   });
 
+  test('omits includeIfNull by default', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Item',
+          fields: [
+            FieldDef(
+              dartName: 'files',
+              jsonKey: 'files',
+              type: DartType('List<File>', isNullable: true),
+              isRequired: false,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains('@JsonSerializable()'));
+    expect(out, isNot(contains('includeIfNull')));
+  });
+
+  test('adds includeIfNull false to every field key when the option is off', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Item',
+          fields: [
+            FieldDef(
+              dartName: 'files',
+              jsonKey: 'files',
+              type: DartType('List<File>', isNullable: true),
+              isRequired: false,
+            ),
+            FieldDef(
+              dartName: 'title',
+              jsonKey: 'title',
+              type: DartType('String'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+      includeIfNull: false,
+    );
+
+    expect(out, contains('@JsonSerializable()'));
+    expect(out, contains(r"@JsonKey(name: 'files', includeIfNull: false)"));
+    expect(out, contains(r"@JsonKey(name: 'title', includeIfNull: false)"));
+  });
+
   test('emits typedefs above the classes', () {
     final out = ModelEmitter().emit(
       const [

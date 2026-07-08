@@ -59,6 +59,7 @@ targets:
 | `method_names` | `operationId` | How service method names are derived: `operationId` (default) or `path` (from the HTTP verb and request path). |
 | `overrides_import` | _(none)_ | Import URI of a single file holding override types. Required when `override_schemas` is set. |
 | `override_schemas` | _(empty)_ | List of component schema keys to replace with a hand-written type named `className(key)` from `overrides_import`. |
+| `include_if_null` | `true` | Whether models serialize null fields. Set to `false` to add `includeIfNull: false` to every field's `@JsonKey`, omitting null values from the JSON output. |
 
 Each spec generates a `<name>.api.dart` barrel that exports its enums, models,
 service, and client.

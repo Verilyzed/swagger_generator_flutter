@@ -11,12 +11,18 @@ class BuilderConfig {
   final String? overridesImport;
   final Set<String> overrideSchemas;
 
+  /// Whether generated models serialize null fields. When false, every field's
+  /// `@JsonKey` carries `includeIfNull: false` so null values are omitted from
+  /// the JSON output. Defaults to true, matching json_serializable.
+  final bool includeIfNull;
+
   const BuilderConfig({
     required this.inputFolder,
     required this.outputFolder,
     this.nameFromPath = false,
     this.overridesImport,
     this.overrideSchemas = const {},
+    this.includeIfNull = true,
   });
 
   factory BuilderConfig.fromOptions(BuilderOptions options) {
@@ -44,6 +50,8 @@ class BuilderConfig {
     final overrideSchemas = rawSchemas is List
         ? rawSchemas.map((e) => e.toString()).toSet()
         : <String>{};
+    final rawIncludeIfNull = options.config['include_if_null'];
+    final includeIfNull = rawIncludeIfNull is bool ? rawIncludeIfNull : true;
     if (overrideSchemas.isNotEmpty && overridesImport == null) {
       throw ArgumentError.value(
         rawSchemas,
@@ -57,6 +65,7 @@ class BuilderConfig {
       nameFromPath: nameFromPath,
       overridesImport: overridesImport,
       overrideSchemas: overrideSchemas,
+      includeIfNull: includeIfNull,
     );
   }
 
