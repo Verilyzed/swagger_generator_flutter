@@ -85,7 +85,9 @@ class ServiceEmitter {
   }
 
   bool _usesMultipartFile(ServiceDef service) => service.operations.any(
-        (op) => op.parameters.any((p) => p.location == ParamLocation.partFile),
+        (op) => op.parameters.any((p) =>
+            p.location == ParamLocation.partFile &&
+            p.type.name == 'MultipartFile'),
       );
 
   bool _usesEnum(ServiceDef service, Set<String> enumNames) {

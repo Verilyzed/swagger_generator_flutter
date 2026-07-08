@@ -159,4 +159,37 @@ void main() {
     expect(out, contains("@PartFile('file') required MultipartFile file,"));
     expect(out, contains("@Part('label') required String label,"));
   });
+
+  test('omits the http import when file parts are not MultipartFile', () {
+    final out = ServiceEmitter().emit(
+      const ServiceDef(
+        name: 'DemoService',
+        operations: [
+          OperationDef(
+            methodName: 'upload',
+            httpMethod: 'POST',
+            path: '/upload',
+            parameters: [
+              ParamDef(
+                dartName: 'file',
+                wireName: 'file',
+                type: DartType('List<int>'),
+                location: ParamLocation.partFile,
+                isRequired: true,
+              ),
+            ],
+            responseType: DartType('dynamic'),
+          ),
+        ],
+      ),
+      partFileName: 'demo.service.chopper.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, isNot(contains("import 'package:http/http.dart'")));
+    expect(out, contains('  @multipart'));
+    expect(out, contains("@PartFile('file') required List<int> file,"));
+  });
 }

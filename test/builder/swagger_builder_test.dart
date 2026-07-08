@@ -79,4 +79,42 @@ void main() {
     );
     expect(pathNamed['.service.dart'], contains('getTasks('));
   });
+
+  test('generateSources applies multipart_file_type to file parts', () {
+    final content = jsonEncode({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/upload': {
+          'post': {
+            'operationId': 'upload',
+            'requestBody': {
+              'content': {
+                'multipart/form-data': {
+                  'schema': {
+                    'type': 'object',
+                    'required': ['file'],
+                    'properties': {
+                      'file': {'type': 'string', 'format': 'binary'},
+                    },
+                  },
+                },
+              },
+            },
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    });
+
+    final sources = generateSources(
+      content,
+      path: 'lib/api/demo.openapi.json',
+      baseName: 'demo',
+      multipartFileType: MultipartFileType.listInt,
+    );
+
+    final service = sources['.service.dart']!;
+    expect(service, contains("@PartFile('file') required List<int> file,"));
+    expect(service, isNot(contains('package:http')));
+  });
 }

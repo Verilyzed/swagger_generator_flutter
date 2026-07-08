@@ -126,6 +126,51 @@ void main() {
     expect(out, contains("import 'demo.enums.dart';"));
   });
 
+  test('imports MultipartFile only when a file part uses it', () {
+    ServiceDef serviceWith(DartType filePartType) => ServiceDef(
+          name: 'DemoService',
+          operations: [
+            OperationDef(
+              methodName: 'upload',
+              httpMethod: 'POST',
+              path: '/upload',
+              parameters: [
+                ParamDef(
+                  dartName: 'file',
+                  wireName: 'file',
+                  type: filePartType,
+                  location: ParamLocation.partFile,
+                  isRequired: true,
+                ),
+              ],
+              responseType: const DartType('dynamic'),
+            ),
+          ],
+        );
+
+    String emitFor(DartType filePartType) => emitter.emitClient(
+          serviceWith(filePartType),
+          serviceImport: 'demo.service.dart',
+          modelsImport: 'demo.models.dart',
+          enumsImport: 'demo.enums.dart',
+          models: const [],
+          enumNames: const {},
+        );
+
+    expect(
+      emitFor(const DartType('MultipartFile')),
+      contains("import 'package:http/http.dart' show Client, MultipartFile;"),
+    );
+    expect(
+      emitFor(const DartType('List<int>')),
+      contains("import 'package:http/http.dart' show Client;"),
+    );
+    expect(
+      emitFor(const DartType('String')),
+      contains("import 'package:http/http.dart' show Client;"),
+    );
+  });
+
   test('emits a barrel of exports', () {
     final out = emitter.emitBarrel(
       enumsImport: 'demo.enums.dart',

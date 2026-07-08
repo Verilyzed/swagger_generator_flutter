@@ -7,6 +7,11 @@
 * `include_if_null` build option (default `true`). Set it to `false` to add
   `includeIfNull: false` to every generated model field's `@JsonKey`, so null
   values are omitted from the serialized JSON instead of sent as `null`.
+* `multipart_file_type` build option (default `multipart_file`). Controls the
+  Dart type generated for multipart file parts: `multipart_file` for
+  `MultipartFile`, `list_int` for `List<int>`, or `string` for a file path
+  `String`. The `package:http` import is only emitted when `MultipartFile` is
+  used.
 
 ### Changed
 

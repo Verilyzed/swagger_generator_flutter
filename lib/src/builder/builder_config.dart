@@ -1,5 +1,17 @@
 import 'package:build/build.dart';
 
+/// The Dart type generated for multipart file parts. Chopper's `@PartFile`
+/// accepts all three.
+enum MultipartFileType {
+  multipartFile('MultipartFile'),
+  listInt('List<int>'),
+  string('String');
+
+  final String dartType;
+
+  const MultipartFileType(this.dartType);
+}
+
 /// Resolved input/output folder configuration for the builder.
 ///
 /// Folders are normalized to have no surrounding slashes; an empty string
@@ -16,6 +28,8 @@ class BuilderConfig {
   /// the JSON output. Defaults to true, matching json_serializable.
   final bool includeIfNull;
 
+  final MultipartFileType multipartFileType;
+
   const BuilderConfig({
     required this.inputFolder,
     required this.outputFolder,
@@ -23,6 +37,7 @@ class BuilderConfig {
     this.overridesImport,
     this.overrideSchemas = const {},
     this.includeIfNull = true,
+    this.multipartFileType = MultipartFileType.multipartFile,
   });
 
   factory BuilderConfig.fromOptions(BuilderOptions options) {
@@ -52,6 +67,18 @@ class BuilderConfig {
         : <String>{};
     final rawIncludeIfNull = options.config['include_if_null'];
     final includeIfNull = rawIncludeIfNull is bool ? rawIncludeIfNull : true;
+    final rawMultipart = options.config['multipart_file_type'];
+    final multipartFileType = switch (rawMultipart) {
+      null => MultipartFileType.multipartFile,
+      'multipart_file' => MultipartFileType.multipartFile,
+      'list_int' => MultipartFileType.listInt,
+      'string' => MultipartFileType.string,
+      _ => throw ArgumentError.value(
+          rawMultipart,
+          'multipart_file_type',
+          "must be 'multipart_file', 'list_int', or 'string'",
+        ),
+    };
     if (overrideSchemas.isNotEmpty && overridesImport == null) {
       throw ArgumentError.value(
         rawSchemas,
@@ -66,6 +93,7 @@ class BuilderConfig {
       overridesImport: overridesImport,
       overrideSchemas: overrideSchemas,
       includeIfNull: includeIfNull,
+      multipartFileType: multipartFileType,
     );
   }
 

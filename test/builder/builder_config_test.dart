@@ -188,4 +188,45 @@ void main() {
       throwsArgumentError,
     );
   });
+
+  test('multipartFileType defaults to multipartFile', () {
+    final config = BuilderConfig.fromOptions(const BuilderOptions({}));
+    expect(config.multipartFileType, MultipartFileType.multipartFile);
+  });
+
+  test('reads each multipart_file_type value', () {
+    expect(
+      BuilderConfig.fromOptions(
+        const BuilderOptions({'multipart_file_type': 'multipart_file'}),
+      ).multipartFileType,
+      MultipartFileType.multipartFile,
+    );
+    expect(
+      BuilderConfig.fromOptions(
+        const BuilderOptions({'multipart_file_type': 'list_int'}),
+      ).multipartFileType,
+      MultipartFileType.listInt,
+    );
+    expect(
+      BuilderConfig.fromOptions(
+        const BuilderOptions({'multipart_file_type': 'string'}),
+      ).multipartFileType,
+      MultipartFileType.string,
+    );
+  });
+
+  test('throws on an unknown multipart_file_type', () {
+    expect(
+      () => BuilderConfig.fromOptions(
+        const BuilderOptions({'multipart_file_type': 'bytes'}),
+      ),
+      throwsArgumentError,
+    );
+  });
+
+  test('MultipartFileType maps to its Dart type', () {
+    expect(MultipartFileType.multipartFile.dartType, 'MultipartFile');
+    expect(MultipartFileType.listInt.dartType, 'List<int>');
+    expect(MultipartFileType.string.dartType, 'String');
+  });
 }

@@ -21,14 +21,17 @@ class SpecParser {
   final DartTypeResolver _resolver;
   final bool _nameFromPath;
   final Set<String> _overrideSchemas;
+  final DartType _filePartType;
 
   SpecParser(
     this._names,
     this._resolver, {
     bool nameFromPath = false,
     Set<String> overrideSchemas = const {},
+    DartType filePartType = const DartType('MultipartFile'),
   })  : _nameFromPath = nameFromPath,
-        _overrideSchemas = overrideSchemas;
+        _overrideSchemas = overrideSchemas,
+        _filePartType = filePartType;
 
   Map<String, dynamic> _schemasCache = const {};
 
@@ -281,9 +284,7 @@ class SpecParser {
           params.add(ParamDef(
             dartName: _names.memberName(entry.key),
             wireName: entry.key,
-            type: isFile
-                ? const DartType('MultipartFile')
-                : _resolver.resolve(propSchema),
+            type: isFile ? _filePartType : _resolver.resolve(propSchema),
             location: isFile ? ParamLocation.partFile : ParamLocation.part,
             isRequired: object.required.contains(entry.key),
           ));

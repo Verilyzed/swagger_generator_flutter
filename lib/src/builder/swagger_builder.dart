@@ -4,6 +4,7 @@ import '../emit/client_emitter.dart';
 import '../emit/enum_emitter.dart';
 import '../emit/model_emitter.dart';
 import '../emit/service_emitter.dart';
+import '../ir/dart_type.dart';
 import '../parser/schema_hoister.dart';
 import '../parser/spec_loader.dart';
 import '../parser/spec_parser.dart';
@@ -37,6 +38,7 @@ class SwaggerBuilder implements Builder {
       overridesImport: config.overridesImport,
       overrideSchemas: config.overrideSchemas,
       includeIfNull: config.includeIfNull,
+      multipartFileType: config.multipartFileType,
     );
 
     for (final entry in sources.entries) {
@@ -57,6 +59,7 @@ Map<String, String> generateSources(
   String? overridesImport,
   Set<String> overrideSchemas = const {},
   bool includeIfNull = true,
+  MultipartFileType multipartFileType = MultipartFileType.multipartFile,
 }) {
   final names = NameGiver();
   final loaded = SpecLoader().load(content, path: path);
@@ -77,6 +80,7 @@ Map<String, String> generateSources(
     resolver,
     nameFromPath: nameFromPath,
     overrideSchemas: overrideSchemas,
+    filePartType: DartType(multipartFileType.dartType),
   ).parse(normalized, name: baseName);
 
   final enumsFile = '$baseName.enums.dart';

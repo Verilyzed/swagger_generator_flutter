@@ -60,6 +60,7 @@ targets:
 | `overrides_import` | _(none)_ | Import URI of a single file holding override types. Required when `override_schemas` is set. |
 | `override_schemas` | _(empty)_ | List of component schema keys to replace with a hand-written type named `className(key)` from `overrides_import`. |
 | `include_if_null` | `true` | Whether models serialize null fields. Set to `false` to add `includeIfNull: false` to every field's `@JsonKey`, omitting null values from the JSON output. |
+| `multipart_file_type` | `multipart_file` | Dart type generated for multipart file parts: `multipart_file` (`MultipartFile`), `list_int` (`List<int>`), or `string` (a file path `String`). |
 
 Each spec generates a `<name>.api.dart` barrel that exports its enums, models,
 service, and client.

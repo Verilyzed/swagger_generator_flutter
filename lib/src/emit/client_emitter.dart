@@ -14,7 +14,9 @@ class ClientEmitter {
     String? overridesImport,
   }) {
     final usesMultipart = service.operations.any(
-      (op) => op.parameters.any((p) => p.location == ParamLocation.partFile),
+      (op) => op.parameters.any((p) =>
+          p.location == ParamLocation.partFile &&
+          p.type.name == 'MultipartFile'),
     );
     final httpShow = usesMultipart ? 'Client, MultipartFile' : 'Client';
 
