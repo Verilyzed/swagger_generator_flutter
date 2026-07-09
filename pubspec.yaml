@@ -1,6 +1,6 @@
 name: swagger_generator_flutter
 description: "Generate Dart code from OpenAPI (Swagger) specifications."
-version: 0.0.3
+version: 0.0.3+1
 repository: https://github.com/Verilyzed/swagger_generator_flutter
 
 environment:

@@ -1,56 +1,72 @@
 # Swagger Generator Flutter
 
-Generate Dart / Flutter code from OpenAPI (Swagger) specifications
-(`.json`, `.yaml`, `.yml`).
+Generates type-safe Dart code from OpenAPI (Swagger) specifications
+(`.json`, `.yaml`, `.yml`): models with JSON serialization, enums, and API
+clients built on [`chopper`](https://pub.dev/packages/chopper). Runs as a
+[`build_runner`](https://pub.dev/packages/build_runner) builder and works in
+any Dart or Flutter project.
 
-## Status
+## Features
 
-Early development. No code generation is implemented yet — the goal is a tool
-that turns OpenAPI definitions into Dart models and API clients. This README
-will document the actual commands, configuration, and output as they are built.
+- Models with `fromJson` / `toJson` via
+  [`json_serializable`](https://pub.dev/packages/json_serializable)
+- Dart enums for OpenAPI enum schemas
+- A Chopper service and a ready-to-use client facade per spec
+- Multiple specs in one project without name collisions
+- Configurable method naming, output location, null serialization,
+  multipart file types, and hand-written type overrides
 
-## Goal
+## Installation
 
-Read an OpenAPI / Swagger specification and emit type-safe Dart code (models
-with JSON serialization, and API clients) usable in any Dart or Flutter project.
-Generation is intended to run through
-[`build_runner`](https://pub.dev/packages/build_runner).
+Add the package and its runtime dependencies to `pubspec.yaml`:
 
-## Requirements
+```yaml
+dependencies:
+  swagger_generator_flutter: ^0.0.3
+  json_annotation: ^4.12.0
+  chopper: ^8.0.0
+  http: ^1.0.0
 
-- [Dart SDK](https://dart.dev/get-dart) `^3.8.0`
-- [Flutter](https://docs.flutter.dev/get-started/install) (only if generating
-  into a Flutter app)
-
-## Development
-
-Fetch dependencies:
-
-```bash
-flutter pub get
+dev_dependencies:
+  build_runner: ^2.15.0
+  json_serializable: ^6.8.0
+  chopper_generator: ^8.0.0
 ```
 
-Run the analyzer and tests:
+## Quick start
 
-```bash
-dart analyze
-dart test
-```
+1. Put an OpenAPI spec under `lib/`, for example `lib/specs/petstore.yaml`.
+
+2. Configure the generator in your project's `build.yaml`:
+
+   ```yaml
+   targets:
+     $default:
+       builders:
+         swagger_generator_flutter|swagger_generator:
+           options:
+             input_folder: lib/specs
+             output_folder: lib/generated
+   ```
+
+3. Run the build:
+
+   ```bash
+   dart run build_runner build
+   ```
+
+4. Import the generated barrel file and use the client:
+
+   ```dart
+   import 'package:my_app/generated/petstore.api.dart';
+   ```
+
+Each spec generates a `<name>.api.dart` barrel that exports its enums, models,
+service, and client.
 
 ## Build options
 
-Spec files may be `.json`, `.yaml`, or `.yml`. Configure the generator in the
-consuming project's `build.yaml`:
-
-```yaml
-targets:
-  $default:
-    builders:
-      swagger_generator_flutter|swagger_generator:
-        options:
-          input_folder: lib/specs
-          output_folder: lib/generated
-```
+Spec files may be `.json`, `.yaml`, or `.yml`.
 
 | Option | Default | Description |
 | --- | --- | --- |
@@ -61,9 +77,6 @@ targets:
 | `override_schemas` | _(empty)_ | List of component schema keys to replace with a hand-written type named `className(key)` from `overrides_import`. |
 | `include_if_null` | `true` | Whether models serialize null fields. Set to `false` to add `includeIfNull: false` to every field's `@JsonKey`, omitting null values from the JSON output. |
 | `multipart_file_type` | `multipart_file` | Dart type generated for multipart file parts: `multipart_file` (`MultipartFile`), `list_int` (`List<int>`), or `string` (a file path `String`). |
-
-Each spec generates a `<name>.api.dart` barrel that exports its enums, models,
-service, and client.
 
 Use overrides for schemas that cannot be generated usefully, such as a `oneOf`.
 List the schema keys in `override_schemas` and provide their types in the single
@@ -99,6 +112,11 @@ The facade names are unique per spec, so multiple specs do not collide. To reuse
 an existing `ChopperClient`, use `NewapiApi.fromClient(chopperClient)`. The
 generated client depends on `package:http` (for the `httpClient` parameter), so
 add `http` to your `dependencies`.
+
+## Example
+
+See the [example](example/) directory for a Flutter app that generates a client
+from a spec in `lib/specs` into `lib/generated`.
 
 ## Contributing
 

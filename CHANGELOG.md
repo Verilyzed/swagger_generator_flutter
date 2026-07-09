@@ -1,3 +1,12 @@
+## 0.0.3+1
+
+### Changed
+
+* Rewrote the README for pub.dev: installation instructions, quick start, and
+  removal of the outdated "no code generation implemented yet" status.
+* The example app now uses a generated client: `main.dart` constructs the
+  `ResourceSchedulerApi` facade and renders its `listAssets` response.
+
 ## 0.0.3
 
 ### Added
