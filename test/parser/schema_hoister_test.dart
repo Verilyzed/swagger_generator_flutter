@@ -467,4 +467,89 @@ void main() {
       ],
     });
   });
+
+  test('hoists an inline multi-member allOf response into a model', () {
+    final out = _hoister().hoist({
+      'components': {
+        'schemas': {
+          'Base': {
+            'type': 'object',
+            'properties': {
+              'id': {'type': 'string'},
+            },
+          },
+        },
+      },
+      'paths': {
+        '/kunde': {
+          'get': {
+            'operationId': 'getKunde',
+            'responses': {
+              '200': {
+                'content': {
+                  'application/json': {
+                    'schema': {
+                      'allOf': [
+                        {r'$ref': '#/components/schemas/Base'},
+                        {
+                          'type': 'object',
+                          'properties': {
+                            'extra': {'type': 'string'},
+                          },
+                          'required': ['extra'],
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    final schemas = _schemas(out);
+    expect(schemas, contains('GetKundeResponse'));
+    expect(
+      (schemas['GetKundeResponse'] as Map<String, dynamic>)['allOf'],
+      isA<List<dynamic>>(),
+    );
+
+    final get = (((out['paths'] as Map)['/kunde'] as Map)['get'] as Map)
+        .cast<String, dynamic>();
+    final schema =
+        ((((get['responses'] as Map)['200'] as Map)['content']
+                    as Map)['application/json']
+                as Map)['schema']
+            as Map;
+    expect(schema, {r'$ref': '#/components/schemas/GetKundeResponse'});
+  });
+
+  test('leaves a single-member allOf untouched', () {
+    final out = _hoister().hoist({
+      'components': {
+        'schemas': {
+          'Item': {
+            'type': 'object',
+            'properties': {
+              'child': {
+                'allOf': [
+                  {r'$ref': '#/components/schemas/Bar'},
+                ],
+              },
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    });
+
+    final props = _props(_schemas(out)['Item'] as Map<String, dynamic>);
+    expect(props['child'], {
+      'allOf': [
+        {r'$ref': '#/components/schemas/Bar'},
+      ],
+    });
+  });
 }

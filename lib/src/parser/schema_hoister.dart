@@ -151,7 +151,12 @@ class SchemaHoister {
 
     final isObject = schema['properties'] is Map;
     final isEnum = schema['enum'] is List;
-    if (!isObject && !isEnum) return schema;
+    // A multi-member `allOf` is a merged model; hoist it so it resolves to a
+    // named type. A single-member `allOf` is left inline for the resolver to
+    // unwrap to its one member.
+    final allOf = schema['allOf'];
+    final isComposite = allOf is List && allOf.length > 1;
+    if (!isObject && !isEnum && !isComposite) return schema;
 
     final key = _uniqueName(name, used);
     final defaultValue = schema.remove('default');
