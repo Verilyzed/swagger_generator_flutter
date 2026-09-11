@@ -44,13 +44,15 @@ void main() {
     );
 
     final paths = (out['paths'] as Map).cast<String, dynamic>();
-    final get = ((paths['/health'] as Map)['get'] as Map).cast<String, dynamic>();
-    final response =
-        ((get['responses'] as Map)['200'] as Map).cast<String, dynamic>();
+    final get = ((paths['/health'] as Map)['get'] as Map)
+        .cast<String, dynamic>();
+    final response = ((get['responses'] as Map)['200'] as Map)
+        .cast<String, dynamic>();
     final media = ((response['content'] as Map)['application/json'] as Map)
         .cast<String, dynamic>();
-    expect(media['schema'],
-        {r'$ref': '#/components/schemas/GetServerHealthResponse'});
+    expect(media['schema'], {
+      r'$ref': '#/components/schemas/GetServerHealthResponse',
+    });
   });
 
   test('hoists an inline request body to <OperationId>Request', () {
@@ -102,8 +104,9 @@ void main() {
 
     final schemas = _schemas(out);
     expect(schemas, contains('ItemRecipe'));
-    expect(_props(schemas['Item'] as Map<String, dynamic>)['recipe'],
-        {r'$ref': '#/components/schemas/ItemRecipe'});
+    expect(_props(schemas['Item'] as Map<String, dynamic>)['recipe'], {
+      r'$ref': '#/components/schemas/ItemRecipe',
+    });
   });
 
   test('hoists an inline enum and keeps a default on the ref', () {
@@ -126,8 +129,10 @@ void main() {
     });
 
     final schemas = _schemas(out);
-    expect((schemas['ItemCategory'] as Map<String, dynamic>)['enum'],
-        ['LOGIN', 'PASSWORD']);
+    expect((schemas['ItemCategory'] as Map<String, dynamic>)['enum'], [
+      'LOGIN',
+      'PASSWORD',
+    ]);
     expect(_props(schemas['Item'] as Map<String, dynamic>)['category'], {
       r'$ref': '#/components/schemas/ItemCategory',
       'default': 'LOGIN',
@@ -154,8 +159,9 @@ void main() {
 
     final schemas = _schemas(out);
     expect(schemas, contains('PatchItem'));
-    expect((schemas['Patch'] as Map<String, dynamic>)['items'],
-        {r'$ref': '#/components/schemas/PatchItem'});
+    expect((schemas['Patch'] as Map<String, dynamic>)['items'], {
+      r'$ref': '#/components/schemas/PatchItem',
+    });
   });
 
   test('de-duplicates a generated name that already exists', () {
@@ -181,8 +187,9 @@ void main() {
 
     final schemas = _schemas(out);
     expect(schemas, contains('ItemRecipe2'));
-    expect(_props(schemas['Item'] as Map<String, dynamic>)['recipe'],
-        {r'$ref': '#/components/schemas/ItemRecipe2'});
+    expect(_props(schemas['Item'] as Map<String, dynamic>)['recipe'], {
+      r'$ref': '#/components/schemas/ItemRecipe2',
+    });
   });
 
   test('leaves refs, additionalProperties, and bare objects untouched', () {
@@ -211,21 +218,23 @@ void main() {
     expect(props['bare'], {'type': 'object'});
   });
 
-  test('names a hoisted response model from the path without an operationId',
-      () {
-    final out = _hoister().hoist({
-      'components': {'schemas': <String, dynamic>{}},
-      'paths': {
-        '/vaults/{vaultUuid}/items': {
-          'post': {
-            'responses': {
-              '200': {
-                'content': {
-                  'application/json': {
-                    'schema': {
-                      'type': 'object',
-                      'properties': {
-                        'id': {'type': 'string'},
+  test(
+    'names a hoisted response model from the path without an operationId',
+    () {
+      final out = _hoister().hoist({
+        'components': {'schemas': <String, dynamic>{}},
+        'paths': {
+          '/vaults/{vaultUuid}/items': {
+            'post': {
+              'responses': {
+                '200': {
+                  'content': {
+                    'application/json': {
+                      'schema': {
+                        'type': 'object',
+                        'properties': {
+                          'id': {'type': 'string'},
+                        },
                       },
                     },
                   },
@@ -234,12 +243,12 @@ void main() {
             },
           },
         },
-      },
-    });
+      });
 
-    expect(_schemas(out), contains('PostVaultsVaultUuidItemsResponse'));
-    expect(_schemas(out), isNot(contains('OperationResponse')));
-  });
+      expect(_schemas(out), contains('PostVaultsVaultUuidItemsResponse'));
+      expect(_schemas(out), isNot(contains('OperationResponse')));
+    },
+  );
 
   test('names a hoisted model from the path when nameFromPath is true', () {
     final out = SchemaHoister(NameGiver(), nameFromPath: true).hoist({
@@ -296,14 +305,16 @@ void main() {
 
     final schemas = _schemas(out);
     expect(
-      (schemas['GetCurveInterpolationsAufloesung'] as Map<String, dynamic>)['enum'],
+      (schemas['GetCurveInterpolationsAufloesung']
+          as Map<String, dynamic>)['enum'],
       ['LINEAR', 'CUBIC'],
     );
 
     final paths = (out['paths'] as Map).cast<String, dynamic>();
-    final get = ((paths['/curve'] as Map)['get'] as Map).cast<String, dynamic>();
-    final param =
-        ((get['parameters'] as List).first as Map).cast<String, dynamic>();
+    final get = ((paths['/curve'] as Map)['get'] as Map)
+        .cast<String, dynamic>();
+    final param = ((get['parameters'] as List).first as Map)
+        .cast<String, dynamic>();
     expect(param['schema'], {
       r'$ref': '#/components/schemas/GetCurveInterpolationsAufloesung',
       'default': 'LINEAR',
@@ -360,9 +371,100 @@ void main() {
     expect(_schemas(out), isEmpty);
     final post = (((out['paths'] as Map)['/upload'] as Map)['post'] as Map)
         .cast<String, dynamic>();
-    final schema = (((post['requestBody'] as Map)['content'] as Map)
-        ['multipart/form-data'] as Map)['schema'] as Map;
+    final schema =
+        (((post['requestBody'] as Map)['content'] as Map)['multipart/form-data']
+                as Map)['schema']
+            as Map;
     expect(schema.containsKey('properties'), isTrue);
     expect(schema.containsKey(r'$ref'), isFalse);
+  });
+
+  test('hoists an inline object inside an anyOf response and keeps the null '
+      'member', () {
+    final out = _hoister().hoist({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/next': {
+          'get': {
+            'operationId': 'naechsterAbschlag',
+            'responses': {
+              '200': {
+                'content': {
+                  'application/json': {
+                    'schema': {
+                      'anyOf': [
+                        {
+                          'type': 'object',
+                          'properties': {
+                            'bruttoBetrag': {'type': 'string'},
+                          },
+                        },
+                        {'type': 'null'},
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    final schemas = _schemas(out);
+    expect(schemas, contains('NaechsterAbschlagResponse'));
+
+    final get = (((out['paths'] as Map)['/next'] as Map)['get'] as Map)
+        .cast<String, dynamic>();
+    final schema =
+        ((((get['responses'] as Map)['200'] as Map)['content']
+                    as Map)['application/json']
+                as Map)['schema']
+            as Map;
+    expect(schema['anyOf'], [
+      {r'$ref': '#/components/schemas/NaechsterAbschlagResponse'},
+      {'type': 'null'},
+    ]);
+  });
+
+  test('hoists inline object members inside a oneOf', () {
+    final out = _hoister().hoist({
+      'components': {
+        'schemas': {
+          'Wrapper': {
+            'type': 'object',
+            'properties': {
+              'payload': {
+                'oneOf': [
+                  {
+                    'type': 'object',
+                    'properties': {
+                      'a': {'type': 'string'},
+                    },
+                  },
+                  {
+                    'type': 'object',
+                    'properties': {
+                      'b': {'type': 'string'},
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    });
+
+    final schemas = _schemas(out);
+    expect(schemas, contains('WrapperPayload'));
+    expect(schemas, contains('WrapperPayload2'));
+    expect(_props(schemas['Wrapper'] as Map<String, dynamic>)['payload'], {
+      'oneOf': [
+        {r'$ref': '#/components/schemas/WrapperPayload'},
+        {r'$ref': '#/components/schemas/WrapperPayload2'},
+      ],
+    });
   });
 }

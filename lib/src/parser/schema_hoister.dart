@@ -11,17 +11,17 @@ class SchemaHoister {
   final bool _nameFromPath;
 
   SchemaHoister(this._names, {bool nameFromPath = false})
-      : _nameFromPath = nameFromPath;
+    : _nameFromPath = nameFromPath;
 
   Map<String, dynamic> hoist(Map<String, dynamic> spec) {
     final copy = (jsonDecode(jsonEncode(spec)) as Map).cast<String, dynamic>();
 
     final components =
         (copy['components'] as Map?)?.cast<String, dynamic>() ??
-            <String, dynamic>{};
+        <String, dynamic>{};
     final schemas =
         (components['schemas'] as Map?)?.cast<String, dynamic>() ??
-            <String, dynamic>{};
+        <String, dynamic>{};
     components['schemas'] = schemas;
     copy['components'] = components;
 
@@ -198,6 +198,26 @@ class SchemaHoister {
       for (final member in allOf) {
         if (member is Map) {
           _hoistChildren(member.cast<String, dynamic>(), name, schemas, used);
+        }
+      }
+    }
+
+    // Inline object/enum members of an anyOf/oneOf are lifted to named schemas
+    // so a nullable inline union (e.g. `anyOf: [<object>, {type: null}]`)
+    // resolves to a typed model instead of `Map<String, dynamic>`.
+    for (final keyword in const ['anyOf', 'oneOf']) {
+      final members = schema[keyword];
+      if (members is List) {
+        for (var i = 0; i < members.length; i++) {
+          final member = members[i];
+          if (member is Map) {
+            members[i] = _hoistType(
+              member.cast<String, dynamic>(),
+              name,
+              schemas,
+              used,
+            );
+          }
         }
       }
     }
