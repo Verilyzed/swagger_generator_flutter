@@ -16,9 +16,7 @@ class ModelEmitter {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
       ..writeln(
-        SourceWriter.importLine(
-          'package:json_annotation/json_annotation.dart',
-        ),
+        SourceWriter.importLine('package:json_annotation/json_annotation.dart'),
       )
       ..writeln(SourceWriter.importLine(enumsImport));
     if (overridesImport != null && _usesOverride(models, overrideTypes)) {
@@ -28,6 +26,20 @@ class ModelEmitter {
       ..writeln()
       ..writeln("part '$partFileName';")
       ..writeln();
+
+    // A single `readValue` helper feeds the whole parent map to a spread
+    // `$ref` field so json_serializable reconstructs it from sibling keys.
+    final hasSpread = models.any(
+      (m) => m.fields.any((f) => f.spreadFromParent),
+    );
+    if (hasSpread) {
+      buffer
+        ..writeln(
+          'Object? _spreadFromParent(Map<dynamic, dynamic> json, '
+          'String _) => json;',
+        )
+        ..writeln();
+    }
 
     if (typedefs.isNotEmpty) {
       for (final t in typedefs) {
@@ -49,8 +61,18 @@ class ModelEmitter {
     Set<String> enumNames,
     bool includeIfNull,
   ) {
+    final spreadKeys = model.fields
+        .where((f) => f.spreadFromParent)
+        .map((f) => f.jsonKey);
+    final hasSpread = spreadKeys.isNotEmpty;
     buffer
-      ..writeln('@JsonSerializable()')
+      // explicitToJson makes json_serializable call `toJson()` on a spread
+      // field so its map can be merged into the parent below.
+      ..writeln(
+        hasSpread
+            ? '@JsonSerializable(explicitToJson: true)'
+            : '@JsonSerializable()',
+      )
       ..writeln('class ${model.name} {');
 
     for (final field in model.fields) {
@@ -58,6 +80,9 @@ class ModelEmitter {
       // Always pin the wire name so renaming a Dart field cannot silently
       // change the JSON contract.
       final keyArgs = <String>["name: '${field.jsonKey}'"];
+      if (field.spreadFromParent) {
+        keyArgs.add('readValue: _spreadFromParent');
+      }
       if (enumName != null) {
         keyArgs.add('unknownEnumValue: $enumName.\$unknown');
       }
@@ -84,8 +109,9 @@ class ModelEmitter {
         final makeRequired =
             field.defaultValue == null && !field.type.isNullable;
         final prefix = makeRequired ? 'required ' : '';
-        final suffix =
-            field.defaultValue != null ? ' = ${field.defaultValue}' : '';
+        final suffix = field.defaultValue != null
+            ? ' = ${field.defaultValue}'
+            : '';
         buffer.writeln('    ${prefix}this.${field.dartName}$suffix,');
       }
       buffer
@@ -98,18 +124,38 @@ class ModelEmitter {
         '  factory ${model.name}.fromJson(Map<String, dynamic> json) =>',
       )
       ..writeln('      _\$${model.name}FromJson(json);')
-      ..writeln()
-      ..writeln(
-        '  Map<String, dynamic> toJson() => _\$${model.name}ToJson(this);',
-      )
-      ..writeln('}')
       ..writeln();
+    if (hasSpread) {
+      final keyList = spreadKeys.map((k) => "'$k'").join(', ');
+      buffer
+        ..writeln('  Map<String, dynamic> toJson() {')
+        ..writeln('    final json = _\$${model.name}ToJson(this);')
+        ..writeln('    for (final key in const [$keyList]) {')
+        ..writeln('      final nested = json.remove(key);')
+        ..writeln(
+          '      if (nested is Map<String, dynamic>) '
+          'json.addAll(nested);',
+        )
+        ..writeln('    }')
+        ..writeln('    return json;')
+        ..writeln('  }')
+        ..writeln('}')
+        ..writeln();
+    } else {
+      buffer
+        ..writeln(
+          '  Map<String, dynamic> toJson() => _\$${model.name}ToJson(this);',
+        )
+        ..writeln('}')
+        ..writeln();
+    }
   }
 
   // json_serializable accepts unknownEnumValue only on an enum field or a
   // List/Set/Iterable of an enum, not on an enum used as a map key or value.
-  static final _enumCollection =
-      RegExp(r'^(?:List|Set|Iterable)<([A-Za-z_][A-Za-z0-9_]*)>$');
+  static final _enumCollection = RegExp(
+    r'^(?:List|Set|Iterable)<([A-Za-z_][A-Za-z0-9_]*)>$',
+  );
 
   // Each parameter is the field's type made nullable so an omitted argument
   // keeps the current value (`dynamic` is already nullable). Passing null to a
@@ -123,8 +169,9 @@ class ModelEmitter {
     }
     buffer.writeln('  ${model.name} copyWith({');
     for (final field in model.fields) {
-      final paramType =
-          field.type.name == 'dynamic' ? 'dynamic' : '${field.type.name}?';
+      final paramType = field.type.name == 'dynamic'
+          ? 'dynamic'
+          : '${field.type.name}?';
       buffer.writeln('    $paramType ${field.dartName},');
     }
     buffer

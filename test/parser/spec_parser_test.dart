@@ -25,10 +25,7 @@ void main() {
     }, name: 'demo');
 
     expect(spec.enums.single.name, 'AggregationEnum');
-    expect(
-      spec.enums.single.values.map((v) => v.jsonValue),
-      ['month', 'year'],
-    );
+    expect(spec.enums.single.values.map((v) => v.jsonValue), ['month', 'year']);
   });
 
   test('parses a top-level array schema into a typedef', () {
@@ -520,7 +517,7 @@ void main() {
     expect(file.type.name, 'MultipartFile');
   });
 
-  test('flattens allOf into a single model', () {
+  test('builds a nested ref field and inline fields for an allOf model', () {
     final spec = _parser().parse({
       'components': {
         'schemas': {
@@ -549,9 +546,89 @@ void main() {
     }, name: 'demo');
 
     final full = spec.models.firstWhere((m) => m.name == 'FullItem');
-    final keys = full.fields.map((f) => f.jsonKey).toSet();
-    expect(keys, containsAll(<String>['id', 'title', 'sections']));
-    expect(full.fields.firstWhere((f) => f.jsonKey == 'id').isRequired, isTrue);
+    final item = full.fields.firstWhere((f) => f.dartName == 'item');
+    expect(item.type.name, 'Item');
+    expect(item.type.isNullable, isFalse);
+    expect(item.isRequired, isTrue);
+    expect(item.spreadFromParent, isTrue);
+
+    final sections = full.fields.firstWhere((f) => f.jsonKey == 'sections');
+    expect(sections.type.display, 'String?');
+    expect(sections.spreadFromParent, isFalse);
+
+    // The referenced object's own fields are not flattened into the model.
+    expect(full.fields.any((f) => f.jsonKey == 'id'), isFalse);
+    expect(full.fields.any((f) => f.jsonKey == 'title'), isFalse);
+  });
+
+  test('treats a top-level ref sibling like an allOf model', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Item': {
+            'type': 'object',
+            'required': ['id'],
+            'properties': {
+              'id': {'type': 'string'},
+              'title': {'type': 'string'},
+            },
+          },
+          'FullItem': {
+            r'$ref': '#/components/schemas/Item',
+            'type': 'object',
+            'properties': {
+              'sections': {'type': 'string'},
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    final full = spec.models.firstWhere((m) => m.name == 'FullItem');
+    final item = full.fields.firstWhere((f) => f.dartName == 'item');
+    expect(item.type.name, 'Item');
+    expect(item.type.isNullable, isFalse);
+    expect(item.isRequired, isTrue);
+    expect(item.spreadFromParent, isTrue);
+
+    final sections = full.fields.firstWhere((f) => f.jsonKey == 'sections');
+    expect(sections.type.display, 'String?');
+    expect(sections.spreadFromParent, isFalse);
+
+    // The referenced object's own fields are not flattened into the model.
+    expect(full.fields.any((f) => f.jsonKey == 'id'), isFalse);
+    expect(full.fields.any((f) => f.jsonKey == 'title'), isFalse);
+  });
+
+  test('falls back to flattening when an allOf ref targets a non-object', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Color': {
+            'type': 'string',
+            'enum': ['red', 'green'],
+          },
+          'Thing': {
+            'allOf': [
+              {r'$ref': '#/components/schemas/Color'},
+              {
+                'type': 'object',
+                'properties': {
+                  'label': {'type': 'string'},
+                },
+              },
+            ],
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    final thing = spec.models.firstWhere((m) => m.name == 'Thing');
+    // No nested ref field is created; only the inline property survives.
+    expect(thing.fields.any((f) => f.spreadFromParent), isFalse);
+    expect(thing.fields.any((f) => f.jsonKey == 'label'), isTrue);
   });
 
   test('marks non-required fields without a default as nullable', () {
@@ -572,10 +649,14 @@ void main() {
     }, name: 'demo');
 
     final item = spec.models.single;
-    expect(item.fields.firstWhere((f) => f.jsonKey == 'id').type.isNullable,
-        isFalse);
-    expect(item.fields.firstWhere((f) => f.jsonKey == 'note').type.isNullable,
-        isTrue);
+    expect(
+      item.fields.firstWhere((f) => f.jsonKey == 'id').type.isNullable,
+      isFalse,
+    );
+    expect(
+      item.fields.firstWhere((f) => f.jsonKey == 'note').type.isNullable,
+      isTrue,
+    );
   });
 
   test('does not make a dynamic non-required field nullable', () {
@@ -584,9 +665,7 @@ void main() {
         'schemas': {
           'Item': {
             'type': 'object',
-            'properties': {
-              'extra': <String, dynamic>{},
-            },
+            'properties': {'extra': <String, dynamic>{}},
           },
         },
       },
@@ -620,8 +699,7 @@ void main() {
       'paths': <String, dynamic>{},
     }, name: 'demo');
 
-    final field =
-        spec.models.firstWhere((m) => m.name == 'Item').fields.single;
+    final field = spec.models.firstWhere((m) => m.name == 'Item').fields.single;
     expect(field.type.name, 'ItemCategory');
     expect(field.defaultValue, 'ItemCategory.login');
   });
@@ -665,23 +743,23 @@ void main() {
     );
     final spec = SpecParser(names, resolver, overrideSchemas: {'OneOfThing'})
         .parse({
-      'components': {
-        'schemas': {
-          'OneOfThing': {
-            'oneOf': [
-              {r'$ref': '#/components/schemas/A'},
-            ],
-          },
-          'Foo': {
-            'type': 'object',
-            'properties': {
-              'thing': {r'$ref': '#/components/schemas/OneOfThing'},
+          'components': {
+            'schemas': {
+              'OneOfThing': {
+                'oneOf': [
+                  {r'$ref': '#/components/schemas/A'},
+                ],
+              },
+              'Foo': {
+                'type': 'object',
+                'properties': {
+                  'thing': {r'$ref': '#/components/schemas/OneOfThing'},
+                },
+              },
             },
           },
-        },
-      },
-      'paths': <String, dynamic>{},
-    }, name: 'demo');
+          'paths': <String, dynamic>{},
+        }, name: 'demo');
 
     expect(spec.models.map((m) => m.name), isNot(contains('OneOfThing')));
     expect(spec.models.map((m) => m.name), contains('Foo'));
