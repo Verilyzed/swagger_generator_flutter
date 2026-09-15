@@ -70,6 +70,7 @@ class SchemaHoister {
       operationId: op['operationId'] as String?,
       nameFromPath: _nameFromPath,
     );
+    final operationId = op['operationId'] as String?;
 
     final parameters = op['parameters'];
     if (parameters is List) {
@@ -84,6 +85,7 @@ class SchemaHoister {
             '$base $paramName',
             schemas,
             used,
+            operationId: operationId,
           );
         }
       }
@@ -96,6 +98,7 @@ class SchemaHoister {
         '$base request',
         schemas,
         used,
+        operationId: operationId,
       );
     }
 
@@ -108,6 +111,7 @@ class SchemaHoister {
             '$base response',
             schemas,
             used,
+            operationId: operationId,
           );
         }
       }
@@ -118,8 +122,9 @@ class SchemaHoister {
     Map<String, dynamic> container,
     String name,
     Map<String, dynamic> schemas,
-    Set<String> used,
-  ) {
+    Set<String> used, {
+    String? operationId,
+  }) {
     final content = container['content'];
     if (content is! Map) return;
     for (final entry in content.cast<String, dynamic>().entries) {
@@ -134,6 +139,7 @@ class SchemaHoister {
           name,
           schemas,
           used,
+          operationId: operationId,
         );
       }
     }
@@ -143,8 +149,9 @@ class SchemaHoister {
     Map<String, dynamic> schema,
     String name,
     Map<String, dynamic> schemas,
-    Set<String> used,
-  ) {
+    Set<String> used, {
+    String? operationId,
+  }) {
     if (schema.containsKey(r'$ref')) return schema;
 
     _hoistChildren(schema, name, schemas, used);
@@ -160,6 +167,8 @@ class SchemaHoister {
 
     final key = _uniqueName(name, used);
     final defaultValue = schema.remove('default');
+    // Tag operation-derived schemas so allOf exceptions can match by operationId.
+    if (operationId != null) schema['x-source-operation-id'] = operationId;
     schemas[key] = schema;
     final ref = <String, dynamic>{r'$ref': '#/components/schemas/$key'};
     if (defaultValue != null) ref['default'] = defaultValue;

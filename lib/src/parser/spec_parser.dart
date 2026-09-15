@@ -22,6 +22,8 @@ class SpecParser {
   final bool _nameFromPath;
   final Set<String> _overrideSchemas;
   final DartType _filePartType;
+  final bool _allOfNested;
+  final Set<String> _allOfExceptions;
 
   SpecParser(
     this._names,
@@ -29,9 +31,13 @@ class SpecParser {
     bool nameFromPath = false,
     Set<String> overrideSchemas = const {},
     DartType filePartType = const DartType('MultipartFile'),
+    bool allOfNested = false,
+    Set<String> allOfExceptions = const {},
   }) : _nameFromPath = nameFromPath,
        _overrideSchemas = overrideSchemas,
-       _filePartType = filePartType;
+       _filePartType = filePartType,
+       _allOfNested = allOfNested,
+       _allOfExceptions = allOfExceptions;
 
   Map<String, dynamic> _schemasCache = const {};
 
@@ -113,17 +119,24 @@ class SpecParser {
     // apply. Normalize it so it takes the same path as an explicit `allOf`.
     final ref = schema[r'$ref'];
     if (ref is String && schema['properties'] is Map) {
-      final sibling = Map<String, dynamic>.from(schema)..remove(r'$ref');
-      return _model(rawName, {
+      final sibling = Map<String, dynamic>.from(schema)
+        ..remove(r'$ref')
+        ..remove(_sourceOperationKey);
+      final normalized = <String, dynamic>{
         'allOf': [
           {r'$ref': ref},
           sibling,
         ],
-      }, enumNames: enumNames);
+      };
+      final opId = schema[_sourceOperationKey];
+      if (opId != null) normalized[_sourceOperationKey] = opId;
+      return _model(rawName, normalized, enumNames: enumNames);
     }
 
     final allOf = schema['allOf'];
-    if (allOf is List && _allRefsAreObjects(allOf)) {
+    if (allOf is List &&
+        _allRefsAreObjects(allOf) &&
+        _useNested(rawName, schema)) {
       return _allOfModel(rawName, allOf, enumNames: enumNames);
     }
 
@@ -227,6 +240,46 @@ class SpecParser {
       isRequired: isRequired,
       defaultValue: defaultValue,
     );
+  }
+
+  /// Internal marker the hoister stamps on operation-derived schemas so
+  /// [_allOfExceptions] can match by operationId.
+  static const _sourceOperationKey = 'x-source-operation-id';
+
+  /// Whether an `allOf` model keeps referenced schemas as nested fields.
+  /// The global [_allOfNested] mode applies, flipped for any model whose schema
+  /// name, class name, or source operationId matches an [_allOfExceptions]
+  /// pattern (case-insensitive, `*`/`?` glob wildcards).
+  bool _useNested(String rawName, Map<String, dynamic> schema) {
+    final matched = _matchesAllOfException(rawName, schema);
+    return matched ? !_allOfNested : _allOfNested;
+  }
+
+  bool _matchesAllOfException(String rawName, Map<String, dynamic> schema) {
+    if (_allOfExceptions.isEmpty) return false;
+    final ids = <String>{rawName, _names.className(rawName)};
+    final opId = schema[_sourceOperationKey];
+    if (opId is String) ids.add(opId);
+    for (final pattern in _allOfExceptions) {
+      final re = _globToRegExp(pattern);
+      if (ids.any(re.hasMatch)) return true;
+    }
+    return false;
+  }
+
+  static RegExp _globToRegExp(String pattern) {
+    final buffer = StringBuffer('^');
+    for (final ch in pattern.split('')) {
+      if (ch == '*') {
+        buffer.write('.*');
+      } else if (ch == '?') {
+        buffer.write('.');
+      } else {
+        buffer.write(RegExp.escape(ch));
+      }
+    }
+    buffer.write(r'$');
+    return RegExp(buffer.toString(), caseSensitive: false);
   }
 
   /// Whether every `$ref` member of an `allOf` targets an object-like schema

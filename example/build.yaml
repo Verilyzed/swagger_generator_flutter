@@ -5,3 +5,8 @@ targets:
         options:
           input_folder: lib/specs
           output_folder: lib/generated
+          allof_mode: flatten
+          # `Derived` (edge_cases specs) keeps its `Base` ref as a nested field;
+          # every other allOf model flattens.
+          allof_exceptions:
+            - Derived

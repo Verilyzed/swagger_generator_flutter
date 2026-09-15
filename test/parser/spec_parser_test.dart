@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:swagger_generator_flutter/src/ir/api_spec.dart';
 import 'package:swagger_generator_flutter/src/ir/dart_type.dart';
 import 'package:swagger_generator_flutter/src/parser/spec_parser.dart';
@@ -5,9 +7,17 @@ import 'package:swagger_generator_flutter/src/resolve/dart_type_resolver.dart';
 import 'package:swagger_generator_flutter/src/resolve/name_giver.dart';
 import 'package:test/test.dart';
 
-SpecParser _parser() {
+SpecParser _parser({
+  bool allOfNested = false,
+  Set<String> allOfExceptions = const {},
+}) {
   final names = NameGiver();
-  return SpecParser(names, OpenApi31TypeResolver(names));
+  return SpecParser(
+    names,
+    OpenApi31TypeResolver(names),
+    allOfNested: allOfNested,
+    allOfExceptions: allOfExceptions,
+  );
 }
 
 void main() {
@@ -518,7 +528,7 @@ void main() {
   });
 
   test('builds a nested ref field and inline fields for an allOf model', () {
-    final spec = _parser().parse({
+    final spec = _parser(allOfNested: true).parse({
       'components': {
         'schemas': {
           'Item': {
@@ -562,7 +572,7 @@ void main() {
   });
 
   test('treats a top-level ref sibling like an allOf model', () {
-    final spec = _parser().parse({
+    final spec = _parser(allOfNested: true).parse({
       'components': {
         'schemas': {
           'Item': {
@@ -601,8 +611,88 @@ void main() {
     expect(full.fields.any((f) => f.jsonKey == 'title'), isFalse);
   });
 
+  group('allOf mode', () {
+    Map<String, dynamic> specWith(String modelName) => {
+      'components': {
+        'schemas': {
+          'Item': {
+            'type': 'object',
+            'required': ['id'],
+            'properties': {
+              'id': {'type': 'string'},
+              'title': {'type': 'string'},
+            },
+          },
+          modelName: {
+            'allOf': [
+              {r'$ref': '#/components/schemas/Item'},
+              {
+                'type': 'object',
+                'properties': {
+                  'sections': {'type': 'string'},
+                },
+              },
+            ],
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    };
+
+    test('flattens by default', () {
+      final full = _parser()
+          .parse(specWith('FullItem'), name: 'demo')
+          .models
+          .firstWhere((m) => m.name == 'FullItem');
+      final keys = full.fields.map((f) => f.jsonKey).toSet();
+      expect(keys, containsAll(<String>['id', 'title', 'sections']));
+      expect(full.fields.any((f) => f.spreadFromParent), isFalse);
+      expect(full.fields.any((f) => f.dartName == 'item'), isFalse);
+    });
+
+    test('an exception name flips a flatten default to nested', () {
+      final full = _parser(allOfExceptions: {'FullItem'})
+          .parse(specWith('FullItem'), name: 'demo')
+          .models
+          .firstWhere((m) => m.name == 'FullItem');
+      expect(full.fields.any((f) => f.spreadFromParent), isTrue);
+      expect(full.fields.any((f) => f.jsonKey == 'id'), isFalse);
+    });
+
+    test('a glob exception matches the schema name', () {
+      final full = _parser(allOfExceptions: {'Full*'})
+          .parse(specWith('FullItem'), name: 'demo')
+          .models
+          .firstWhere((m) => m.name == 'FullItem');
+      expect(full.fields.any((f) => f.spreadFromParent), isTrue);
+    });
+
+    test('an exception name flips a nested default to flatten', () {
+      final full = _parser(allOfNested: true, allOfExceptions: {'FullItem'})
+          .parse(specWith('FullItem'), name: 'demo')
+          .models
+          .firstWhere((m) => m.name == 'FullItem');
+      expect(full.fields.any((f) => f.spreadFromParent), isFalse);
+      expect(full.fields.map((f) => f.jsonKey), contains('id'));
+    });
+
+    test('an exception matches the source operationId', () {
+      final spec =
+          jsonDecode(jsonEncode(specWith('FullItem'))) as Map<String, dynamic>;
+      final schemas =
+          (spec['components'] as Map)['schemas'] as Map<String, dynamic>;
+      (schemas['FullItem'] as Map<String, dynamic>)['x-source-operation-id'] =
+          'getFullItem';
+      final full = _parser(allOfExceptions: {'getFullItem'})
+          .parse(spec, name: 'demo')
+          .models
+          .firstWhere((m) => m.name == 'FullItem');
+      expect(full.fields.any((f) => f.spreadFromParent), isTrue);
+    });
+  });
+
   test('falls back to flattening when an allOf ref targets a non-object', () {
-    final spec = _parser().parse({
+    final spec = _parser(allOfNested: true).parse({
       'components': {
         'schemas': {
           'Color': {
