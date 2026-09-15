@@ -54,7 +54,7 @@ class SpecParser {
       if (_overrideSchemas.contains(entry.key)) continue;
       final schema = entry.value;
       if (schema is Map<String, dynamic> && schema['enum'] is List) {
-        enumNames.add(_names.className(entry.key));
+        enumNames.add(_names.uniqueClassName(entry.key));
       }
     }
 
@@ -74,7 +74,7 @@ class SpecParser {
         // referenced.
         typedefs.add(
           TypedefDef(
-            name: _names.className(entry.key),
+            name: _names.uniqueClassName(entry.key),
             aliasType: DartType(_resolver.resolve(schema).name),
           ),
         );
@@ -106,7 +106,7 @@ class SpecParser {
           ),
         )
         .toList();
-    return EnumDef(name: _names.className(rawName), values: values);
+    return EnumDef(name: _names.uniqueClassName(rawName), values: values);
   }
 
   ModelDef _model(
@@ -158,7 +158,7 @@ class SpecParser {
       );
     }
 
-    return ModelDef(name: _names.className(rawName), fields: fields);
+    return ModelDef(name: _names.uniqueClassName(rawName), fields: fields);
   }
 
   /// Builds a model from an `allOf` where each `$ref` member becomes its own
@@ -183,7 +183,7 @@ class SpecParser {
           FieldDef(
             dartName: dartName,
             jsonKey: dartName,
-            type: DartType(_names.className(refName)),
+            type: DartType(_names.uniqueClassName(refName)),
             isRequired: true,
             spreadFromParent: true,
           ),
@@ -207,7 +207,7 @@ class SpecParser {
       }
     }
 
-    return ModelDef(name: _names.className(rawName), fields: fields);
+    return ModelDef(name: _names.uniqueClassName(rawName), fields: fields);
   }
 
   FieldDef _fieldFor(
@@ -257,7 +257,7 @@ class SpecParser {
 
   bool _matchesAllOfException(String rawName, Map<String, dynamic> schema) {
     if (_allOfExceptions.isEmpty) return false;
-    final ids = <String>{rawName, _names.className(rawName)};
+    final ids = <String>{rawName, _names.uniqueClassName(rawName)};
     final opId = schema[_sourceOperationKey];
     if (opId is String) ids.add(opId);
     for (final pattern in _allOfExceptions) {

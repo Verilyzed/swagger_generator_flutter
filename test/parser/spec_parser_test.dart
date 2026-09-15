@@ -56,6 +56,28 @@ void main() {
     expect(spec.typedefs.single.aliasType.display, 'List<String>');
   });
 
+  test('uniquifies schema keys that map to the same Dart class name', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Verbrauchsart': {
+            'type': 'string',
+            'enum': ['Strom', 'Gas'],
+          },
+          'verbrauchsart': {
+            'type': 'array',
+            'items': {'type': 'string'},
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    expect(spec.enums.single.name, 'Verbrauchsart');
+    expect(spec.typedefs.single.name, 'Verbrauchsart2');
+    expect(spec.typedefs.single.aliasType.display, 'List<String>');
+  });
+
   test('parses models with required and nullable fields', () {
     final spec = _parser().parse({
       'components': {

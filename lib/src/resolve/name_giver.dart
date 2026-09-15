@@ -26,9 +26,35 @@ const _chopperTypeNames = {
 
 /// Produces valid Dart identifiers from arbitrary OpenAPI names.
 class NameGiver {
+  final Map<String, String> _assignedClassNames = {};
+  final Set<String> _usedClassNames = {};
+
   String className(String raw) {
     final name = _words(raw).map(_capitalize).join();
     return _chopperTypeNames.contains(name) ? '${name}Model' : name;
+  }
+
+  /// Like [className] but guarantees a distinct name per raw schema key.
+  ///
+  /// Two schema keys that format to the same Dart identifier (for example
+  /// `Verbrauchsart` and `verbrauchsart`) would otherwise emit two types with
+  /// the same name. The first key to be seen keeps the base name; later keys
+  /// that collide gain a numeric suffix (`Verbrauchsart2`, `Verbrauchsart3`).
+  /// The result is memoized so every stage of the pipeline resolves a given
+  /// raw key to the same class name.
+  String uniqueClassName(String raw) {
+    final existing = _assignedClassNames[raw];
+    if (existing != null) return existing;
+    final base = className(raw);
+    var name = base;
+    var counter = 2;
+    while (_usedClassNames.contains(name)) {
+      name = '$base$counter';
+      counter++;
+    }
+    _usedClassNames.add(name);
+    _assignedClassNames[raw] = name;
+    return name;
   }
 
   String memberName(String raw) {

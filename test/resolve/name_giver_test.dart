@@ -64,4 +64,35 @@ void main() {
   test('enumValueName avoids the wildcard for empty values', () {
     expect(names.enumValueName(''), 'empty');
   });
+
+  test('uniqueClassName returns the same name for the same raw input', () {
+    final giver = NameGiver();
+    expect(giver.uniqueClassName('Verbrauchsart'), 'Verbrauchsart');
+    expect(giver.uniqueClassName('Verbrauchsart'), 'Verbrauchsart');
+  });
+
+  test('uniqueClassName suffixes a colliding class name', () {
+    final giver = NameGiver();
+    expect(giver.uniqueClassName('Verbrauchsart'), 'Verbrauchsart');
+    expect(giver.uniqueClassName('verbrauchsart'), 'Verbrauchsart2');
+  });
+
+  test('uniqueClassName keeps counting for repeated collisions', () {
+    final giver = NameGiver();
+    expect(giver.uniqueClassName('Status'), 'Status');
+    expect(giver.uniqueClassName('status'), 'Status2');
+    expect(giver.uniqueClassName('STATUS'), 'Status3');
+  });
+
+  test('uniqueClassName leaves non-colliding names untouched', () {
+    final giver = NameGiver();
+    expect(giver.uniqueClassName('Kunde'), 'Kunde');
+    expect(giver.uniqueClassName('Adresse'), 'Adresse');
+  });
+
+  test('uniqueClassName applies the Chopper suffix before uniquifying', () {
+    final giver = NameGiver();
+    expect(giver.uniqueClassName('Field'), 'FieldModel');
+    expect(giver.uniqueClassName('field'), 'FieldModel2');
+  });
 }
