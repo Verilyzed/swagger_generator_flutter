@@ -67,8 +67,14 @@ class ClientEmitter {
       ..writeln(
         '    final decoded = await super.convertResponse<dynamic, dynamic>(response);',
       )
-      ..writeln('    return decoded.copyWith<ResultType>(')
-      ..writeln('      body: _decode<Inner>(decoded.body),')
+      ..writeln('    final rawBody = response.bodyString.trim();')
+      ..writeln("    final body = rawBody.isEmpty || rawBody == 'null'")
+      ..writeln('        ? null')
+      ..writeln('        : _decode<Inner>(decoded.body);')
+      ..writeln('    return Response<ResultType>(')
+      ..writeln('      decoded.base,')
+      ..writeln('      body,')
+      ..writeln('      error: decoded.error,')
       ..writeln('    );')
       ..writeln('  }')
       ..writeln('}')

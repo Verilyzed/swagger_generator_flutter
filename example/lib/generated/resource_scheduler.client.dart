@@ -35,8 +35,14 @@ class JsonSerializableConverter extends JsonConverter {
     Response response,
   ) async {
     final decoded = await super.convertResponse<dynamic, dynamic>(response);
-    return decoded.copyWith<ResultType>(
-      body: _decode<Inner>(decoded.body),
+    final rawBody = response.bodyString.trim();
+    final body = rawBody.isEmpty || rawBody == 'null'
+        ? null
+        : _decode<Inner>(decoded.body);
+    return Response<ResultType>(
+      decoded.base,
+      body,
+      error: decoded.error,
     );
   }
 }

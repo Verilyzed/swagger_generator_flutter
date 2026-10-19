@@ -1,3 +1,11 @@
+## Unreleased
+
+### Fixed
+
+* Generated response converters now return a null body for JSON `null` and empty
+  responses instead of retaining the raw string and potentially failing a cast.
+  JSON string literals, response metadata, and error handling are unchanged.
+
 ## 0.0.3+1
 
 ### Changed
