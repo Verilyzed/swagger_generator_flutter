@@ -11,17 +11,17 @@ class SchemaHoister {
   final bool _nameFromPath;
 
   SchemaHoister(this._names, {bool nameFromPath = false})
-      : _nameFromPath = nameFromPath;
+    : _nameFromPath = nameFromPath;
 
   Map<String, dynamic> hoist(Map<String, dynamic> spec) {
     final copy = (jsonDecode(jsonEncode(spec)) as Map).cast<String, dynamic>();
 
     final components =
         (copy['components'] as Map?)?.cast<String, dynamic>() ??
-            <String, dynamic>{};
+        <String, dynamic>{};
     final schemas =
         (components['schemas'] as Map?)?.cast<String, dynamic>() ??
-            <String, dynamic>{};
+        <String, dynamic>{};
     components['schemas'] = schemas;
     copy['components'] = components;
 
@@ -70,6 +70,7 @@ class SchemaHoister {
       operationId: op['operationId'] as String?,
       nameFromPath: _nameFromPath,
     );
+    final operationId = op['operationId'] as String?;
 
     final parameters = op['parameters'];
     if (parameters is List) {
@@ -84,6 +85,7 @@ class SchemaHoister {
             '$base $paramName',
             schemas,
             used,
+            operationId: operationId,
           );
         }
       }
@@ -96,6 +98,7 @@ class SchemaHoister {
         '$base request',
         schemas,
         used,
+        operationId: operationId,
       );
     }
 
@@ -108,6 +111,7 @@ class SchemaHoister {
             '$base response',
             schemas,
             used,
+            operationId: operationId,
           );
         }
       }
@@ -118,8 +122,9 @@ class SchemaHoister {
     Map<String, dynamic> container,
     String name,
     Map<String, dynamic> schemas,
-    Set<String> used,
-  ) {
+    Set<String> used, {
+    String? operationId,
+  }) {
     final content = container['content'];
     if (content is! Map) return;
     for (final entry in content.cast<String, dynamic>().entries) {
@@ -134,6 +139,7 @@ class SchemaHoister {
           name,
           schemas,
           used,
+          operationId: operationId,
         );
       }
     }
@@ -143,18 +149,26 @@ class SchemaHoister {
     Map<String, dynamic> schema,
     String name,
     Map<String, dynamic> schemas,
-    Set<String> used,
-  ) {
+    Set<String> used, {
+    String? operationId,
+  }) {
     if (schema.containsKey(r'$ref')) return schema;
 
     _hoistChildren(schema, name, schemas, used);
 
     final isObject = schema['properties'] is Map;
     final isEnum = schema['enum'] is List;
-    if (!isObject && !isEnum) return schema;
+    // A multi-member `allOf` is a merged model; hoist it so it resolves to a
+    // named type. A single-member `allOf` is left inline for the resolver to
+    // unwrap to its one member.
+    final allOf = schema['allOf'];
+    final isComposite = allOf is List && allOf.length > 1;
+    if (!isObject && !isEnum && !isComposite) return schema;
 
     final key = _uniqueName(name, used);
     final defaultValue = schema.remove('default');
+    // Tag operation-derived schemas so allOf exceptions can match by operationId.
+    if (operationId != null) schema['x-source-operation-id'] = operationId;
     schemas[key] = schema;
     final ref = <String, dynamic>{r'$ref': '#/components/schemas/$key'};
     if (defaultValue != null) ref['default'] = defaultValue;
@@ -198,6 +212,26 @@ class SchemaHoister {
       for (final member in allOf) {
         if (member is Map) {
           _hoistChildren(member.cast<String, dynamic>(), name, schemas, used);
+        }
+      }
+    }
+
+    // Inline object/enum members of an anyOf/oneOf are lifted to named schemas
+    // so a nullable inline union (e.g. `anyOf: [<object>, {type: null}]`)
+    // resolves to a typed model instead of `Map<String, dynamic>`.
+    for (final keyword in const ['anyOf', 'oneOf']) {
+      final members = schema[keyword];
+      if (members is List) {
+        for (var i = 0; i < members.length; i++) {
+          final member = members[i];
+          if (member is Map) {
+            members[i] = _hoistType(
+              member.cast<String, dynamic>(),
+              name,
+              schemas,
+              used,
+            );
+          }
         }
       }
     }

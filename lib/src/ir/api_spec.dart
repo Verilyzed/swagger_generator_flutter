@@ -21,12 +21,17 @@ class FieldDef {
   final bool isRequired;
   final String? defaultValue;
 
+  /// True when this field holds an `allOf` `$ref` member whose JSON is spread
+  /// into (and read from) the parent object rather than nested under a key.
+  final bool spreadFromParent;
+
   const FieldDef({
     required this.dartName,
     required this.jsonKey,
     required this.type,
     required this.isRequired,
     this.defaultValue,
+    this.spreadFromParent = false,
   });
 }
 

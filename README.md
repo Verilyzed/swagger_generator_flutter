@@ -77,6 +77,8 @@ Spec files may be `.json`, `.yaml`, or `.yml`.
 | `override_schemas` | _(empty)_ | List of component schema keys to replace with a hand-written type named `className(key)` from `overrides_import`. |
 | `include_if_null` | `true` | Whether models serialize null fields. Set to `false` to add `includeIfNull: false` to every field's `@JsonKey`, omitting null values from the JSON output. |
 | `multipart_file_type` | `multipart_file` | Dart type generated for multipart file parts: `multipart_file` (`MultipartFile`), `list_int` (`List<int>`), or `string` (a file path `String`). |
+| `allof_mode` | `flatten` | How `allOf` (and `$ref`-with-siblings) models are shaped: `flatten` inlines every member's fields into one model; `nested` keeps each referenced schema as a nested typed field and spreads it back into the flat JSON on serialization. |
+| `allof_exceptions` | _(empty)_ | List of schema names or operationIds (case-insensitive, `*`/`?` glob wildcards) whose `allOf` models use the opposite of `allof_mode`. |
 
 Use overrides for schemas that cannot be generated usefully, such as a `oneOf`.
 List the schema keys in `override_schemas` and provide their types in the single
@@ -90,6 +92,26 @@ the schema is referenced.
 With `method_names: path`, `GET /vaults/{vaultUuid}/items` generates
 `getVaultsVaultUuidItems`. The path form includes parameter segments so names
 stay unique.
+
+An `allOf` (or a `$ref` with sibling keywords, which OpenAPI 3.1 treats the same
+way) merges a referenced schema with an inline object. By default the members
+are flattened into a single model, so a response combining `Kunde` with two
+extra fields exposes `response.vorname` alongside `response.cssLoginStatus`. Set
+`allof_mode: nested` to instead keep the referenced schema as a typed field
+(`response.kunde.vorname`); the wire JSON stays flat in both modes. Use
+`allof_exceptions` to flip individual cases, matched by component schema name or
+by the operationId of the endpoint whose inline body/response produced the
+model:
+
+```yaml
+options:
+  allof_mode: flatten
+  allof_exceptions:
+    - GetKundeResponse   # a generated or named schema
+    - getKundeDetails    # every allOf model from this endpoint
+    - "getKunde*"        # glob over schema names / operationIds
+```
+
 
 When you set `output_folder`, also set `input_folder` so the spec's directory
 prefix is stripped; otherwise the generated files nest under the captured path

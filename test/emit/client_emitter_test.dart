@@ -39,6 +39,21 @@ void main() {
     expect(out, contains('    authenticator: authenticator,'));
   });
 
+  test('constructs converted responses without the copyWith null fallback', () {
+    final out = emitter.emitClient(
+      const ServiceDef(name: 'DemoService', operations: []),
+      serviceImport: 'demo.service.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      models: const [],
+      enumNames: const {},
+    );
+
+    expect(out, contains('return Response<ResultType>('));
+    expect(out, contains('error: decoded.error,'));
+    expect(out, isNot(contains('decoded.copyWith<ResultType>')));
+  });
+
   test('registers an override type in the factory map', () {
     final out = emitter.emitClient(
       const ServiceDef(name: 'DemoService', operations: []),

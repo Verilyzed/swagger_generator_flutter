@@ -39,6 +39,8 @@ class SwaggerBuilder implements Builder {
       overrideSchemas: config.overrideSchemas,
       includeIfNull: config.includeIfNull,
       multipartFileType: config.multipartFileType,
+      allOfNested: config.allOfNested,
+      allOfExceptions: config.allOfExceptions,
     );
 
     for (final entry in sources.entries) {
@@ -60,6 +62,8 @@ Map<String, String> generateSources(
   Set<String> overrideSchemas = const {},
   bool includeIfNull = true,
   MultipartFileType multipartFileType = MultipartFileType.multipartFile,
+  bool allOfNested = false,
+  Set<String> allOfExceptions = const {},
 }) {
   final names = NameGiver();
   final loaded = SpecLoader().load(content, path: path);
@@ -81,6 +85,8 @@ Map<String, String> generateSources(
     nameFromPath: nameFromPath,
     overrideSchemas: overrideSchemas,
     filePartType: DartType(multipartFileType.dartType),
+    allOfNested: allOfNested,
+    allOfExceptions: allOfExceptions,
   ).parse(normalized, name: baseName);
 
   final enumsFile = '$baseName.enums.dart';

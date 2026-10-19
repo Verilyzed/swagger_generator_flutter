@@ -44,8 +44,14 @@ void main() {
     expect(out, contains('final double? costs;'));
     expect(out, contains('required this.id'));
     expect(out, contains('const Task({'));
-    expect(out, contains('factory Task.fromJson(Map<String, dynamic> json) =>'));
-    expect(out, contains('Map<String, dynamic> toJson() => _\$TaskToJson(this);'));
+    expect(
+      out,
+      contains('factory Task.fromJson(Map<String, dynamic> json) =>'),
+    );
+    expect(
+      out,
+      contains('Map<String, dynamic> toJson() => _\$TaskToJson(this);'),
+    );
   });
 
   test('omits includeIfNull by default', () {
@@ -72,37 +78,40 @@ void main() {
     expect(out, isNot(contains('includeIfNull')));
   });
 
-  test('adds includeIfNull false to every field key when the option is off', () {
-    final out = ModelEmitter().emit(
-      const [
-        ModelDef(
-          name: 'Item',
-          fields: [
-            FieldDef(
-              dartName: 'files',
-              jsonKey: 'files',
-              type: DartType('List<File>', isNullable: true),
-              isRequired: false,
-            ),
-            FieldDef(
-              dartName: 'title',
-              jsonKey: 'title',
-              type: DartType('String'),
-              isRequired: true,
-            ),
-          ],
-        ),
-      ],
-      partFileName: 'demo.models.g.dart',
-      enumsImport: 'demo.enums.dart',
-      enumNames: const {},
-      includeIfNull: false,
-    );
+  test(
+    'adds includeIfNull false to every field key when the option is off',
+    () {
+      final out = ModelEmitter().emit(
+        const [
+          ModelDef(
+            name: 'Item',
+            fields: [
+              FieldDef(
+                dartName: 'files',
+                jsonKey: 'files',
+                type: DartType('List<File>', isNullable: true),
+                isRequired: false,
+              ),
+              FieldDef(
+                dartName: 'title',
+                jsonKey: 'title',
+                type: DartType('String'),
+                isRequired: true,
+              ),
+            ],
+          ),
+        ],
+        partFileName: 'demo.models.g.dart',
+        enumsImport: 'demo.enums.dart',
+        enumNames: const {},
+        includeIfNull: false,
+      );
 
-    expect(out, contains('@JsonSerializable()'));
-    expect(out, contains(r"@JsonKey(name: 'files', includeIfNull: false)"));
-    expect(out, contains(r"@JsonKey(name: 'title', includeIfNull: false)"));
-  });
+      expect(out, contains('@JsonSerializable()'));
+      expect(out, contains(r"@JsonKey(name: 'files', includeIfNull: false)"));
+      expect(out, contains(r"@JsonKey(name: 'title', includeIfNull: false)"));
+    },
+  );
 
   test('emits typedefs above the classes', () {
     final out = ModelEmitter().emit(
@@ -251,30 +260,33 @@ void main() {
     expect(out, isNot(contains('required this.type')));
   });
 
-  test('a required field that also has a default is not emitted as required', () {
-    final out = ModelEmitter().emit(
-      const [
-        ModelDef(
-          name: 'Thing',
-          fields: [
-            FieldDef(
-              dartName: 'mode',
-              jsonKey: 'mode',
-              type: DartType('String'),
-              isRequired: true,
-              defaultValue: "'auto'",
-            ),
-          ],
-        ),
-      ],
-      partFileName: 'demo.models.g.dart',
-      enumsImport: 'demo.enums.dart',
-      enumNames: const {},
-    );
+  test(
+    'a required field that also has a default is not emitted as required',
+    () {
+      final out = ModelEmitter().emit(
+        const [
+          ModelDef(
+            name: 'Thing',
+            fields: [
+              FieldDef(
+                dartName: 'mode',
+                jsonKey: 'mode',
+                type: DartType('String'),
+                isRequired: true,
+                defaultValue: "'auto'",
+              ),
+            ],
+          ),
+        ],
+        partFileName: 'demo.models.g.dart',
+        enumsImport: 'demo.enums.dart',
+        enumNames: const {},
+      );
 
-    expect(out, contains("this.mode = 'auto'"));
-    expect(out, isNot(contains('required this.mode')));
-  });
+      expect(out, contains("this.mode = 'auto'"));
+      expect(out, isNot(contains('required this.mode')));
+    },
+  );
 
   test('a required field that is nullable is not emitted as required', () {
     final out = ModelEmitter().emit(
@@ -347,7 +359,9 @@ void main() {
 
     expect(
       out,
-      contains(r"@JsonKey(name: 'category', unknownEnumValue: ItemCategory.$unknown)"),
+      contains(
+        r"@JsonKey(name: 'category', unknownEnumValue: ItemCategory.$unknown)",
+      ),
     );
   });
 
@@ -371,7 +385,10 @@ void main() {
       enumNames: const {'Tag'},
     );
 
-    expect(out, contains(r"@JsonKey(name: 'tags', unknownEnumValue: Tag.$unknown)"));
+    expect(
+      out,
+      contains(r"@JsonKey(name: 'tags', unknownEnumValue: Tag.$unknown)"),
+    );
   });
 
   test('omits unknownEnumValue when an enum is only a map key', () {
@@ -396,7 +413,9 @@ void main() {
 
     expect(
       out,
-      contains('final Map<Weekday, List<DepartureSchedule>> departureSchedule;'),
+      contains(
+        'final Map<Weekday, List<DepartureSchedule>> departureSchedule;',
+      ),
     );
     expect(out, isNot(contains('unknownEnumValue')));
   });
@@ -478,5 +497,79 @@ void main() {
     );
 
     expect(out, isNot(contains('package:example/overrides.dart')));
+  });
+
+  test('emits spread serialization for an allOf ref field', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'GetKundeResponse',
+          fields: [
+            FieldDef(
+              dartName: 'kunde',
+              jsonKey: 'kunde',
+              type: DartType('Kunde'),
+              isRequired: true,
+              spreadFromParent: true,
+            ),
+            FieldDef(
+              dartName: 'cssLoginStatus',
+              jsonKey: 'cssLoginStatus',
+              type: DartType('CssLoginStatus'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(
+      out,
+      contains(
+        'Object? _spreadFromParent(Map<dynamic, dynamic> json, '
+        'String _) => json;',
+      ),
+    );
+    expect(out, contains('@JsonSerializable(explicitToJson: true)'));
+    expect(
+      out,
+      contains("@JsonKey(name: 'kunde', readValue: _spreadFromParent)"),
+    );
+    expect(out, contains('final Kunde kunde;'));
+    // Custom toJson spreads the nested ref map into the parent.
+    expect(out, contains('final json = _\$GetKundeResponseToJson(this);'));
+    expect(out, contains("for (final key in const ['kunde']) {"));
+    expect(out, contains('json.addAll(nested);'));
+  });
+
+  test('emits no spread helper when no field is spread', () {
+    final out = ModelEmitter().emit(
+      const [
+        ModelDef(
+          name: 'Plain',
+          fields: [
+            FieldDef(
+              dartName: 'id',
+              jsonKey: 'id',
+              type: DartType('String'),
+              isRequired: true,
+            ),
+          ],
+        ),
+      ],
+      partFileName: 'demo.models.g.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, isNot(contains('_spreadFromParent')));
+    expect(out, contains('@JsonSerializable()'));
+    expect(
+      out,
+      contains('Map<String, dynamic> toJson() => _\$PlainToJson(this);'),
+    );
   });
 }

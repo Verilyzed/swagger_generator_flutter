@@ -21,6 +21,32 @@ void main() {
     expect(config.includeIfNull, isFalse);
   });
 
+  test('allof defaults to flatten with no exceptions', () {
+    final config = BuilderConfig.fromOptions(const BuilderOptions({}));
+    expect(config.allOfNested, isFalse);
+    expect(config.allOfExceptions, isEmpty);
+  });
+
+  test('reads allof_mode nested and allof_exceptions', () {
+    final config = BuilderConfig.fromOptions(
+      const BuilderOptions({
+        'allof_mode': 'nested',
+        'allof_exceptions': ['KundeDetailsAllOf', 'getKunde*'],
+      }),
+    );
+    expect(config.allOfNested, isTrue);
+    expect(config.allOfExceptions, {'KundeDetailsAllOf', 'getKunde*'});
+  });
+
+  test('throws on an invalid allof_mode', () {
+    expect(
+      () => BuilderConfig.fromOptions(
+        const BuilderOptions({'allof_mode': 'spread'}),
+      ),
+      throwsArgumentError,
+    );
+  });
+
   test('output_folder defaults to input_folder when only input is set', () {
     final config = BuilderConfig.fromOptions(
       const BuilderOptions({'input_folder': 'api_specs'}),

@@ -64,15 +64,18 @@ abstract class DartTypeResolver {
         // A named array schema is emitted as a typedef, so reference it by name
         // instead of inlining the `List<...>`.
         if (target['type'] == 'array') {
-          return DartType(_names.className(name), isNullable: isNullable(target));
+          return DartType(
+            _names.uniqueClassName(name),
+            isNullable: isNullable(target),
+          );
         }
         if (_isAlias(target)) return resolve(target);
         // A named schema marked nullable is nullable wherever it is referenced.
         if (isNullable(target)) {
-          return DartType(_names.className(name), isNullable: true);
+          return DartType(_names.uniqueClassName(name), isNullable: true);
         }
       }
-      return DartType(_names.className(name));
+      return DartType(_names.uniqueClassName(name));
     }
 
     final allOf = schema['allOf'];
@@ -121,7 +124,7 @@ abstract class DartTypeResolver {
         final name = ref.split('/').last;
         final target = _schemas[name];
         if (target is Map<String, dynamic> && target['enum'] is List) {
-          return _names.className(name);
+          return _names.uniqueClassName(name);
         }
       }
     }

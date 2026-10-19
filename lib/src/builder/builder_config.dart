@@ -30,6 +30,16 @@ class BuilderConfig {
 
   final MultipartFileType multipartFileType;
 
+  /// Whether `allOf` (and `$ref`-with-siblings) models keep each referenced
+  /// schema as a nested typed field (`true`) or flatten every member's fields
+  /// into one model (`false`, the default). Individual cases can be flipped via
+  /// [allOfExceptions].
+  final bool allOfNested;
+
+  /// Schema names or operationIds (glob wildcards allowed) whose `allOf` models
+  /// use the opposite of [allOfNested].
+  final Set<String> allOfExceptions;
+
   const BuilderConfig({
     required this.inputFolder,
     required this.outputFolder,
@@ -38,6 +48,8 @@ class BuilderConfig {
     this.overrideSchemas = const {},
     this.includeIfNull = true,
     this.multipartFileType = MultipartFileType.multipartFile,
+    this.allOfNested = false,
+    this.allOfExceptions = const {},
   });
 
   factory BuilderConfig.fromOptions(BuilderOptions options) {
@@ -67,6 +79,20 @@ class BuilderConfig {
         : <String>{};
     final rawIncludeIfNull = options.config['include_if_null'];
     final includeIfNull = rawIncludeIfNull is bool ? rawIncludeIfNull : true;
+    final rawAllOfMode = options.config['allof_mode'];
+    final allOfNested = switch (rawAllOfMode) {
+      null || 'flatten' => false,
+      'nested' => true,
+      _ => throw ArgumentError.value(
+          rawAllOfMode,
+          'allof_mode',
+          "must be 'flatten' or 'nested'",
+        ),
+    };
+    final rawAllOfExceptions = options.config['allof_exceptions'];
+    final allOfExceptions = rawAllOfExceptions is List
+        ? rawAllOfExceptions.map((e) => e.toString()).toSet()
+        : <String>{};
     final rawMultipart = options.config['multipart_file_type'];
     final multipartFileType = switch (rawMultipart) {
       null => MultipartFileType.multipartFile,
@@ -94,6 +120,8 @@ class BuilderConfig {
       overrideSchemas: overrideSchemas,
       includeIfNull: includeIfNull,
       multipartFileType: multipartFileType,
+      allOfNested: allOfNested,
+      allOfExceptions: allOfExceptions,
     );
   }
 
