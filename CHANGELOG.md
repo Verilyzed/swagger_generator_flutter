@@ -3,8 +3,12 @@
 ### Fixed
 
 * Generated response converters now return a null body for JSON `null` and empty
-  responses instead of retaining the raw string and potentially failing a cast.
+  JSON responses instead of retaining the raw string and potentially failing a cast.
   JSON string literals, response metadata, and error handling are unchanged.
+* Response converters preserve bodies with explicit non-JSON content types,
+  including empty strings and whitespace. JSON media types with parameters or a
+  `+json` suffix are supported. HTTP 204, 205, and HEAD responses, and empty
+  responses without a content type, are handled separately as having no content.
 
 ## 0.0.3+1
 

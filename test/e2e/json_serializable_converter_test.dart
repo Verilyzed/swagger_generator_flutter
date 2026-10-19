@@ -17,12 +17,21 @@ String _converterSource(String source) => source.substring(
   source.indexOf('ChopperClient createClient('),
 );
 
-Response<String> _response(String body, {Object? error}) {
+Response<String> _response(
+  String body, {
+  Object? error,
+  String? contentType = 'application/json',
+  int statusCode = 200,
+  String method = 'GET',
+}) {
   final base = http.Response(
     body,
-    200,
-    headers: {'content-type': 'application/json', 'x-request-id': 'test'},
-    request: http.Request('GET', Uri.parse('https://example.test/ping')),
+    statusCode,
+    headers: {
+      if (contentType != null) 'content-type': contentType,
+      'x-request-id': 'test',
+    },
+    request: http.Request(method, Uri.parse('https://example.test/ping')),
   );
   return Response(base, base.body, error: error);
 }
@@ -58,6 +67,108 @@ void main() {
   });
 
   group('generated JsonSerializableConverter', () {
+    for (final body in [
+      'null',
+      '',
+      ' \n\t ',
+      '"null"',
+      '42',
+      'false',
+      '{"id":"ping-1"}',
+      '[{"id":"ping-1"}]',
+    ]) {
+      test('preserves plain text body ${body.length}: $body', () async {
+        final result = await converter.convertResponse<String, String>(
+          _response(body, contentType: 'text/plain; charset=utf-8'),
+        );
+
+        expect(result.body, body);
+      });
+    }
+
+    test('preserves response metadata when bypassing JSON decoding', () async {
+      final error = Object();
+      final original = _response(
+        'null',
+        contentType: 'text/plain',
+        error: error,
+      );
+      final result = await converter.convertResponse<String, String>(original);
+
+      expect(result.base, same(original.base));
+      expect(result.headers, original.headers);
+      expect(result.error, same(error));
+    });
+
+    for (final contentType in [
+      'application/json; charset=utf-8',
+      'Application/JSON',
+      'application/problem+json',
+      'application/vnd.api+json; charset=utf-8',
+    ]) {
+      test('recognizes JSON null for $contentType', () async {
+        final result = await converter.convertResponse<Ping?, Ping>(
+          _response('null', contentType: contentType),
+        );
+
+        expect(result.body, isNull);
+      });
+    }
+
+    test('maps a model from a structured JSON media type', () async {
+      final result = await converter.convertResponse<Ping, Ping>(
+        _response('{"id":"ping-1"}', contentType: 'application/vnd.api+json'),
+      );
+
+      expect(result.body!.id, 'ping-1');
+    });
+
+    for (final statusCode in [204, 205]) {
+      test(
+        '$statusCode returns no content even with a text media type',
+        () async {
+          final error = Object();
+          final original = _response(
+            '',
+            statusCode: statusCode,
+            contentType: 'text/plain',
+            error: error,
+          );
+          final result = await converter.convertResponse<Ping?, Ping>(original);
+
+          expect(result.body, isNull);
+          expect(result.base, same(original.base));
+          expect(result.statusCode, statusCode);
+          expect(result.headers, original.headers);
+          expect(result.error, same(error));
+        },
+      );
+    }
+
+    test('HEAD returns no content even with a text media type', () async {
+      final result = await converter.convertResponse<Ping?, Ping>(
+        _response('', method: 'HEAD', contentType: 'text/plain'),
+      );
+
+      expect(result.body, isNull);
+    });
+
+    test('an empty body without a content type returns no content', () async {
+      final result = await converter.convertResponse<Ping?, Ping>(
+        _response('', contentType: null),
+      );
+
+      expect(result.body, isNull);
+    });
+
+    test('preserves JSON inference when the content type is missing', () async {
+      final result = await converter.convertResponse<Ping, Ping>(
+        _response('{"id":"ping-1"}', contentType: null),
+      );
+
+      expect(result.body!.id, 'ping-1');
+    });
+
     for (final entry in {
       'JSON null': 'null',
       'JSON null with whitespace': ' \nnull\t ',

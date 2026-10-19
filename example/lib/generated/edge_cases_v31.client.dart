@@ -33,9 +33,24 @@ class JsonSerializableConverter extends JsonConverter {
   Future<Response<ResultType>> convertResponse<ResultType, Inner>(
     Response response,
   ) async {
+    final contentType = response.headers['content-type']
+        ?.split(';').first.trim().toLowerCase();
+    final isJson = contentType == 'application/json' ||
+        (contentType?.endsWith('+json') ?? false);
+    final isNoContent = response.statusCode == 204 ||
+        response.statusCode == 205 ||
+        response.base.request?.method == 'HEAD' ||
+        (contentType == null && response.bodyString.isEmpty);
+    if (isNoContent || (contentType != null && !isJson)) {
+      return Response<ResultType>(
+        response.base,
+        isNoContent ? null : response.body,
+        error: response.error,
+      );
+    }
     final decoded = await super.convertResponse<dynamic, dynamic>(response);
     final rawBody = response.bodyString.trim();
-    final body = rawBody.isEmpty || rawBody == 'null'
+    final body = isJson && (rawBody.isEmpty || rawBody == 'null')
         ? null
         : _decode<Inner>(decoded.body);
     return Response<ResultType>(
