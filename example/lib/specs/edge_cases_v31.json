@@ -20,6 +20,14 @@
         }
       }
     },
+    "/responses/strings": {"get": {"operationId": "getStrings", "responses": {"200": {"description": "ok", "content": {"application/json": {"schema": {"type": "array", "items": {"type": "string"}}}}}}}},
+    "/responses/counts": {"get": {"operationId": "getCounts", "responses": {"200": {"description": "ok", "content": {"application/json": {"schema": {"type": "object", "additionalProperties": {"type": "integer"}}}}}}}},
+    "/responses/free-map": {"get": {"operationId": "getFreeMap", "responses": {"200": {"description": "ok", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/FreeMapTrue"}}}}}}},
+    "/responses/ping-map": {"get": {"operationId": "getPingMap", "responses": {"200": {"description": "ok", "content": {"application/json": {"schema": {"type": "object", "additionalProperties": {"$ref": "#/components/schemas/Ping"}}}}}}}},
+    "/responses/int-enum": {"get": {"operationId": "getIntEnum", "responses": {"200": {"description": "ok", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/IntEnum"}}}}}}},
+    "/responses/timestamp": {"get": {"operationId": "getTimestamp", "responses": {"200": {"description": "ok", "content": {"application/json": {"schema": {"type": "string", "format": "date-time"}}}}}}},
+    "/responses/ratio": {"get": {"operationId": "getRatio", "responses": {"200": {"description": "ok", "content": {"application/json": {"schema": {"type": "number"}}}}}}},
+    "/responses/grid": {"get": {"operationId": "getGrid", "responses": {"200": {"description": "ok", "content": {"application/json": {"schema": {"type": "array", "items": {"type": "array", "items": {"$ref": "#/components/schemas/Ping"}}}}}}}}},
     "/params": {
       "get": {
         "operationId": "getParams",

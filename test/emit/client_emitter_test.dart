@@ -188,6 +188,66 @@ void main() {
     );
   });
 
+  test('the converter consults typed decoders by result type', () {
+    final out = emitter.emitClient(
+      const ServiceDef(name: 'DemoService', operations: []),
+      serviceImport: 'demo.service.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      models: const [],
+      enumNames: const {},
+    );
+
+    expect(
+      out,
+      contains(
+        'const JsonSerializableConverter(this.factories, [this.decoders = const {}]);',
+      ),
+    );
+    expect(
+      out,
+      contains('(decoders[ResultType] ?? _decode<Inner>)(decoded.body)'),
+    );
+    expect(out, isNot(contains('_responseDecoders')));
+  });
+
+  test('passes response decoders for non-model response types', () {
+    final out = emitter.emitClient(
+      const ServiceDef(
+        name: 'DemoService',
+        operations: [
+          OperationDef(
+            methodName: 'getCounts',
+            httpMethod: 'GET',
+            path: '/counts',
+            parameters: [],
+            responseType: DartType('Counts'),
+          ),
+          OperationDef(
+            methodName: 'getStatus',
+            httpMethod: 'GET',
+            path: '/status',
+            parameters: [],
+            responseType: DartType('Status'),
+          ),
+        ],
+      ),
+      serviceImport: 'demo.service.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      models: const [],
+      enumNames: const {'Status'},
+      typedefs: const [
+        TypedefDef(name: 'Counts', aliasType: DartType('Map<String, int>')),
+      ],
+    );
+
+    expect(out, contains('}, _responseDecoders),'));
+    expect(out, contains('Counts: _decodeResponse0,'));
+    expect(out, contains('Status: _decodeResponse1,'));
+    expect(out, contains("import 'demo.enums.dart';"));
+  });
+
   test('emits a barrel of exports', () {
     final out = emitter.emitBarrel(
       enumsImport: 'demo.enums.dart',

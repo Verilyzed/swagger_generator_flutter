@@ -1,4 +1,5 @@
 import '../ir/api_spec.dart';
+import 'response_decoder_emitter.dart';
 import 'source_writer.dart';
 
 /// Emits the Chopper client assembly and the barrel export file.
@@ -12,7 +13,13 @@ class ClientEmitter {
     required Set<String> enumNames,
     Set<String> overrideTypes = const {},
     String? overridesImport,
+    List<TypedefDef> typedefs = const [],
   }) {
+    final decoders = ResponseDecoderEmitter(
+      models: {...models.map((m) => m.name), ...overrideTypes},
+      enums: enumNames,
+      typedefs: {for (final t in typedefs) t.name: t.aliasType.display},
+    ).emit(service.operations.map((op) => op.responseType).toList());
     final usesMultipart = service.operations.any(
       (op) => op.parameters.any(
         (p) =>
@@ -28,7 +35,8 @@ class ClientEmitter {
       ..writeln("import 'package:http/http.dart' show $httpShow;")
       ..writeln(SourceWriter.importLine(serviceImport))
       ..writeln(SourceWriter.importLine(modelsImport));
-    if (_usesEnum(service, enumNames)) {
+    if (_usesEnum(service, enumNames) ||
+        _identifiers(decoders).any(enumNames.contains)) {
       buffer.writeln(SourceWriter.importLine(enumsImport));
     }
     if (overridesImport != null && overrideTypes.isNotEmpty) {
@@ -41,9 +49,12 @@ class ClientEmitter {
       )
       ..writeln()
       ..writeln('class JsonSerializableConverter extends JsonConverter {')
-      ..writeln('  const JsonSerializableConverter(this.factories);')
+      ..writeln(
+        '  const JsonSerializableConverter(this.factories, [this.decoders = const {}]);',
+      )
       ..writeln()
       ..writeln('  final Map<Type, JsonFactory> factories;')
+      ..writeln('  final Map<Type, Object? Function(Object?)> decoders;')
       ..writeln()
       ..writeln('  T? _decodeMap<T>(Map<String, dynamic> values) {')
       ..writeln('    final factory = factories[T];')
@@ -93,7 +104,9 @@ class ClientEmitter {
         "    final body = isJson && (rawBody.isEmpty || rawBody == 'null')",
       )
       ..writeln('        ? null')
-      ..writeln('        : _decode<Inner>(decoded.body);')
+      ..writeln(
+        '        : (decoders[ResultType] ?? _decode<Inner>)(decoded.body);',
+      )
       ..writeln('    return Response<ResultType>(')
       ..writeln('      decoded.base,')
       ..writeln('      body,')
@@ -119,13 +132,14 @@ class ClientEmitter {
       buffer.writeln('      $type: $type.fromJson,');
     }
     buffer
-      ..writeln('    }),')
+      ..writeln(decoders.isEmpty ? '    }),' : '    }, _responseDecoders),')
       ..writeln('    interceptors: interceptors ?? const [],')
       ..writeln('    authenticator: authenticator,')
       ..writeln('    services: [${service.name}.create()],')
       ..writeln('  );')
       ..writeln('}')
-      ..writeln();
+      ..writeln()
+      ..write(decoders);
 
     _emitFacade(buffer, service);
 

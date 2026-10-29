@@ -15,6 +15,11 @@
   member.
 * A named schema with only `additionalProperties` is generated as a `Map`
   typedef instead of an empty class that dropped its contents.
+* Response bodies that are not a model or a list of models are decoded to their
+  declared type. Previously a `Map` response returned `null`, a list of
+  primitives returned `[]`, and an enum, `DateTime`, or `double` response failed
+  with a type error. The generated client passes typed decoders to
+  `JsonSerializableConverter` through a new optional `decoders` argument.
 
 ## 0.0.4
 

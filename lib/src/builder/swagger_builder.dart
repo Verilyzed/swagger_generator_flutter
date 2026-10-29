@@ -144,6 +144,7 @@ Map<String, String> generateSources(
       enumNames: spec.enums.map((e) => e.name).toSet(),
       overrideTypes: usedOverrides,
       overridesImport: overridesImport,
+      typedefs: spec.typedefs,
     ),
     '.api.dart': emitter.emitBarrel(
       enumsImport: enumsFile,
