@@ -8,9 +8,10 @@ import 'edge_cases_v30.models.dart';
 typedef JsonFactory = dynamic Function(Map<String, dynamic> json);
 
 class JsonSerializableConverter extends JsonConverter {
-  const JsonSerializableConverter(this.factories);
+  const JsonSerializableConverter(this.factories, [this.decoders = const {}]);
 
   final Map<Type, JsonFactory> factories;
+  final Map<Type, Object? Function(Object?)> decoders;
 
   T? _decodeMap<T>(Map<String, dynamic> values) {
     final factory = factories[T];
@@ -52,7 +53,7 @@ class JsonSerializableConverter extends JsonConverter {
     final rawBody = response.bodyString.trim();
     final body = isJson && (rawBody.isEmpty || rawBody == 'null')
         ? null
-        : _decode<Inner>(decoded.body);
+        : (decoders[ResultType] ?? _decode<Inner>)(decoded.body);
     return Response<ResultType>(
       decoded.base,
       body,

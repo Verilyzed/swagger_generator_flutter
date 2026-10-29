@@ -1,4 +1,5 @@
 import '../ir/api_spec.dart';
+import 'response_decoder_emitter.dart';
 import 'source_writer.dart';
 
 /// Emits the Chopper client assembly and the barrel export file.
@@ -12,11 +13,19 @@ class ClientEmitter {
     required Set<String> enumNames,
     Set<String> overrideTypes = const {},
     String? overridesImport,
+    List<TypedefDef> typedefs = const [],
   }) {
+    final decoders = ResponseDecoderEmitter(
+      models: {...models.map((m) => m.name), ...overrideTypes},
+      enums: enumNames,
+      typedefs: {for (final t in typedefs) t.name: t.aliasType.display},
+    ).emit(service.operations.map((op) => op.responseType).toList());
     final usesMultipart = service.operations.any(
-      (op) => op.parameters.any((p) =>
-          p.location == ParamLocation.partFile &&
-          p.type.name == 'MultipartFile'),
+      (op) => op.parameters.any(
+        (p) =>
+            p.location == ParamLocation.partFile &&
+            p.type.name == 'MultipartFile',
+      ),
     );
     final httpShow = usesMultipart ? 'Client, MultipartFile' : 'Client';
 
@@ -26,7 +35,8 @@ class ClientEmitter {
       ..writeln("import 'package:http/http.dart' show $httpShow;")
       ..writeln(SourceWriter.importLine(serviceImport))
       ..writeln(SourceWriter.importLine(modelsImport));
-    if (_usesEnum(service, enumNames)) {
+    if (_usesEnum(service, enumNames) ||
+        _identifiers(decoders).any(enumNames.contains)) {
       buffer.writeln(SourceWriter.importLine(enumsImport));
     }
     if (overridesImport != null && overrideTypes.isNotEmpty) {
@@ -34,12 +44,17 @@ class ClientEmitter {
     }
     buffer
       ..writeln()
-      ..writeln('typedef JsonFactory = dynamic Function(Map<String, dynamic> json);')
+      ..writeln(
+        'typedef JsonFactory = dynamic Function(Map<String, dynamic> json);',
+      )
       ..writeln()
       ..writeln('class JsonSerializableConverter extends JsonConverter {')
-      ..writeln('  const JsonSerializableConverter(this.factories);')
+      ..writeln(
+        '  const JsonSerializableConverter(this.factories, [this.decoders = const {}]);',
+      )
       ..writeln()
       ..writeln('  final Map<Type, JsonFactory> factories;')
+      ..writeln('  final Map<Type, Object? Function(Object?)> decoders;')
       ..writeln()
       ..writeln('  T? _decodeMap<T>(Map<String, dynamic> values) {')
       ..writeln('    final factory = factories[T];')
@@ -61,7 +76,9 @@ class ClientEmitter {
       ..writeln('  }')
       ..writeln()
       ..writeln('  @override')
-      ..writeln('  Future<Response<ResultType>> convertResponse<ResultType, Inner>(')
+      ..writeln(
+        '  Future<Response<ResultType>> convertResponse<ResultType, Inner>(',
+      )
       ..writeln('    Response response,')
       ..writeln('  ) async {')
       ..writeln("    final contentType = response.headers['content-type']")
@@ -83,9 +100,13 @@ class ClientEmitter {
         '    final decoded = await super.convertResponse<dynamic, dynamic>(response);',
       )
       ..writeln('    final rawBody = response.bodyString.trim();')
-      ..writeln("    final body = isJson && (rawBody.isEmpty || rawBody == 'null')")
+      ..writeln(
+        "    final body = isJson && (rawBody.isEmpty || rawBody == 'null')",
+      )
       ..writeln('        ? null')
-      ..writeln('        : _decode<Inner>(decoded.body);')
+      ..writeln(
+        '        : (decoders[ResultType] ?? _decode<Inner>)(decoded.body);',
+      )
       ..writeln('    return Response<ResultType>(')
       ..writeln('      decoded.base,')
       ..writeln('      body,')
@@ -111,13 +132,14 @@ class ClientEmitter {
       buffer.writeln('      $type: $type.fromJson,');
     }
     buffer
-      ..writeln('    }),')
+      ..writeln(decoders.isEmpty ? '    }),' : '    }, _responseDecoders),')
       ..writeln('    interceptors: interceptors ?? const [],')
       ..writeln('    authenticator: authenticator,')
       ..writeln('    services: [${service.name}.create()],')
       ..writeln('  );')
       ..writeln('}')
-      ..writeln();
+      ..writeln()
+      ..write(decoders);
 
     _emitFacade(buffer, service);
 
@@ -222,7 +244,12 @@ class ClientEmitter {
     required String clientImport,
   }) {
     final buffer = StringBuffer()..write(SourceWriter.header());
-    for (final uri in [enumsImport, modelsImport, serviceImport, clientImport]) {
+    for (final uri in [
+      enumsImport,
+      modelsImport,
+      serviceImport,
+      clientImport,
+    ]) {
       buffer.writeln("export '$uri';");
     }
     return buffer.toString();

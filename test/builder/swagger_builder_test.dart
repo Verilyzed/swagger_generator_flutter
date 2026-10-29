@@ -55,16 +55,22 @@ void main() {
       baseName: 'demo',
     );
 
-    expect(sources.keys, containsAll(<String>[
-      '.enums.dart',
-      '.models.dart',
-      '.service.dart',
-      '.client.dart',
-      '.api.dart',
-    ]));
+    expect(
+      sources.keys,
+      containsAll(<String>[
+        '.enums.dart',
+        '.models.dart',
+        '.service.dart',
+        '.client.dart',
+        '.api.dart',
+      ]),
+    );
     expect(sources['.enums.dart'], contains('enum AggregationEnum {'));
     expect(sources['.models.dart'], contains('class Task {'));
-    expect(sources['.service.dart'], contains('class DemoService extends ChopperService {'));
+    expect(
+      sources['.service.dart'],
+      contains('class DemoService extends ChopperService {'),
+    );
     expect(sources['.service.dart'], contains('listTasks('));
     expect(sources['.client.dart'], contains('ChopperClient createClient('));
     expect(sources['.client.dart'], contains('JsonSerializableConverter'));

@@ -26,7 +26,9 @@ void main() {
     );
     expect(
       out,
-      contains('Future<Response<ResultType>> convertResponse<ResultType, Inner>('),
+      contains(
+        'Future<Response<ResultType>> convertResponse<ResultType, Inner>(',
+      ),
     );
     expect(out, contains('converter: const JsonSerializableConverter({'));
     expect(out, contains('Gadget: Gadget.fromJson,'));
@@ -143,34 +145,34 @@ void main() {
 
   test('imports MultipartFile only when a file part uses it', () {
     ServiceDef serviceWith(DartType filePartType) => ServiceDef(
-          name: 'DemoService',
-          operations: [
-            OperationDef(
-              methodName: 'upload',
-              httpMethod: 'POST',
-              path: '/upload',
-              parameters: [
-                ParamDef(
-                  dartName: 'file',
-                  wireName: 'file',
-                  type: filePartType,
-                  location: ParamLocation.partFile,
-                  isRequired: true,
-                ),
-              ],
-              responseType: const DartType('dynamic'),
+      name: 'DemoService',
+      operations: [
+        OperationDef(
+          methodName: 'upload',
+          httpMethod: 'POST',
+          path: '/upload',
+          parameters: [
+            ParamDef(
+              dartName: 'file',
+              wireName: 'file',
+              type: filePartType,
+              location: ParamLocation.partFile,
+              isRequired: true,
             ),
           ],
-        );
+          responseType: const DartType('dynamic'),
+        ),
+      ],
+    );
 
     String emitFor(DartType filePartType) => emitter.emitClient(
-          serviceWith(filePartType),
-          serviceImport: 'demo.service.dart',
-          modelsImport: 'demo.models.dart',
-          enumsImport: 'demo.enums.dart',
-          models: const [],
-          enumNames: const {},
-        );
+      serviceWith(filePartType),
+      serviceImport: 'demo.service.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      models: const [],
+      enumNames: const {},
+    );
 
     expect(
       emitFor(const DartType('MultipartFile')),
@@ -184,6 +186,66 @@ void main() {
       emitFor(const DartType('String')),
       contains("import 'package:http/http.dart' show Client;"),
     );
+  });
+
+  test('the converter consults typed decoders by result type', () {
+    final out = emitter.emitClient(
+      const ServiceDef(name: 'DemoService', operations: []),
+      serviceImport: 'demo.service.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      models: const [],
+      enumNames: const {},
+    );
+
+    expect(
+      out,
+      contains(
+        'const JsonSerializableConverter(this.factories, [this.decoders = const {}]);',
+      ),
+    );
+    expect(
+      out,
+      contains('(decoders[ResultType] ?? _decode<Inner>)(decoded.body)'),
+    );
+    expect(out, isNot(contains('_responseDecoders')));
+  });
+
+  test('passes response decoders for non-model response types', () {
+    final out = emitter.emitClient(
+      const ServiceDef(
+        name: 'DemoService',
+        operations: [
+          OperationDef(
+            methodName: 'getCounts',
+            httpMethod: 'GET',
+            path: '/counts',
+            parameters: [],
+            responseType: DartType('Counts'),
+          ),
+          OperationDef(
+            methodName: 'getStatus',
+            httpMethod: 'GET',
+            path: '/status',
+            parameters: [],
+            responseType: DartType('Status'),
+          ),
+        ],
+      ),
+      serviceImport: 'demo.service.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      models: const [],
+      enumNames: const {'Status'},
+      typedefs: const [
+        TypedefDef(name: 'Counts', aliasType: DartType('Map<String, int>')),
+      ],
+    );
+
+    expect(out, contains('}, _responseDecoders),'));
+    expect(out, contains('Counts: _decodeResponse0,'));
+    expect(out, contains('Status: _decodeResponse1,'));
+    expect(out, contains("import 'demo.enums.dart';"));
   });
 
   test('emits a barrel of exports', () {

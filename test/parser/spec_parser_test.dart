@@ -38,6 +38,47 @@ void main() {
     expect(spec.enums.single.values.map((v) => v.jsonValue), ['month', 'year']);
   });
 
+  test('keeps the wire type of integer enum values', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'IntEnum': {
+            'type': 'integer',
+            'enum': [1, 2],
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    expect(spec.enums.single.values.map((v) => v.jsonValue), [1, 2]);
+  });
+
+  test('parses an additionalProperties-only schema into a Map typedef', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Counts': {
+            'type': 'object',
+            'additionalProperties': {'type': 'integer'},
+          },
+          'Free': {'type': 'object', 'additionalProperties': true},
+          'Closed': {'type': 'object', 'additionalProperties': false},
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    final aliases = {
+      for (final t in spec.typedefs) t.name: t.aliasType.display,
+    };
+    expect(aliases, {
+      'Counts': 'Map<String, int>',
+      'Free': 'Map<String, dynamic>',
+    });
+    expect(spec.models.single.name, 'Closed');
+  });
+
   test('parses a top-level array schema into a typedef', () {
     final spec = _parser().parse({
       'components': {
@@ -286,6 +327,28 @@ void main() {
     expect(field.defaultValue, 'ErrorCode.notAllowed');
   });
 
+  test('enum-typed field with integer default yields enum-member default', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'Level': {
+            'type': 'integer',
+            'enum': [1, 2],
+          },
+          'Settings': {
+            'type': 'object',
+            'properties': {
+              'level': {r'$ref': '#/components/schemas/Level', 'default': 1},
+            },
+          },
+        },
+      },
+      'paths': <String, dynamic>{},
+    }, name: 'demo');
+
+    expect(spec.models.single.fields.single.defaultValue, r'Level.$1');
+  });
+
   test('plain string field default yields quoted literal', () {
     final spec = _parser().parse({
       'components': {
@@ -305,7 +368,7 @@ void main() {
     expect(field.defaultValue, "'hi'");
   });
 
-  test('skips path-level parameters and summary keys', () {
+  test('applies path-level parameters and skips summary keys', () {
     final spec = _parser().parse({
       'components': {'schemas': <String, dynamic>{}},
       'paths': {
@@ -326,7 +389,125 @@ void main() {
       },
     }, name: 'demo');
 
-    expect(spec.service.operations.single.methodName, 'listTasks');
+    final op = spec.service.operations.single;
+    expect(op.methodName, 'listTasks');
+    expect(op.parameters.single.wireName, 'limit');
+    expect(op.parameters.single.location, ParamLocation.query);
+  });
+
+  test('an operation parameter overrides a path-level one', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/tasks': {
+          'parameters': [
+            {
+              'in': 'query',
+              'name': 'limit',
+              'schema': {'type': 'integer'},
+            },
+          ],
+          'get': {
+            'operationId': 'list_tasks',
+            'parameters': [
+              {
+                'in': 'query',
+                'name': 'limit',
+                'required': true,
+                'schema': {'type': 'string'},
+              },
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    final param = spec.service.operations.single.parameters.single;
+    expect(param.isRequired, isTrue);
+    expect(param.type.name, 'String');
+  });
+
+  test('parses header params and skips cookie params', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/ping': {
+          'get': {
+            'operationId': 'ping',
+            'parameters': [
+              {
+                'in': 'header',
+                'name': 'X-Token',
+                'schema': {'type': 'string'},
+              },
+              {
+                'in': 'cookie',
+                'name': 'session',
+                'schema': {'type': 'string'},
+              },
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    final param = spec.service.operations.single.parameters.single;
+    expect(param.wireName, 'X-Token');
+    expect(param.dartName, 'xToken');
+    expect(param.location, ParamLocation.header);
+  });
+
+  test('resolves a parameter ref from components/parameters', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': <String, dynamic>{},
+        'parameters': {
+          'Correlation': {
+            'in': 'header',
+            'name': 'X-Correlation-Id',
+            'required': true,
+            'schema': {'type': 'string'},
+          },
+        },
+      },
+      'paths': {
+        '/ping': {
+          'get': {
+            'operationId': 'ping',
+            'parameters': [
+              {r'$ref': '#/components/parameters/Correlation'},
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    final param = spec.service.operations.single.parameters.single;
+    expect(param.wireName, 'X-Correlation-Id');
+    expect(param.location, ParamLocation.header);
+    expect(param.isRequired, isTrue);
+  });
+
+  test('skips an unresolvable parameter ref', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/ping': {
+          'get': {
+            'operationId': 'ping',
+            'parameters': [
+              {r'$ref': '#/components/parameters/Missing'},
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.parameters, isEmpty);
   });
 
   test('parses query param optionality and defaults', () {

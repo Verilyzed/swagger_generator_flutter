@@ -34,7 +34,10 @@ void main() {
       final m = sources['.models.dart']!;
       expect(m, contains('final List<dynamic>? tuple;')); // prefixItems ignored
       expect(m, contains('final dynamic constField;')); // const, no type
-      expect(m, contains('final String? constTyped;')); // const ignored, type kept
+      expect(
+        m,
+        contains('final String? constTyped;'),
+      ); // const ignored, type kept
       expect(m, contains('final dynamic emptySchema;')); // {} -> dynamic
       expect(m, contains('final String? exampledField;')); // examples ignored
     });
@@ -62,13 +65,18 @@ void main() {
       final m = sources['.models.dart']!;
       expect(m, contains('final List<dynamic>? untypedArray;'));
       expect(m, contains('final List<List<String>>? arrayOfArrays;'));
-      expect(m, contains('final Map<String, List<Map<String, String>>>? deep;'));
+      expect(
+        m,
+        contains('final Map<String, List<Map<String, String>>>? deep;'),
+      );
       // additionalProperties + properties: kept as a class, map part dropped
       expect(m, contains('class MapAndProps {'));
       expect(m, contains('final String? name;'));
-      // additionalProperties-only object becomes an empty class
-      expect(m, contains('class FreeMapTrue {'));
-      expect(m, contains('const FreeMapTrue();'));
+      // additionalProperties-only object becomes a Map typedef
+      expect(m, contains('typedef FreeMapTrue = Map<String, dynamic>;'));
+      expect(m, isNot(contains('class FreeMapTrue {')));
+      // additionalProperties: false allows no keys, so it stays a class
+      expect(m, contains('class FreeMapFalse {'));
       // recursion and circular refs compile
       expect(m, contains('final List<Tree>? children;'));
       expect(m, contains('final NodeB? b;'));
@@ -93,10 +101,11 @@ void main() {
       expect(e, contains(r"@JsonValue('\$dollar')")); // $ escaped in the value
     });
 
-    test('integer enum uses string JsonValues (gap)', () {
+    test('integer enum uses integer JsonValues', () {
       final e = sources['.enums.dart']!;
       expect(e, contains('enum IntEnum'));
-      expect(e, contains(r"@JsonValue('1')")); // string, not the integer 1
+      expect(e, contains('@JsonValue(1)'));
+      expect(e, isNot(contains("@JsonValue('1')")));
     });
 
     test('nasty property names sanitize to valid identifiers', () {
@@ -110,10 +119,10 @@ void main() {
       expect(m, contains('final String? type;'));
     });
 
-    test('header and cookie params become query params (gap)', () {
+    test('header params become @Header, cookie params are skipped', () {
       final s = sources['.service.dart']!;
-      expect(s, contains("@Query('X-Token') String? xToken,")); // header -> query
-      expect(s, contains("@Query('session') String? session,")); // cookie -> query
+      expect(s, contains("@Header('X-Token') String? xToken,"));
+      expect(s, isNot(contains('session')));
       expect(s, contains("@Query('tags') List<String>? tags,"));
       expect(s, contains("@Query('filter') Map<String, String>? filter,"));
     });
@@ -130,8 +139,8 @@ void main() {
     });
   });
 
-  group('edge_cases crashes', () {
-    test('a parameter \$ref crashes generation (gap)', () {
+  group('edge_cases parameter refs', () {
+    test('a parameter \$ref is resolved', () {
       const spec = '''
 {
   "openapi": "3.1.0",
@@ -143,10 +152,8 @@ void main() {
     {"in": "query", "name": "limit", "schema": {"type": "integer"}}}}
 }
 ''';
-      expect(
-        () => generateSources(spec, path: 'x.json', baseName: 'x'),
-        throwsA(anything),
-      );
+      final s = generateSources(spec, path: 'x.json', baseName: 'x');
+      expect(s['.service.dart'], contains("@Query('limit') int? limit,"));
     });
   });
 

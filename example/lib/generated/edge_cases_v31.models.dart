@@ -5,6 +5,10 @@ import 'edge_cases_v31.enums.dart';
 
 part 'edge_cases_v31.models.g.dart';
 
+Object? _spreadFromParent(Map<dynamic, dynamic> json, String _) => json;
+
+typedef FreeMapTrue = Map<String, dynamic>;
+
 @JsonSerializable()
 class Ping {
   @JsonKey(name: 'id')
@@ -183,24 +187,24 @@ class Base {
   Map<String, dynamic> toJson() => _$BaseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Derived {
-  @JsonKey(name: 'id')
-  final String id;
+  @JsonKey(name: 'base', readValue: _spreadFromParent)
+  final Base base;
   @JsonKey(name: 'extra')
   final String? extra;
 
   const Derived({
-    required this.id,
+    required this.base,
     this.extra,
   });
 
   Derived copyWith({
-    String? id,
+    Base? base,
     String? extra,
   }) {
     return Derived(
-      id: id ?? this.id,
+      base: base ?? this.base,
       extra: extra ?? this.extra,
     );
   }
@@ -208,7 +212,14 @@ class Derived {
   factory Derived.fromJson(Map<String, dynamic> json) =>
       _$DerivedFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DerivedToJson(this);
+  Map<String, dynamic> toJson() {
+    final json = _$DerivedToJson(this);
+    for (final key in const ['base']) {
+      final nested = json.remove(key);
+      if (nested is Map<String, dynamic>) json.addAll(nested);
+    }
+    return json;
+  }
 }
 
 @JsonSerializable()
@@ -260,19 +271,6 @@ class MapAndProps {
       _$MapAndPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$MapAndPropsToJson(this);
-}
-
-@JsonSerializable()
-class FreeMapTrue {
-
-  const FreeMapTrue();
-
-  FreeMapTrue copyWith() => FreeMapTrue();
-
-  factory FreeMapTrue.fromJson(Map<String, dynamic> json) =>
-      _$FreeMapTrueFromJson(json);
-
-  Map<String, dynamic> toJson() => _$FreeMapTrueToJson(this);
 }
 
 @JsonSerializable()

@@ -155,7 +155,10 @@ void main() {
     );
 
     expect(out, contains('  @multipart'));
-    expect(out, contains("import 'package:http/http.dart' show MultipartFile;"));
+    expect(
+      out,
+      contains("import 'package:http/http.dart' show MultipartFile;"),
+    );
     expect(out, contains("@PartFile('file') required MultipartFile file,"));
     expect(out, contains("@Part('label') required String label,"));
   });
@@ -191,5 +194,35 @@ void main() {
     expect(out, isNot(contains("import 'package:http/http.dart'")));
     expect(out, contains('  @multipart'));
     expect(out, contains("@PartFile('file') required List<int> file,"));
+  });
+
+  test('emits header params as @Header', () {
+    final out = ServiceEmitter().emit(
+      const ServiceDef(
+        name: 'DemoService',
+        operations: [
+          OperationDef(
+            methodName: 'ping',
+            httpMethod: 'GET',
+            path: '/ping',
+            parameters: [
+              ParamDef(
+                dartName: 'xToken',
+                wireName: 'X-Token',
+                type: DartType('String'),
+                location: ParamLocation.header,
+              ),
+            ],
+            responseType: DartType('dynamic'),
+          ),
+        ],
+      ),
+      partFileName: 'demo.service.chopper.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains("@Header('X-Token') String? xToken,"));
   });
 }

@@ -14,9 +14,7 @@ class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Swagger Generator Example',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: const AssetListPage(),
     );
   }
@@ -68,10 +66,7 @@ class _AssetListPageState extends State<AssetListPage> {
                 mainAxisAlignment: .center,
                 children: [
                   Text('Failed to load assets: ${snapshot.error}'),
-                  TextButton(
-                    onPressed: _reload,
-                    child: const Text('Retry'),
-                  ),
+                  TextButton(onPressed: _reload, child: const Text('Retry')),
                 ],
               ),
             );

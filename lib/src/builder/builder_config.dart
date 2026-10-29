@@ -84,10 +84,10 @@ class BuilderConfig {
       null || 'flatten' => false,
       'nested' => true,
       _ => throw ArgumentError.value(
-          rawAllOfMode,
-          'allof_mode',
-          "must be 'flatten' or 'nested'",
-        ),
+        rawAllOfMode,
+        'allof_mode',
+        "must be 'flatten' or 'nested'",
+      ),
     };
     final rawAllOfExceptions = options.config['allof_exceptions'];
     final allOfExceptions = rawAllOfExceptions is List
@@ -100,10 +100,10 @@ class BuilderConfig {
       'list_int' => MultipartFileType.listInt,
       'string' => MultipartFileType.string,
       _ => throw ArgumentError.value(
-          rawMultipart,
-          'multipart_file_type',
-          "must be 'multipart_file', 'list_int', or 'string'",
-        ),
+        rawMultipart,
+        'multipart_file_type',
+        "must be 'multipart_file', 'list_int', or 'string'",
+      ),
     };
     if (overrideSchemas.isNotEmpty && overridesImport == null) {
       throw ArgumentError.value(
@@ -139,11 +139,11 @@ class BuilderConfig {
   String get _outputPrefix => outputFolder.isEmpty ? '' : '$outputFolder/';
 
   Map<String, List<String>> get buildExtensions => {
-        for (final inExt in _inputExtensions)
-          '$_inputPrefix{{}}$inExt': [
-            for (final ext in _extensions) '$_outputPrefix{{}}$ext',
-          ],
-      };
+    for (final inExt in _inputExtensions)
+      '$_inputPrefix{{}}$inExt': [
+        for (final ext in _extensions) '$_outputPrefix{{}}$ext',
+      ],
+  };
 
   /// The portion of [inputPath] captured by `{{}}`: the input prefix and the
   /// `.json`/`.yaml`/`.yml` suffix removed, any subdirectories preserved.
@@ -165,7 +165,8 @@ class BuilderConfig {
   }
 
   /// The bare base name (last path segment) used for cross-file imports.
-  String baseNameFor(String inputPath) => captureStem(inputPath).split('/').last;
+  String baseNameFor(String inputPath) =>
+      captureStem(inputPath).split('/').last;
 
   /// The output asset path for [extension], matching what build_runner derives
   /// from [buildExtensions].

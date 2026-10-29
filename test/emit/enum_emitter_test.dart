@@ -19,7 +19,10 @@ void main() {
     expect(out, contains('month,'));
     expect(out, contains(r'  $unknown;'));
     expect(out, contains('// Fallback for values not present in the spec.'));
-    expect(out, contains("import 'package:json_annotation/json_annotation.dart';"));
+    expect(
+      out,
+      contains("import 'package:json_annotation/json_annotation.dart';"),
+    );
     expect(out, contains('  @override'));
     expect(out, contains('  String toString() => const {'));
     expect(out, contains("        AggregationEnum.month: 'month',"));
@@ -35,5 +38,23 @@ void main() {
 
     expect(out, contains(r"@JsonValue('\$dollar')"));
     expect(out, contains(r"E.dollar: '\$dollar',"));
+  });
+
+  test('emits integer and boolean values as typed JsonValues', () {
+    final out = EnumEmitter().emit(const [
+      EnumDef(
+        name: 'IntEnum',
+        values: [EnumValueDef(dartName: r'$1', jsonValue: 1)],
+      ),
+      EnumDef(
+        name: 'BoolEnum',
+        values: [EnumValueDef(dartName: r'$true', jsonValue: true)],
+      ),
+    ]);
+
+    expect(out, contains('@JsonValue(1)'));
+    expect(out, contains('@JsonValue(true)'));
+    expect(out, contains(r"IntEnum.$1: '1',"));
+    expect(out, contains(r"BoolEnum.$true: 'true',"));
   });
 }

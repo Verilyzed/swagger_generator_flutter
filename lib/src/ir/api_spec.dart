@@ -2,7 +2,9 @@ import 'dart_type.dart';
 
 class EnumValueDef {
   final String dartName;
-  final String jsonValue;
+
+  /// The value on the wire: a `String`, `num`, or `bool`.
+  final Object jsonValue;
 
   const EnumValueDef({required this.dartName, required this.jsonValue});
 }
@@ -51,7 +53,7 @@ class TypedefDef {
   const TypedefDef({required this.name, required this.aliasType});
 }
 
-enum ParamLocation { path, query, body, part, partFile }
+enum ParamLocation { path, query, header, body, part, partFile }
 
 class ParamDef {
   final String dartName;

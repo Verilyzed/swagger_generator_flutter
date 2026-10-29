@@ -1,3 +1,26 @@
+## 0.0.5
+
+### Fixed
+
+* Header parameters are generated as `@Header` instead of `@Query`.
+* Cookie parameters are no longer generated. Previously they were sent as query
+  parameters.
+* Parameter `$ref`s to `components/parameters` are resolved instead of crashing
+  generation. An unresolvable ref is skipped.
+* Path-level `parameters` are applied to every operation of the path. An
+  operation parameter with the same `name` and `in` takes precedence.
+* Integer and boolean enums are emitted with typed `@JsonValue`s (`@JsonValue(1)`
+  instead of `@JsonValue('1')`), so their values decode instead of falling back
+  to `$unknown`. An integer default on an enum-typed field maps to the enum
+  member.
+* A named schema with only `additionalProperties` is generated as a `Map`
+  typedef instead of an empty class that dropped its contents.
+* Response bodies that are not a model or a list of models are decoded to their
+  declared type. Previously a `Map` response returned `null`, a list of
+  primitives returned `[]`, and an enum, `DateTime`, or `double` response failed
+  with a type error. The generated client passes typed decoders to
+  `JsonSerializableConverter` through a new optional `decoders` argument.
+
 ## 0.0.4
 
 ### Fixed

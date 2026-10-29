@@ -6,7 +6,9 @@ import 'package:yaml/yaml.dart';
 class SpecLoader {
   Map<String, dynamic> load(String content, {required String path}) {
     final isYaml = path.endsWith('.yaml') || path.endsWith('.yml');
-    final decoded = isYaml ? _normalize(loadYaml(content)) : jsonDecode(content);
+    final decoded = isYaml
+        ? _normalize(loadYaml(content))
+        : jsonDecode(content);
     if (decoded is! Map) {
       throw FormatException(
         'Expected an OpenAPI document with a top-level object',

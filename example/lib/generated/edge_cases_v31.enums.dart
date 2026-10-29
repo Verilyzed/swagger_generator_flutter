@@ -18,11 +18,11 @@ enum Status {
 }
 
 enum IntEnum {
-  @JsonValue('1')
+  @JsonValue(1)
   $1,
-  @JsonValue('2')
+  @JsonValue(2)
   $2,
-  @JsonValue('3')
+  @JsonValue(3)
   $3,
   // Fallback for values not present in the spec.
   $unknown;

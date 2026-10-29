@@ -13,8 +13,8 @@ abstract class DartTypeResolver {
     this._names, {
     Map<String, dynamic> schemas = const {},
     Set<String> overrides = const {},
-  })  : _schemas = schemas,
-        _overrides = overrides;
+  }) : _schemas = schemas,
+       _overrides = overrides;
 
   DartType resolve(Map<String, dynamic> schema) {
     final core = coreSchema(schema);
@@ -46,12 +46,21 @@ abstract class DartTypeResolver {
     return nonNull.length == 1 ? nonNull.single : const <String, dynamic>{};
   }
 
+  /// An object with `additionalProperties` and no `properties` is a map. A
+  /// named one is emitted as a `Map` typedef instead of an empty class.
+  static bool isMapOnly(Map<String, dynamic> schema) =>
+      schema['type'] == 'object' &&
+      schema['properties'] is! Map &&
+      schema['allOf'] is! List &&
+      (schema['additionalProperties'] is Map ||
+          schema['additionalProperties'] == true);
+
   static bool anyOfHasNull(Map<String, dynamic> schema) {
     final anyOf = schema['anyOf'];
     if (anyOf is! List) return false;
-    return anyOf
-        .whereType<Map<dynamic, dynamic>>()
-        .any((e) => e['type'] == 'null');
+    return anyOf.whereType<Map<dynamic, dynamic>>().any(
+      (e) => e['type'] == 'null',
+    );
   }
 
   DartType _resolveCore(Map<String, dynamic> schema) {
@@ -61,9 +70,9 @@ abstract class DartTypeResolver {
       if (_overrides.contains(name)) return DartType(_names.className(name));
       final target = _schemas[name];
       if (target is Map<String, dynamic>) {
-        // A named array schema is emitted as a typedef, so reference it by name
-        // instead of inlining the `List<...>`.
-        if (target['type'] == 'array') {
+        // A named array or map schema is emitted as a typedef, so reference it
+        // by name instead of inlining the `List<...>` or `Map<...>`.
+        if (target['type'] == 'array' || isMapOnly(target)) {
           return DartType(
             _names.uniqueClassName(name),
             isNullable: isNullable(target),
@@ -166,10 +175,7 @@ class OpenApi31TypeResolver extends DartTypeResolver {
     final type = schema['type'];
     if (type is List) {
       final nonNull = type.where((t) => t != 'null').toList();
-      return {
-        ...schema,
-        'type': nonNull.length == 1 ? nonNull.single : null,
-      };
+      return {...schema, 'type': nonNull.length == 1 ? nonNull.single : null};
     }
     return schema;
   }

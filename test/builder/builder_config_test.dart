@@ -110,19 +110,22 @@ void main() {
     );
   });
 
-  test('configured outputPathFor strips input prefix and applies output prefix', () {
-    final config = BuilderConfig.fromOptions(
-      const BuilderOptions({
-        'input_folder': 'api_specs',
-        'output_folder': 'lib/generated',
-      }),
-    );
-    expect(
-      config.outputPathFor('api_specs/demo.json', '.models.dart'),
-      'lib/generated/demo.models.dart',
-    );
-    expect(config.baseNameFor('api_specs/demo.json'), 'demo');
-  });
+  test(
+    'configured outputPathFor strips input prefix and applies output prefix',
+    () {
+      final config = BuilderConfig.fromOptions(
+        const BuilderOptions({
+          'input_folder': 'api_specs',
+          'output_folder': 'lib/generated',
+        }),
+      );
+      expect(
+        config.outputPathFor('api_specs/demo.json', '.models.dart'),
+        'lib/generated/demo.models.dart',
+      );
+      expect(config.baseNameFor('api_specs/demo.json'), 'demo');
+    },
+  );
 
   test('captureStem preserves subdirectories under the input folder', () {
     final config = BuilderConfig.fromOptions(
@@ -161,11 +164,10 @@ void main() {
 
   test('buildExtensions cover json, yaml, and yml inputs', () {
     final config = BuilderConfig.fromOptions(const BuilderOptions({}));
-    expect(config.buildExtensions.keys, containsAll(<String>[
-      '{{}}.json',
-      '{{}}.yaml',
-      '{{}}.yml',
-    ]));
+    expect(
+      config.buildExtensions.keys,
+      containsAll(<String>['{{}}.json', '{{}}.yaml', '{{}}.yml']),
+    );
   });
 
   test('outputPathFor strips a yaml or json suffix', () {

@@ -37,9 +37,7 @@ class ServiceEmitter {
     }
 
     buffer
-      ..writeln(
-        '  static ${service.name} create([ChopperClient? client]) =>',
-      )
+      ..writeln('  static ${service.name} create([ChopperClient? client]) =>')
       ..writeln('      _\$${service.name}(client);')
       ..writeln('}')
       ..writeln();
@@ -49,13 +47,14 @@ class ServiceEmitter {
 
   void _emitMethod(StringBuffer buffer, OperationDef op) {
     final verb = _verb(op.httpMethod);
-    final named =
-        op.parameters.map((p) => '    ${_namedParam(p)},').toList();
+    final named = op.parameters.map((p) => '    ${_namedParam(p)},').toList();
 
     buffer.writeln("  @$verb(path: '${op.path}')");
-    if (op.parameters.any((p) =>
-        p.location == ParamLocation.part ||
-        p.location == ParamLocation.partFile)) {
+    if (op.parameters.any(
+      (p) =>
+          p.location == ParamLocation.part ||
+          p.location == ParamLocation.partFile,
+    )) {
       buffer.writeln('  @multipart');
     }
     buffer.write(
@@ -85,10 +84,12 @@ class ServiceEmitter {
   }
 
   bool _usesMultipartFile(ServiceDef service) => service.operations.any(
-        (op) => op.parameters.any((p) =>
-            p.location == ParamLocation.partFile &&
-            p.type.name == 'MultipartFile'),
-      );
+    (op) => op.parameters.any(
+      (p) =>
+          p.location == ParamLocation.partFile &&
+          p.type.name == 'MultipartFile',
+    ),
+  );
 
   bool _usesEnum(ServiceDef service, Set<String> enumNames) {
     if (enumNames.isEmpty) return false;
@@ -126,6 +127,8 @@ class ServiceEmitter {
         return "@Path('${p.wireName}')";
       case ParamLocation.query:
         return "@Query('${p.wireName}')";
+      case ParamLocation.header:
+        return "@Header('${p.wireName}')";
       case ParamLocation.body:
         return '@Body()';
       case ParamLocation.part:
