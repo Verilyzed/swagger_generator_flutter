@@ -15,12 +15,14 @@ enum ApiRequestAction {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ApiRequestAction.read: 'READ',
         ApiRequestAction.create: 'CREATE',
         ApiRequestAction.update: 'UPDATE',
         ApiRequestAction.delete: 'DELETE',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ApiRequestResourceType {
@@ -32,10 +34,12 @@ enum ApiRequestResourceType {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ApiRequestResourceType.item: 'ITEM',
         ApiRequestResourceType.vault: 'VAULT',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ApiRequestResult {
@@ -47,10 +51,12 @@ enum ApiRequestResult {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ApiRequestResult.success: 'SUCCESS',
         ApiRequestResult.deny: 'DENY',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum FieldPurpose {
@@ -66,12 +72,14 @@ enum FieldPurpose {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         FieldPurpose.empty: '',
         FieldPurpose.username: 'USERNAME',
         FieldPurpose.password: 'PASSWORD',
         FieldPurpose.notes: 'NOTES',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum FieldType {
@@ -95,7 +103,8 @@ enum FieldType {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         FieldType.string: 'STRING',
         FieldType.email: 'EMAIL',
         FieldType.concealed: 'CONCEALED',
@@ -104,7 +113,8 @@ enum FieldType {
         FieldType.date: 'DATE',
         FieldType.monthYear: 'MONTH_YEAR',
         FieldType.menu: 'MENU',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum GeneratorRecipeCharacterSetsItem {
@@ -118,11 +128,13 @@ enum GeneratorRecipeCharacterSetsItem {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         GeneratorRecipeCharacterSetsItem.letters: 'LETTERS',
         GeneratorRecipeCharacterSetsItem.digits: 'DIGITS',
         GeneratorRecipeCharacterSetsItem.symbols: 'SYMBOLS',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ItemCategory {
@@ -174,7 +186,8 @@ enum ItemCategory {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ItemCategory.login: 'LOGIN',
         ItemCategory.password: 'PASSWORD',
         ItemCategory.apiCredential: 'API_CREDENTIAL',
@@ -197,7 +210,8 @@ enum ItemCategory {
         ItemCategory.medicalRecord: 'MEDICAL_RECORD',
         ItemCategory.sshKey: 'SSH_KEY',
         ItemCategory.custom: 'CUSTOM',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ItemState {
@@ -209,10 +223,12 @@ enum ItemState {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ItemState.archived: 'ARCHIVED',
         ItemState.deleted: 'DELETED',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum PatchItemOp {
@@ -226,11 +242,13 @@ enum PatchItemOp {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         PatchItemOp.add: 'add',
         PatchItemOp.remove: 'remove',
         PatchItemOp.replace: 'replace',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum VaultType {
@@ -246,11 +264,12 @@ enum VaultType {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         VaultType.userCreated: 'USER_CREATED',
         VaultType.personal: 'PERSONAL',
         VaultType.everyone: 'EVERYONE',
         VaultType.transfer: 'TRANSFER',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
-

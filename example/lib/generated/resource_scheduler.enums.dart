@@ -11,10 +11,12 @@ enum AggregationEnum {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         AggregationEnum.month: 'month',
         AggregationEnum.year: 'year',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum TaskStateEnum {
@@ -34,14 +36,16 @@ enum TaskStateEnum {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         TaskStateEnum.planned: 'PLANNED',
         TaskStateEnum.running: 'RUNNING',
         TaskStateEnum.finished: 'FINISHED',
         TaskStateEnum.failed: 'FAILED',
         TaskStateEnum.triggeredStart: 'TRIGGERED_START',
         TaskStateEnum.triggeredStop: 'TRIGGERED_STOP',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum TaskEndTriggerEnum {
@@ -53,10 +57,12 @@ enum TaskEndTriggerEnum {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         TaskEndTriggerEnum.level: 'LEVEL',
         TaskEndTriggerEnum.datetime: 'DATETIME',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum TaskTypeEnum {
@@ -70,11 +76,13 @@ enum TaskTypeEnum {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         TaskTypeEnum.costOptimized: 'COST_OPTIMIZED',
         TaskTypeEnum.minLevel: 'MIN_LEVEL',
         TaskTypeEnum.immediately: 'IMMEDIATELY',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ActivityReason {
@@ -92,13 +100,15 @@ enum ActivityReason {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ActivityReason.costOptimized: 'COST_OPTIMIZED',
         ActivityReason.minLevel: 'MIN_LEVEL',
         ActivityReason.immediately: 'IMMEDIATELY',
         ActivityReason.initializing: 'INITIALIZING',
         ActivityReason.manual: 'MANUAL',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum RunStateEnum {
@@ -110,10 +120,12 @@ enum RunStateEnum {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         RunStateEnum.active: 'ACTIVE',
         RunStateEnum.finished: 'FINISHED',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ActivityState {
@@ -127,11 +139,13 @@ enum ActivityState {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ActivityState.shouldRun: 'SHOULD_RUN',
         ActivityState.shouldNotRun: 'SHOULD_NOT_RUN',
         ActivityState.indeterminate: 'INDETERMINATE',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ActivityStateReason {
@@ -143,10 +157,12 @@ enum ActivityStateReason {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ActivityStateReason.byTask: 'BY_TASK',
         ActivityStateReason.byOverride: 'BY_OVERRIDE',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum DeadlineFilterEnum {
@@ -160,11 +176,13 @@ enum DeadlineFilterEnum {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         DeadlineFilterEnum.active: 'active',
         DeadlineFilterEnum.inactive: 'inactive',
         DeadlineFilterEnum.all: 'all',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum DiscoveredAssetCapability {
@@ -178,11 +196,14 @@ enum DiscoveredAssetCapability {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         DiscoveredAssetCapability.fullyCapable: 'FULLY_CAPABLE',
         DiscoveredAssetCapability.incapable: 'INCAPABLE',
-        DiscoveredAssetCapability.checkingCompatibility: 'CHECKING_COMPATIBILITY',
-      }[this] ?? '';
+        DiscoveredAssetCapability.checkingCompatibility:
+            'CHECKING_COMPATIBILITY',
+      }[this] ??
+      '';
 }
 
 enum Domain {
@@ -194,10 +215,8 @@ enum Domain {
   $unknown;
 
   @override
-  String toString() => const {
-        Domain.account: 'Account',
-        Domain.asset: 'Asset',
-      }[this] ?? '';
+  String toString() =>
+      const {Domain.account: 'Account', Domain.asset: 'Asset'}[this] ?? '';
 }
 
 enum ErrorCode {
@@ -229,7 +248,8 @@ enum ErrorCode {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ErrorCode.internalServerError: 'INTERNAL_SERVER_ERROR',
         ErrorCode.resourceNotFound: 'RESOURCE_NOT_FOUND',
         ErrorCode.notAllowed: 'NOT_ALLOWED',
@@ -242,7 +262,8 @@ enum ErrorCode {
         ErrorCode.relinkNoAssetLinked: 'RELINK_NO_ASSET_LINKED',
         ErrorCode.assetDeletionPending: 'ASSET_DELETION_PENDING',
         ErrorCode.locationLookupFailed: 'LOCATION_LOOKUP_FAILED',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum FailureReasonTypeEnum {
@@ -258,12 +279,14 @@ enum FailureReasonTypeEnum {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         FailureReasonTypeEnum.noResponse: 'NO_RESPONSE',
         FailureReasonTypeEnum.failedPrecondition: 'FAILED_PRECONDITION',
         FailureReasonTypeEnum.unnecessary: 'UNNECESSARY',
         FailureReasonTypeEnum.notFound: 'NOT_FOUND',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum TaskSortFieldEnum {
@@ -273,9 +296,8 @@ enum TaskSortFieldEnum {
   $unknown;
 
   @override
-  String toString() => const {
-        TaskSortFieldEnum.pricePerUnit: 'price_per_unit',
-      }[this] ?? '';
+  String toString() =>
+      const {TaskSortFieldEnum.pricePerUnit: 'price_per_unit'}[this] ?? '';
 }
 
 enum ConnectionState {
@@ -301,7 +323,8 @@ enum ConnectionState {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ConnectionState.unknown: 'UNKNOWN',
         ConnectionState.disconnected: 'DISCONNECTED',
         ConnectionState.connectedInitializing: 'CONNECTED:INITIALIZING',
@@ -311,7 +334,8 @@ enum ConnectionState {
         ConnectionState.connectedNoPower: 'CONNECTED:NO_POWER',
         ConnectionState.connectedFault: 'CONNECTED:FAULT',
         ConnectionState.connectedDraining: 'CONNECTED:DRAINING',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ResolutionAccess {
@@ -323,10 +347,12 @@ enum ResolutionAccess {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ResolutionAccess.remote: 'Remote',
         ResolutionAccess.physical: 'Physical',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ResolutionAction {
@@ -338,10 +364,12 @@ enum ResolutionAction {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ResolutionAction.link: 'Link',
         ResolutionAction.linkAdditionalAsset: 'LinkAdditionalAsset',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum ResolutionAgent {
@@ -353,10 +381,12 @@ enum ResolutionAgent {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         ResolutionAgent.user: 'User',
         ResolutionAgent.thirdParty: 'ThirdParty',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum SortOrderEnum {
@@ -368,10 +398,8 @@ enum SortOrderEnum {
   $unknown;
 
   @override
-  String toString() => const {
-        SortOrderEnum.asc: 'asc',
-        SortOrderEnum.desc: 'desc',
-      }[this] ?? '';
+  String toString() =>
+      const {SortOrderEnum.asc: 'asc', SortOrderEnum.desc: 'desc'}[this] ?? '';
 }
 
 enum Weekday {
@@ -393,7 +421,8 @@ enum Weekday {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         Weekday.monday: 'Monday',
         Weekday.tuesday: 'Tuesday',
         Weekday.wednesday: 'Wednesday',
@@ -401,6 +430,6 @@ enum Weekday {
         Weekday.friday: 'Friday',
         Weekday.saturday: 'Saturday',
         Weekday.sunday: 'Sunday',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
-

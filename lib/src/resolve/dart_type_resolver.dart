@@ -13,8 +13,8 @@ abstract class DartTypeResolver {
     this._names, {
     Map<String, dynamic> schemas = const {},
     Set<String> overrides = const {},
-  })  : _schemas = schemas,
-        _overrides = overrides;
+  }) : _schemas = schemas,
+       _overrides = overrides;
 
   DartType resolve(Map<String, dynamic> schema) {
     final core = coreSchema(schema);
@@ -49,9 +49,9 @@ abstract class DartTypeResolver {
   static bool anyOfHasNull(Map<String, dynamic> schema) {
     final anyOf = schema['anyOf'];
     if (anyOf is! List) return false;
-    return anyOf
-        .whereType<Map<dynamic, dynamic>>()
-        .any((e) => e['type'] == 'null');
+    return anyOf.whereType<Map<dynamic, dynamic>>().any(
+      (e) => e['type'] == 'null',
+    );
   }
 
   DartType _resolveCore(Map<String, dynamic> schema) {
@@ -166,10 +166,7 @@ class OpenApi31TypeResolver extends DartTypeResolver {
     final type = schema['type'];
     if (type is List) {
       final nonNull = type.where((t) => t != 'null').toList();
-      return {
-        ...schema,
-        'type': nonNull.length == 1 ? nonNull.single : null,
-      };
+      return {...schema, 'type': nonNull.length == 1 ? nonNull.single : null};
     }
     return schema;
   }

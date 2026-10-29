@@ -19,7 +19,10 @@ void main() {
     expect(out, contains('month,'));
     expect(out, contains(r'  $unknown;'));
     expect(out, contains('// Fallback for values not present in the spec.'));
-    expect(out, contains("import 'package:json_annotation/json_annotation.dart';"));
+    expect(
+      out,
+      contains("import 'package:json_annotation/json_annotation.dart';"),
+    );
     expect(out, contains('  @override'));
     expect(out, contains('  String toString() => const {'));
     expect(out, contains("        AggregationEnum.month: 'month',"));

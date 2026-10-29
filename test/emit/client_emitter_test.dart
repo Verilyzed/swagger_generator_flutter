@@ -26,7 +26,9 @@ void main() {
     );
     expect(
       out,
-      contains('Future<Response<ResultType>> convertResponse<ResultType, Inner>('),
+      contains(
+        'Future<Response<ResultType>> convertResponse<ResultType, Inner>(',
+      ),
     );
     expect(out, contains('converter: const JsonSerializableConverter({'));
     expect(out, contains('Gadget: Gadget.fromJson,'));
@@ -143,34 +145,34 @@ void main() {
 
   test('imports MultipartFile only when a file part uses it', () {
     ServiceDef serviceWith(DartType filePartType) => ServiceDef(
-          name: 'DemoService',
-          operations: [
-            OperationDef(
-              methodName: 'upload',
-              httpMethod: 'POST',
-              path: '/upload',
-              parameters: [
-                ParamDef(
-                  dartName: 'file',
-                  wireName: 'file',
-                  type: filePartType,
-                  location: ParamLocation.partFile,
-                  isRequired: true,
-                ),
-              ],
-              responseType: const DartType('dynamic'),
+      name: 'DemoService',
+      operations: [
+        OperationDef(
+          methodName: 'upload',
+          httpMethod: 'POST',
+          path: '/upload',
+          parameters: [
+            ParamDef(
+              dartName: 'file',
+              wireName: 'file',
+              type: filePartType,
+              location: ParamLocation.partFile,
+              isRequired: true,
             ),
           ],
-        );
+          responseType: const DartType('dynamic'),
+        ),
+      ],
+    );
 
     String emitFor(DartType filePartType) => emitter.emitClient(
-          serviceWith(filePartType),
-          serviceImport: 'demo.service.dart',
-          modelsImport: 'demo.models.dart',
-          enumsImport: 'demo.enums.dart',
-          models: const [],
-          enumNames: const {},
-        );
+      serviceWith(filePartType),
+      serviceImport: 'demo.service.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      models: const [],
+      enumNames: const {},
+    );
 
     expect(
       emitFor(const DartType('MultipartFile')),

@@ -14,9 +14,11 @@ class ClientEmitter {
     String? overridesImport,
   }) {
     final usesMultipart = service.operations.any(
-      (op) => op.parameters.any((p) =>
-          p.location == ParamLocation.partFile &&
-          p.type.name == 'MultipartFile'),
+      (op) => op.parameters.any(
+        (p) =>
+            p.location == ParamLocation.partFile &&
+            p.type.name == 'MultipartFile',
+      ),
     );
     final httpShow = usesMultipart ? 'Client, MultipartFile' : 'Client';
 
@@ -34,7 +36,9 @@ class ClientEmitter {
     }
     buffer
       ..writeln()
-      ..writeln('typedef JsonFactory = dynamic Function(Map<String, dynamic> json);')
+      ..writeln(
+        'typedef JsonFactory = dynamic Function(Map<String, dynamic> json);',
+      )
       ..writeln()
       ..writeln('class JsonSerializableConverter extends JsonConverter {')
       ..writeln('  const JsonSerializableConverter(this.factories);')
@@ -61,7 +65,9 @@ class ClientEmitter {
       ..writeln('  }')
       ..writeln()
       ..writeln('  @override')
-      ..writeln('  Future<Response<ResultType>> convertResponse<ResultType, Inner>(')
+      ..writeln(
+        '  Future<Response<ResultType>> convertResponse<ResultType, Inner>(',
+      )
       ..writeln('    Response response,')
       ..writeln('  ) async {')
       ..writeln("    final contentType = response.headers['content-type']")
@@ -83,7 +89,9 @@ class ClientEmitter {
         '    final decoded = await super.convertResponse<dynamic, dynamic>(response);',
       )
       ..writeln('    final rawBody = response.bodyString.trim();')
-      ..writeln("    final body = isJson && (rawBody.isEmpty || rawBody == 'null')")
+      ..writeln(
+        "    final body = isJson && (rawBody.isEmpty || rawBody == 'null')",
+      )
       ..writeln('        ? null')
       ..writeln('        : _decode<Inner>(decoded.body);')
       ..writeln('    return Response<ResultType>(')
@@ -222,7 +230,12 @@ class ClientEmitter {
     required String clientImport,
   }) {
     final buffer = StringBuffer()..write(SourceWriter.header());
-    for (final uri in [enumsImport, modelsImport, serviceImport, clientImport]) {
+    for (final uri in [
+      enumsImport,
+      modelsImport,
+      serviceImport,
+      clientImport,
+    ]) {
       buffer.writeln("export '$uri';");
     }
     return buffer.toString();

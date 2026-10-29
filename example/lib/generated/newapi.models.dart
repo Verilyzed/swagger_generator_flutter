@@ -62,15 +62,9 @@ class ErrorResponse {
   @JsonKey(name: 'status')
   final int? status;
 
-  const ErrorResponse({
-    this.message,
-    this.status,
-  });
+  const ErrorResponse({this.message, this.status});
 
-  ErrorResponse copyWith({
-    String? message,
-    int? status,
-  }) {
+  ErrorResponse copyWith({String? message, int? status}) {
     return ErrorResponse(
       message: message ?? this.message,
       status: status ?? this.status,
@@ -188,8 +182,7 @@ class File {
     );
   }
 
-  factory File.fromJson(Map<String, dynamic> json) =>
-      _$FileFromJson(json);
+  factory File.fromJson(Map<String, dynamic> json) => _$FileFromJson(json);
 
   Map<String, dynamic> toJson() => _$FileToJson(this);
 }
@@ -289,7 +282,10 @@ class FullItem {
 
 @JsonSerializable()
 class GeneratorRecipe {
-  @JsonKey(name: 'characterSets', unknownEnumValue: GeneratorRecipeCharacterSetsItem.$unknown)
+  @JsonKey(
+    name: 'characterSets',
+    unknownEnumValue: GeneratorRecipeCharacterSetsItem.$unknown,
+  )
   final List<GeneratorRecipeCharacterSetsItem>? characterSets;
   @JsonKey(name: 'excludeCharacters')
   final String? excludeCharacters;
@@ -392,8 +388,7 @@ class Item {
     );
   }
 
-  factory Item.fromJson(Map<String, dynamic> json) =>
-      _$ItemFromJson(json);
+  factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$ItemToJson(this);
 }
@@ -407,11 +402,7 @@ class ServiceDependency {
   @JsonKey(name: 'status')
   final String? status;
 
-  const ServiceDependency({
-    this.message,
-    this.service,
-    this.status,
-  });
+  const ServiceDependency({this.message, this.service, this.status});
 
   ServiceDependency copyWith({
     String? message,
@@ -488,8 +479,7 @@ class Vault {
     );
   }
 
-  factory Vault.fromJson(Map<String, dynamic> json) =>
-      _$VaultFromJson(json);
+  factory Vault.fromJson(Map<String, dynamic> json) => _$VaultFromJson(json);
 
   Map<String, dynamic> toJson() => _$VaultToJson(this);
 }
@@ -542,16 +532,10 @@ class ApiRequestResourceItem {
   @JsonKey(name: 'id')
   final String? id;
 
-  const ApiRequestResourceItem({
-    this.id,
-  });
+  const ApiRequestResourceItem({this.id});
 
-  ApiRequestResourceItem copyWith({
-    String? id,
-  }) {
-    return ApiRequestResourceItem(
-      id: id ?? this.id,
-    );
+  ApiRequestResourceItem copyWith({String? id}) {
+    return ApiRequestResourceItem(id: id ?? this.id);
   }
 
   factory ApiRequestResourceItem.fromJson(Map<String, dynamic> json) =>
@@ -565,16 +549,10 @@ class ApiRequestResourceVault {
   @JsonKey(name: 'id')
   final String? id;
 
-  const ApiRequestResourceVault({
-    this.id,
-  });
+  const ApiRequestResourceVault({this.id});
 
-  ApiRequestResourceVault copyWith({
-    String? id,
-  }) {
-    return ApiRequestResourceVault(
-      id: id ?? this.id,
-    );
+  ApiRequestResourceVault copyWith({String? id}) {
+    return ApiRequestResourceVault(id: id ?? this.id);
   }
 
   factory ApiRequestResourceVault.fromJson(Map<String, dynamic> json) =>
@@ -626,16 +604,10 @@ class FieldSection {
   @JsonKey(name: 'id')
   final String? id;
 
-  const FieldSection({
-    this.id,
-  });
+  const FieldSection({this.id});
 
-  FieldSection copyWith({
-    String? id,
-  }) {
-    return FieldSection(
-      id: id ?? this.id,
-    );
+  FieldSection copyWith({String? id}) {
+    return FieldSection(id: id ?? this.id);
   }
 
   factory FieldSection.fromJson(Map<String, dynamic> json) =>
@@ -649,16 +621,10 @@ class FileSection {
   @JsonKey(name: 'id')
   final String? id;
 
-  const FileSection({
-    this.id,
-  });
+  const FileSection({this.id});
 
-  FileSection copyWith({
-    String? id,
-  }) {
-    return FileSection(
-      id: id ?? this.id,
-    );
+  FileSection copyWith({String? id}) {
+    return FileSection(id: id ?? this.id);
   }
 
   factory FileSection.fromJson(Map<String, dynamic> json) =>
@@ -674,19 +640,10 @@ class FullItemSectionsItem {
   @JsonKey(name: 'label')
   final String? label;
 
-  const FullItemSectionsItem({
-    this.id,
-    this.label,
-  });
+  const FullItemSectionsItem({this.id, this.label});
 
-  FullItemSectionsItem copyWith({
-    String? id,
-    String? label,
-  }) {
-    return FullItemSectionsItem(
-      id: id ?? this.id,
-      label: label ?? this.label,
-    );
+  FullItemSectionsItem copyWith({String? id, String? label}) {
+    return FullItemSectionsItem(id: id ?? this.id, label: label ?? this.label);
   }
 
   factory FullItemSectionsItem.fromJson(Map<String, dynamic> json) =>
@@ -704,17 +661,9 @@ class ItemUrlsItem {
   @JsonKey(name: 'primary')
   final bool? primary;
 
-  const ItemUrlsItem({
-    required this.href,
-    this.label,
-    this.primary,
-  });
+  const ItemUrlsItem({required this.href, this.label, this.primary});
 
-  ItemUrlsItem copyWith({
-    String? href,
-    String? label,
-    bool? primary,
-  }) {
+  ItemUrlsItem copyWith({String? href, String? label, bool? primary}) {
     return ItemUrlsItem(
       href: href ?? this.href,
       label: label ?? this.label,
@@ -733,16 +682,10 @@ class ItemVault {
   @JsonKey(name: 'id')
   final String id;
 
-  const ItemVault({
-    required this.id,
-  });
+  const ItemVault({required this.id});
 
-  ItemVault copyWith({
-    String? id,
-  }) {
-    return ItemVault(
-      id: id ?? this.id,
-    );
+  ItemVault copyWith({String? id}) {
+    return ItemVault(id: id ?? this.id);
   }
 
   factory ItemVault.fromJson(Map<String, dynamic> json) =>
@@ -760,11 +703,7 @@ class PatchItem {
   @JsonKey(name: 'value')
   final Map<String, dynamic>? value;
 
-  const PatchItem({
-    required this.op,
-    required this.path,
-    this.value,
-  });
+  const PatchItem({required this.op, required this.path, this.value});
 
   PatchItem copyWith({
     PatchItemOp? op,
@@ -816,4 +755,3 @@ class GetServerHealthResponse {
 
   Map<String, dynamic> toJson() => _$GetServerHealthResponseToJson(this);
 }
-

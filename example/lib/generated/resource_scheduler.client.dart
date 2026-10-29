@@ -35,10 +35,15 @@ class JsonSerializableConverter extends JsonConverter {
     Response response,
   ) async {
     final contentType = response.headers['content-type']
-        ?.split(';').first.trim().toLowerCase();
-    final isJson = contentType == 'application/json' ||
+        ?.split(';')
+        .first
+        .trim()
+        .toLowerCase();
+    final isJson =
+        contentType == 'application/json' ||
         (contentType?.endsWith('+json') ?? false);
-    final isNoContent = response.statusCode == 204 ||
+    final isNoContent =
+        response.statusCode == 204 ||
         response.statusCode == 205 ||
         response.base.request?.method == 'HEAD' ||
         (contentType == null && response.bodyString.isEmpty);
@@ -54,11 +59,7 @@ class JsonSerializableConverter extends JsonConverter {
     final body = isJson && (rawBody.isEmpty || rawBody == 'null')
         ? null
         : _decode<Inner>(decoded.body);
-    return Response<ResultType>(
-      decoded.base,
-      body,
-      error: decoded.error,
-    );
+    return Response<ResultType>(decoded.base, body, error: decoded.error);
   }
 }
 
@@ -127,88 +128,61 @@ class ResourceSchedulerApi {
     Client? httpClient,
     List<Interceptor>? interceptors,
     Authenticator? authenticator,
-  }) : this.fromClient(createClient(
-          baseUrl: baseUrl,
-          httpClient: httpClient,
-          interceptors: interceptors,
-          authenticator: authenticator,
-        ));
+  }) : this.fromClient(
+         createClient(
+           baseUrl: baseUrl,
+           httpClient: httpClient,
+           interceptors: interceptors,
+           authenticator: authenticator,
+         ),
+       );
 
   ResourceSchedulerApi.fromClient(ChopperClient client)
-      : _service = ResourceSchedulerService.create(client);
+    : _service = ResourceSchedulerService.create(client);
 
   Future<Response<Schedule>> getScheduleForAsset({
     required String assetId,
     DeadlineFilterEnum? deadlineFilter,
-  }) =>
-      _service.getScheduleForAsset(
-        assetId: assetId,
-        deadlineFilter: deadlineFilter ?? DeadlineFilterEnum.all,
-      );
+  }) => _service.getScheduleForAsset(
+    assetId: assetId,
+    deadlineFilter: deadlineFilter ?? DeadlineFilterEnum.all,
+  );
 
   Future<Response<Schedule>> createSchedule({
     required String assetId,
     required ScheduleCreateRequest body,
-  }) =>
-      _service.createSchedule(
-        assetId: assetId,
-        body: body,
-      );
+  }) => _service.createSchedule(assetId: assetId, body: body);
 
   Future<Response<Schedule>> updateSchedule({
     required String assetId,
     required String scheduleId,
     required ScheduleUpdateRequest body,
-  }) =>
-      _service.updateSchedule(
-        assetId: assetId,
-        scheduleId: scheduleId,
-        body: body,
-      );
+  }) => _service.updateSchedule(
+    assetId: assetId,
+    scheduleId: scheduleId,
+    body: body,
+  );
 
-  Future<Response<List<Asset>>> listAssets({
-    required int accountId,
-  }) =>
-      _service.listAssets(
-        accountId: accountId,
-      );
+  Future<Response<List<Asset>>> listAssets({required int accountId}) =>
+      _service.listAssets(accountId: accountId);
 
-  Future<Response<Asset>> getAsset({
-    required String assetId,
-  }) =>
-      _service.getAsset(
-        assetId: assetId,
-      );
+  Future<Response<Asset>> getAsset({required String assetId}) =>
+      _service.getAsset(assetId: assetId);
 
   Future<Response<ActivityStatus>> getAssetActivityStatus({
     required String assetId,
-  }) =>
-      _service.getAssetActivityStatus(
-        assetId: assetId,
-      );
+  }) => _service.getAssetActivityStatus(assetId: assetId);
 
-  Future<Response<dynamic>> refreshAsset({
-    required String assetId,
-  }) =>
-      _service.refreshAsset(
-        assetId: assetId,
-      );
+  Future<Response<dynamic>> refreshAsset({required String assetId}) =>
+      _service.refreshAsset(assetId: assetId);
 
-  Future<Response<AssetPolicy>> getAssetPolicy({
-    required String assetId,
-  }) =>
-      _service.getAssetPolicy(
-        assetId: assetId,
-      );
+  Future<Response<AssetPolicy>> getAssetPolicy({required String assetId}) =>
+      _service.getAssetPolicy(assetId: assetId);
 
   Future<Response<dynamic>> patchAssetPolicy({
     required String assetId,
     required AssetPolicyRequest body,
-  }) =>
-      _service.patchAssetPolicy(
-        assetId: assetId,
-        body: body,
-      );
+  }) => _service.patchAssetPolicy(assetId: assetId, body: body);
 
   Future<Response<List<Task>>> listTasksForAsset({
     required String assetId,
@@ -217,80 +191,49 @@ class ResourceSchedulerApi {
     TaskSortFieldEnum? sort,
     SortOrderEnum? order,
     int? limit,
-  }) =>
-      _service.listTasksForAsset(
-        assetId: assetId,
-        aggregation: aggregation,
-        period: period,
-        sort: sort,
-        order: order ?? SortOrderEnum.asc,
-        limit: limit,
-      );
+  }) => _service.listTasksForAsset(
+    assetId: assetId,
+    aggregation: aggregation,
+    period: period,
+    sort: sort,
+    order: order ?? SortOrderEnum.asc,
+    limit: limit,
+  );
 
   Future<Response<StreamTokenResponse>> getStreamTokenForAsset({
     required String assetId,
-  }) =>
-      _service.getStreamTokenForAsset(
-        assetId: assetId,
-      );
+  }) => _service.getStreamTokenForAsset(assetId: assetId);
 
   Future<Response<TicketResponse>> createTicket({
     required String assetId,
     required TicketInput body,
-  }) =>
-      _service.createTicket(
-        assetId: assetId,
-        body: body,
-      );
+  }) => _service.createTicket(assetId: assetId, body: body);
 
   Future<Response<AttachmentResponse>> attachImageToTicket({
     required String ticketId,
     required AttachmentInput body,
-  }) =>
-      _service.attachImageToTicket(
-        ticketId: ticketId,
-        body: body,
-      );
+  }) => _service.attachImageToTicket(ticketId: ticketId, body: body);
 
   Future<Response<ProviderLinkResponse>> postAccountLink({
     required String accountId,
-  }) =>
-      _service.postAccountLink(
-        accountId: accountId,
-      );
+  }) => _service.postAccountLink(accountId: accountId);
 
   Future<Response<ProviderLinkResponse>> postAccountRelink({
     required String accountId,
-  }) =>
-      _service.postAccountRelink(
-        accountId: accountId,
-      );
+  }) => _service.postAccountRelink(accountId: accountId);
 
-  Future<Response<Account>> getAccount({
-    required String accountId,
-  }) =>
-      _service.getAccount(
-        accountId: accountId,
-      );
+  Future<Response<Account>> getAccount({required String accountId}) =>
+      _service.getAccount(accountId: accountId);
 
-  Future<Response<dynamic>> deleteAccount({
-    required String accountId,
-  }) =>
-      _service.deleteAccount(
-        accountId: accountId,
-      );
+  Future<Response<dynamic>> deleteAccount({required String accountId}) =>
+      _service.deleteAccount(accountId: accountId);
 
   Future<Response<Account>> selectAsset({
     required String accountId,
     required SelectAssetRequest body,
-  }) =>
-      _service.selectAsset(
-        accountId: accountId,
-        body: body,
-      );
+  }) => _service.selectAsset(accountId: accountId, body: body);
 
-  Future<Response<FeatureFlagConfig>> getFeatures() =>
-      _service.getFeatures();
+  Future<Response<FeatureFlagConfig>> getFeatures() => _service.getFeatures();
 
   Future<Response<List<Run>>> listRunsForAsset({
     required String assetId,
@@ -298,25 +241,21 @@ class ResourceSchedulerApi {
     int? page,
     SortOrderEnum? sortOrder,
     RunStateEnum? state,
-  }) =>
-      _service.listRunsForAsset(
-        assetId: assetId,
-        limit: limit ?? 5,
-        page: page ?? 0,
-        sortOrder: sortOrder ?? SortOrderEnum.desc,
-        state: state,
-      );
+  }) => _service.listRunsForAsset(
+    assetId: assetId,
+    limit: limit ?? 5,
+    page: page ?? 0,
+    sortOrder: sortOrder ?? SortOrderEnum.desc,
+    state: state,
+  );
 
   Future<Response<RunMetrics>> getRunMetrics({
     required String assetId,
     required AggregationEnum aggregation,
     String? period,
-  }) =>
-      _service.getRunMetrics(
-        assetId: assetId,
-        aggregation: aggregation,
-        period: period,
-      );
-
+  }) => _service.getRunMetrics(
+    assetId: assetId,
+    aggregation: aggregation,
+    period: period,
+  );
 }
-

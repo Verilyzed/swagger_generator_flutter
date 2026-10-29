@@ -63,7 +63,9 @@ void main() {
       schemas: {
         'Bar': {
           'type': 'object',
-          'properties': {'x': {'type': 'string'}},
+          'properties': {
+            'x': {'type': 'string'},
+          },
         },
       },
     );
@@ -138,25 +140,34 @@ void main() {
 
   test('object with additionalProperties maps to a typed Map', () {
     expect(
-      resolver
-          .resolve({'type': 'object', 'additionalProperties': {'type': 'string'}})
-          .display,
+      resolver.resolve({
+        'type': 'object',
+        'additionalProperties': {'type': 'string'},
+      }).display,
       'Map<String, String>',
     );
   });
 
   test('bare object maps to Map<String, dynamic>', () {
-    expect(resolver.resolve({'type': 'object'}).display, 'Map<String, dynamic>');
+    expect(
+      resolver.resolve({'type': 'object'}).display,
+      'Map<String, dynamic>',
+    );
   });
 
   test('uses a propertyNames enum ref as the map key type', () {
     final r = OpenApi31TypeResolver(
       NameGiver(),
       schemas: {
-        'Weekday': {'type': 'string', 'enum': ['Monday', 'Tuesday']},
+        'Weekday': {
+          'type': 'string',
+          'enum': ['Monday', 'Tuesday'],
+        },
         'DepartureSchedule': {
           'type': 'object',
-          'properties': {'targetTime': {'type': 'string'}},
+          'properties': {
+            'targetTime': {'type': 'string'},
+          },
         },
       },
     );
@@ -182,11 +193,9 @@ void main() {
 
   test('3.1 resolver maps type array with null to nullable', () {
     expect(
-      OpenApi31TypeResolver(NameGiver())
-          .resolve({
-            'type': ['string', 'null'],
-          })
-          .display,
+      OpenApi31TypeResolver(NameGiver()).resolve({
+        'type': ['string', 'null'],
+      }).display,
       'String?',
     );
   });
@@ -207,29 +216,28 @@ void main() {
         },
       },
     );
-    expect(
-      r.resolve({r'$ref': '#/components/schemas/Tags'}).display,
-      'Tags',
-    );
+    expect(r.resolve({r'$ref': '#/components/schemas/Tags'}).display, 'Tags');
   });
 
-  test('resolves a ref to a nullable named array schema to a nullable typedef',
-      () {
-    final r = OpenApi30TypeResolver(
-      NameGiver(),
-      schemas: {
-        'Tags': {
-          'type': 'array',
-          'items': {'type': 'string'},
-          'nullable': true,
+  test(
+    'resolves a ref to a nullable named array schema to a nullable typedef',
+    () {
+      final r = OpenApi30TypeResolver(
+        NameGiver(),
+        schemas: {
+          'Tags': {
+            'type': 'array',
+            'items': {'type': 'string'},
+            'nullable': true,
+          },
         },
-      },
-    );
-    expect(
-      r.resolve({r'$ref': '#/components/schemas/Tags'}).display,
-      'Tags?',
-    );
-  });
+      );
+      expect(
+        r.resolve({r'$ref': '#/components/schemas/Tags'}).display,
+        'Tags?',
+      );
+    },
+  );
 
   test('resolves an inline array to a List (not a typedef)', () {
     expect(
@@ -280,9 +288,6 @@ void main() {
         'Task': {'type': 'object', 'properties': <String, dynamic>{}},
       },
     );
-    expect(
-      r.resolve({r'$ref': '#/components/schemas/Task'}).display,
-      'Task',
-    );
+    expect(r.resolve({r'$ref': '#/components/schemas/Task'}).display, 'Task');
   });
 }

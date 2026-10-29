@@ -7,7 +7,6 @@ String operationBaseName({
   required String path,
   String? operationId,
   required bool nameFromPath,
-}) =>
-    nameFromPath
-        ? '${httpMethod.toLowerCase()}_$path'
-        : operationId ?? '${httpMethod.toLowerCase()}_$path';
+}) => nameFromPath
+    ? '${httpMethod.toLowerCase()}_$path'
+    : operationId ?? '${httpMethod.toLowerCase()}_$path';

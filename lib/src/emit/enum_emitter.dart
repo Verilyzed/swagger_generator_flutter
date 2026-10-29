@@ -7,9 +7,7 @@ class EnumEmitter {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
       ..writeln(
-        SourceWriter.importLine(
-          'package:json_annotation/json_annotation.dart',
-        ),
+        SourceWriter.importLine('package:json_annotation/json_annotation.dart'),
       )
       ..writeln();
 

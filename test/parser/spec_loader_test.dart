@@ -10,8 +10,10 @@ void main() {
   });
 
   test('loads YAML content into plain maps', () {
-    final map = loader.load('openapi: 3.1.0\ninfo:\n  title: Demo\n',
-        path: 'spec.yaml');
+    final map = loader.load(
+      'openapi: 3.1.0\ninfo:\n  title: Demo\n',
+      path: 'spec.yaml',
+    );
     expect(map['openapi'], '3.1.0');
     expect((map['info'] as Map)['title'], 'Demo');
   });

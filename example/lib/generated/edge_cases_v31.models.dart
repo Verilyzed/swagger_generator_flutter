@@ -12,23 +12,13 @@ class Ping {
   @JsonKey(name: 'status', unknownEnumValue: Status.$unknown)
   final Status? status;
 
-  const Ping({
-    required this.id,
-    this.status,
-  });
+  const Ping({required this.id, this.status});
 
-  Ping copyWith({
-    String? id,
-    Status? status,
-  }) {
-    return Ping(
-      id: id ?? this.id,
-      status: status ?? this.status,
-    );
+  Ping copyWith({String? id, Status? status}) {
+    return Ping(id: id ?? this.id, status: status ?? this.status);
   }
 
-  factory Ping.fromJson(Map<String, dynamic> json) =>
-      _$PingFromJson(json);
+  factory Ping.fromJson(Map<String, dynamic> json) => _$PingFromJson(json);
 
   Map<String, dynamic> toJson() => _$PingToJson(this);
 }
@@ -119,20 +109,13 @@ class Cat {
   @JsonKey(name: 'meow')
   final bool? meow;
 
-  const Cat({
-    this.meow,
-  });
+  const Cat({this.meow});
 
-  Cat copyWith({
-    bool? meow,
-  }) {
-    return Cat(
-      meow: meow ?? this.meow,
-    );
+  Cat copyWith({bool? meow}) {
+    return Cat(meow: meow ?? this.meow);
   }
 
-  factory Cat.fromJson(Map<String, dynamic> json) =>
-      _$CatFromJson(json);
+  factory Cat.fromJson(Map<String, dynamic> json) => _$CatFromJson(json);
 
   Map<String, dynamic> toJson() => _$CatToJson(this);
 }
@@ -142,20 +125,13 @@ class Dog {
   @JsonKey(name: 'bark')
   final bool? bark;
 
-  const Dog({
-    this.bark,
-  });
+  const Dog({this.bark});
 
-  Dog copyWith({
-    bool? bark,
-  }) {
-    return Dog(
-      bark: bark ?? this.bark,
-    );
+  Dog copyWith({bool? bark}) {
+    return Dog(bark: bark ?? this.bark);
   }
 
-  factory Dog.fromJson(Map<String, dynamic> json) =>
-      _$DogFromJson(json);
+  factory Dog.fromJson(Map<String, dynamic> json) => _$DogFromJson(json);
 
   Map<String, dynamic> toJson() => _$DogToJson(this);
 }
@@ -165,20 +141,13 @@ class Base {
   @JsonKey(name: 'id')
   final String id;
 
-  const Base({
-    required this.id,
-  });
+  const Base({required this.id});
 
-  Base copyWith({
-    String? id,
-  }) {
-    return Base(
-      id: id ?? this.id,
-    );
+  Base copyWith({String? id}) {
+    return Base(id: id ?? this.id);
   }
 
-  factory Base.fromJson(Map<String, dynamic> json) =>
-      _$BaseFromJson(json);
+  factory Base.fromJson(Map<String, dynamic> json) => _$BaseFromJson(json);
 
   Map<String, dynamic> toJson() => _$BaseToJson(this);
 }
@@ -190,19 +159,10 @@ class Derived {
   @JsonKey(name: 'extra')
   final String? extra;
 
-  const Derived({
-    required this.id,
-    this.extra,
-  });
+  const Derived({required this.id, this.extra});
 
-  Derived copyWith({
-    String? id,
-    String? extra,
-  }) {
-    return Derived(
-      id: id ?? this.id,
-      extra: extra ?? this.extra,
-    );
+  Derived copyWith({String? id, String? extra}) {
+    return Derived(id: id ?? this.id, extra: extra ?? this.extra);
   }
 
   factory Derived.fromJson(Map<String, dynamic> json) =>
@@ -218,23 +178,13 @@ class Holder {
   @JsonKey(name: 'derived')
   final Derived? derived;
 
-  const Holder({
-    required this.pet,
-    this.derived,
-  });
+  const Holder({required this.pet, this.derived});
 
-  Holder copyWith({
-    dynamic pet,
-    Derived? derived,
-  }) {
-    return Holder(
-      pet: pet ?? this.pet,
-      derived: derived ?? this.derived,
-    );
+  Holder copyWith({dynamic pet, Derived? derived}) {
+    return Holder(pet: pet ?? this.pet, derived: derived ?? this.derived);
   }
 
-  factory Holder.fromJson(Map<String, dynamic> json) =>
-      _$HolderFromJson(json);
+  factory Holder.fromJson(Map<String, dynamic> json) => _$HolderFromJson(json);
 
   Map<String, dynamic> toJson() => _$HolderToJson(this);
 }
@@ -244,16 +194,10 @@ class MapAndProps {
   @JsonKey(name: 'name')
   final String? name;
 
-  const MapAndProps({
-    this.name,
-  });
+  const MapAndProps({this.name});
 
-  MapAndProps copyWith({
-    String? name,
-  }) {
-    return MapAndProps(
-      name: name ?? this.name,
-    );
+  MapAndProps copyWith({String? name}) {
+    return MapAndProps(name: name ?? this.name);
   }
 
   factory MapAndProps.fromJson(Map<String, dynamic> json) =>
@@ -264,7 +208,6 @@ class MapAndProps {
 
 @JsonSerializable()
 class FreeMapTrue {
-
   const FreeMapTrue();
 
   FreeMapTrue copyWith() => FreeMapTrue();
@@ -277,7 +220,6 @@ class FreeMapTrue {
 
 @JsonSerializable()
 class FreeMapFalse {
-
   const FreeMapFalse();
 
   FreeMapFalse copyWith() => FreeMapFalse();
@@ -297,11 +239,7 @@ class Nested {
   @JsonKey(name: 'deep')
   final Map<String, List<Map<String, String>>>? deep;
 
-  const Nested({
-    this.untypedArray,
-    this.arrayOfArrays,
-    this.deep,
-  });
+  const Nested({this.untypedArray, this.arrayOfArrays, this.deep});
 
   Nested copyWith({
     List<dynamic>? untypedArray,
@@ -315,8 +253,7 @@ class Nested {
     );
   }
 
-  factory Nested.fromJson(Map<String, dynamic> json) =>
-      _$NestedFromJson(json);
+  factory Nested.fromJson(Map<String, dynamic> json) => _$NestedFromJson(json);
 
   Map<String, dynamic> toJson() => _$NestedToJson(this);
 }
@@ -328,23 +265,16 @@ class Tree {
   @JsonKey(name: 'children')
   final List<Tree>? children;
 
-  const Tree({
-    this.value,
-    this.children,
-  });
+  const Tree({this.value, this.children});
 
-  Tree copyWith({
-    String? value,
-    List<Tree>? children,
-  }) {
+  Tree copyWith({String? value, List<Tree>? children}) {
     return Tree(
       value: value ?? this.value,
       children: children ?? this.children,
     );
   }
 
-  factory Tree.fromJson(Map<String, dynamic> json) =>
-      _$TreeFromJson(json);
+  factory Tree.fromJson(Map<String, dynamic> json) => _$TreeFromJson(json);
 
   Map<String, dynamic> toJson() => _$TreeToJson(this);
 }
@@ -354,20 +284,13 @@ class NodeA {
   @JsonKey(name: 'b')
   final NodeB? b;
 
-  const NodeA({
-    this.b,
-  });
+  const NodeA({this.b});
 
-  NodeA copyWith({
-    NodeB? b,
-  }) {
-    return NodeA(
-      b: b ?? this.b,
-    );
+  NodeA copyWith({NodeB? b}) {
+    return NodeA(b: b ?? this.b);
   }
 
-  factory NodeA.fromJson(Map<String, dynamic> json) =>
-      _$NodeAFromJson(json);
+  factory NodeA.fromJson(Map<String, dynamic> json) => _$NodeAFromJson(json);
 
   Map<String, dynamic> toJson() => _$NodeAToJson(this);
 }
@@ -377,20 +300,13 @@ class NodeB {
   @JsonKey(name: 'a')
   final NodeA? a;
 
-  const NodeB({
-    this.a,
-  });
+  const NodeB({this.a});
 
-  NodeB copyWith({
-    NodeA? a,
-  }) {
-    return NodeB(
-      a: a ?? this.a,
-    );
+  NodeB copyWith({NodeA? a}) {
+    return NodeB(a: a ?? this.a);
   }
 
-  factory NodeB.fromJson(Map<String, dynamic> json) =>
-      _$NodeBFromJson(json);
+  factory NodeB.fromJson(Map<String, dynamic> json) => _$NodeBFromJson(json);
 
   Map<String, dynamic> toJson() => _$NodeBToJson(this);
 }
@@ -465,15 +381,9 @@ class EnumHolder {
   @JsonKey(name: 'weird', unknownEnumValue: WeirdEnum.$unknown)
   final WeirdEnum? weird;
 
-  const EnumHolder({
-    this.intEnum,
-    this.weird,
-  });
+  const EnumHolder({this.intEnum, this.weird});
 
-  EnumHolder copyWith({
-    IntEnum? intEnum,
-    WeirdEnum? weird,
-  }) {
+  EnumHolder copyWith({IntEnum? intEnum, WeirdEnum? weird}) {
     return EnumHolder(
       intEnum: intEnum ?? this.intEnum,
       weird: weird ?? this.weird,
@@ -524,7 +434,9 @@ class NastyNames {
       $1leading: $1leading ?? this.$1leading,
       $class: $class ?? this.$class,
       type: type ?? this.type,
-      veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed: veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed ?? this.veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed,
+      veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed:
+          veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed ??
+          this.veryLongNameThatGoesOnAndOnAndKeepsGoingForALongTimeIndeed,
     );
   }
 
@@ -533,4 +445,3 @@ class NastyNames {
 
   Map<String, dynamic> toJson() => _$NastyNamesToJson(this);
 }
-

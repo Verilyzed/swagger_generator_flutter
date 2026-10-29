@@ -20,7 +20,10 @@ void main() {
       sources['.service.dart'],
       contains('class ResourceSchedulerService extends ChopperService {'),
     );
-    expect(sources['.api.dart'], contains("export 'resource_scheduler.enums.dart';"));
+    expect(
+      sources['.api.dart'],
+      contains("export 'resource_scheduler.enums.dart';"),
+    );
 
     for (final source in sources.values) {
       expect(source, startsWith('// GENERATED CODE'));
@@ -91,17 +94,17 @@ void main() {
 }
 ''';
 
-    final service = generateSources(spec, path: 'x.json', baseName: 'x')[
-        '.service.dart'];
+    final service = generateSources(
+      spec,
+      path: 'x.json',
+      baseName: 'x',
+    )['.service.dart'];
 
     expect(
       service,
       contains("@Query('startDatum') required String startDatum,"),
     );
-    expect(
-      service,
-      contains("@Query('endDatum') required String endDatum,"),
-    );
+    expect(service, contains("@Query('endDatum') required String endDatum,"));
   });
 
   test('uses an override type for an overridden schema', () {
@@ -169,8 +172,11 @@ void main() {
 }
 ''';
 
-    final models = generateSources(spec, path: 'p.json', baseName: 'p')[
-        '.models.dart'];
+    final models = generateSources(
+      spec,
+      path: 'p.json',
+      baseName: 'p',
+    )['.models.dart'];
 
     expect(models, contains('typedef Tags = List<String>;'));
     expect(models, contains('final Tags? tags;'));
@@ -195,8 +201,11 @@ void main() {
 }
 ''';
 
-    final models = generateSources(spec, path: 'c.json', baseName: 'c')[
-        '.models.dart'];
+    final models = generateSources(
+      spec,
+      path: 'c.json',
+      baseName: 'c',
+    )['.models.dart'];
 
     expect(models, contains('Customer copyWith({'));
     expect(models, contains('String? id,'));
@@ -220,8 +229,11 @@ void main() {
 }
 ''';
 
-    final models = generateSources(spec, path: 'f.json', baseName: 'f')[
-        '.models.dart'];
+    final models = generateSources(
+      spec,
+      path: 'f.json',
+      baseName: 'f',
+    )['.models.dart'];
 
     expect(models, contains('final Bar? child;'));
     expect(models, isNot(contains('dynamic child')));
@@ -242,16 +254,20 @@ void main() {
 }
 ''';
 
-    final models = generateSources(spec, path: 'f.json', baseName: 'f')[
-        '.models.dart'];
+    final models = generateSources(
+      spec,
+      path: 'f.json',
+      baseName: 'f',
+    )['.models.dart'];
 
     expect(models, contains('final Bar? bar;'));
     expect(models, isNot(contains('dynamic bar')));
   });
 
-  test('a required ref to a nullable enum becomes an optional nullable field',
-      () {
-    const spec = '''
+  test(
+    'a required ref to a nullable enum becomes an optional nullable field',
+    () {
+      const spec = '''
 {
   "openapi": "3.0.0",
   "info": {"title": "t", "version": "1"},
@@ -265,13 +281,17 @@ void main() {
 }
 ''';
 
-    final models = generateSources(spec, path: 'c.json', baseName: 'c')[
-        '.models.dart'];
+      final models = generateSources(
+        spec,
+        path: 'c.json',
+        baseName: 'c',
+      )['.models.dart'];
 
-    expect(models, contains('final Salutation? salutation;'));
-    expect(models, contains('this.salutation,'));
-    expect(models, isNot(contains('required this.salutation')));
-  });
+      expect(models, contains('final Salutation? salutation;'));
+      expect(models, contains('this.salutation,'));
+      expect(models, isNot(contains('required this.salutation')));
+    },
+  );
 
   test('creates a named enum for an inline enum parameter', () {
     const spec = '''
@@ -296,7 +316,11 @@ void main() {
 }
 ''';
 
-    final sources = generateSources(spec, path: 'curve.json', baseName: 'curve');
+    final sources = generateSources(
+      spec,
+      path: 'curve.json',
+      baseName: 'curve',
+    );
 
     expect(
       sources['.enums.dart'],
@@ -304,9 +328,7 @@ void main() {
     );
     expect(
       sources['.service.dart'],
-      contains(
-        'GetCurveInterpolationsAufloesung? interpolationsAufloesung',
-      ),
+      contains('GetCurveInterpolationsAufloesung? interpolationsAufloesung'),
     );
   });
 }

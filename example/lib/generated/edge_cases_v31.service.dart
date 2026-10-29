@@ -18,16 +18,11 @@ abstract class EdgeCasesV31Service extends ChopperService {
   });
 
   @POST(path: '/bodies')
-  Future<Response<dynamic>> postBodies({
-    @Body() required List<Cat> body,
-  });
+  Future<Response<dynamic>> postBodies({@Body() required List<Cat> body});
 
   @POST(path: '/prim')
-  Future<Response<String>> postPrim({
-    @Body() String? body,
-  });
+  Future<Response<String>> postPrim({@Body() String? body});
 
   static EdgeCasesV31Service create([ChopperClient? client]) =>
       _$EdgeCasesV31Service(client);
 }
-

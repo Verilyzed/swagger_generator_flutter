@@ -67,8 +67,10 @@ Map<String, String> generateSources(
 }) {
   final names = NameGiver();
   final loaded = SpecLoader().load(content, path: path);
-  final normalized =
-      SchemaHoister(names, nameFromPath: nameFromPath).hoist(loaded);
+  final normalized = SchemaHoister(
+    names,
+    nameFromPath: nameFromPath,
+  ).hoist(loaded);
   final schemas =
       ((normalized['components'] as Map?)?['schemas'] as Map?)
           ?.cast<String, dynamic>() ??

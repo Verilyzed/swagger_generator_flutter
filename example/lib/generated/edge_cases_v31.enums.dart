@@ -11,10 +11,8 @@ enum Status {
   $unknown;
 
   @override
-  String toString() => const {
-        Status.active: 'ACTIVE',
-        Status.inactive: 'INACTIVE',
-      }[this] ?? '';
+  String toString() =>
+      const {Status.active: 'ACTIVE', Status.inactive: 'INACTIVE'}[this] ?? '';
 }
 
 enum IntEnum {
@@ -28,11 +26,8 @@ enum IntEnum {
   $unknown;
 
   @override
-  String toString() => const {
-        IntEnum.$1: '1',
-        IntEnum.$2: '2',
-        IntEnum.$3: '3',
-      }[this] ?? '';
+  String toString() =>
+      const {IntEnum.$1: '1', IntEnum.$2: '2', IntEnum.$3: '3'}[this] ?? '';
 }
 
 enum WeirdEnum {
@@ -52,14 +47,16 @@ enum WeirdEnum {
   $unknown;
 
   @override
-  String toString() => const {
+  String toString() =>
+      const {
         WeirdEnum.withSpace: 'with space',
         WeirdEnum.withHyphen: 'with-hyphen',
         WeirdEnum.$1leading: '1leading',
         WeirdEnum.$class: 'class',
         WeirdEnum.dollar: '\$dollar',
         WeirdEnum.empty: '',
-      }[this] ?? '';
+      }[this] ??
+      '';
 }
 
 enum SingleEnum {
@@ -69,8 +66,5 @@ enum SingleEnum {
   $unknown;
 
   @override
-  String toString() => const {
-        SingleEnum.only: 'ONLY',
-      }[this] ?? '';
+  String toString() => const {SingleEnum.only: 'ONLY'}[this] ?? '';
 }
-

@@ -34,7 +34,10 @@ void main() {
       final m = sources['.models.dart']!;
       expect(m, contains('final List<dynamic>? tuple;')); // prefixItems ignored
       expect(m, contains('final dynamic constField;')); // const, no type
-      expect(m, contains('final String? constTyped;')); // const ignored, type kept
+      expect(
+        m,
+        contains('final String? constTyped;'),
+      ); // const ignored, type kept
       expect(m, contains('final dynamic emptySchema;')); // {} -> dynamic
       expect(m, contains('final String? exampledField;')); // examples ignored
     });
@@ -62,7 +65,10 @@ void main() {
       final m = sources['.models.dart']!;
       expect(m, contains('final List<dynamic>? untypedArray;'));
       expect(m, contains('final List<List<String>>? arrayOfArrays;'));
-      expect(m, contains('final Map<String, List<Map<String, String>>>? deep;'));
+      expect(
+        m,
+        contains('final Map<String, List<Map<String, String>>>? deep;'),
+      );
       // additionalProperties + properties: kept as a class, map part dropped
       expect(m, contains('class MapAndProps {'));
       expect(m, contains('final String? name;'));
