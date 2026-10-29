@@ -11,6 +11,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
-      - run: dart pub get
+      # example/ is a Flutter app; the Dart-only SDK here cannot resolve it.
+      - run: dart pub get --no-example
       - run: dart analyze
       - run: dart test
