@@ -1,3 +1,15 @@
+## 0.0.5
+
+### Fixed
+
+* Header parameters are generated as `@Header` instead of `@Query`.
+* Cookie parameters are no longer generated. Previously they were sent as query
+  parameters.
+* Parameter `$ref`s to `components/parameters` are resolved instead of crashing
+  generation. An unresolvable ref is skipped.
+* Path-level `parameters` are applied to every operation of the path. An
+  operation parameter with the same `name` and `in` takes precedence.
+
 ## 0.0.4
 
 ### Fixed

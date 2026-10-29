@@ -86,7 +86,11 @@ abstract class NewapiService extends ChopperService {
   });
 
   @GET(path: '/vaults/{vaultUuid}/items/{itemUuid}/files/{fileUuid}/content')
-  Future<Response<String>> downloadFileById();
+  Future<Response<String>> downloadFileById({
+    @Path('vaultUuid') required String vaultUuid,
+    @Path('itemUuid') required String itemUuid,
+    @Path('fileUuid') required String fileUuid,
+  });
 
   static NewapiService create([ChopperClient? client]) =>
       _$NewapiService(client);

@@ -126,6 +126,8 @@ class ServiceEmitter {
         return "@Path('${p.wireName}')";
       case ParamLocation.query:
         return "@Query('${p.wireName}')";
+      case ParamLocation.header:
+        return "@Header('${p.wireName}')";
       case ParamLocation.body:
         return '@Body()';
       case ParamLocation.part:

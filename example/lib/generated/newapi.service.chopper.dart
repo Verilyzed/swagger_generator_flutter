@@ -195,9 +195,13 @@ final class _$NewapiService extends NewapiService {
   }
 
   @override
-  Future<Response<String>> downloadFileById() {
+  Future<Response<String>> downloadFileById({
+    required String vaultUuid,
+    required String itemUuid,
+    required String fileUuid,
+  }) {
     final Uri $url = Uri.parse(
-      '/vaults/{vaultUuid}/items/{itemUuid}/files/{fileUuid}/content',
+      '/vaults/${vaultUuid}/items/${itemUuid}/files/${fileUuid}/content',
     );
     final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<String, String>($request);

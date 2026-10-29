@@ -28,22 +28,23 @@ final class _$EdgeCasesV31Service extends EdgeCasesV31Service {
   @override
   Future<Response<dynamic>> getParams({
     String? xToken,
-    String? session,
     List<String>? tags,
     Map<String, String>? filter,
   }) {
     final Uri $url = Uri.parse('/params');
     final Map<String, dynamic> $params = <String, dynamic>{
-      'X-Token': xToken,
-      'session': session,
       'tags': tags,
       'filter': filter,
+    };
+    final Map<String, String> $headers = {
+      if (xToken != null) 'X-Token': xToken,
     };
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
       parameters: $params,
+      headers: $headers,
     );
     return client.send<dynamic, dynamic>($request);
   }

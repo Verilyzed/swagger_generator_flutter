@@ -305,7 +305,7 @@ void main() {
     expect(field.defaultValue, "'hi'");
   });
 
-  test('skips path-level parameters and summary keys', () {
+  test('applies path-level parameters and skips summary keys', () {
     final spec = _parser().parse({
       'components': {'schemas': <String, dynamic>{}},
       'paths': {
@@ -326,7 +326,125 @@ void main() {
       },
     }, name: 'demo');
 
-    expect(spec.service.operations.single.methodName, 'listTasks');
+    final op = spec.service.operations.single;
+    expect(op.methodName, 'listTasks');
+    expect(op.parameters.single.wireName, 'limit');
+    expect(op.parameters.single.location, ParamLocation.query);
+  });
+
+  test('an operation parameter overrides a path-level one', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/tasks': {
+          'parameters': [
+            {
+              'in': 'query',
+              'name': 'limit',
+              'schema': {'type': 'integer'},
+            },
+          ],
+          'get': {
+            'operationId': 'list_tasks',
+            'parameters': [
+              {
+                'in': 'query',
+                'name': 'limit',
+                'required': true,
+                'schema': {'type': 'string'},
+              },
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    final param = spec.service.operations.single.parameters.single;
+    expect(param.isRequired, isTrue);
+    expect(param.type.name, 'String');
+  });
+
+  test('parses header params and skips cookie params', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/ping': {
+          'get': {
+            'operationId': 'ping',
+            'parameters': [
+              {
+                'in': 'header',
+                'name': 'X-Token',
+                'schema': {'type': 'string'},
+              },
+              {
+                'in': 'cookie',
+                'name': 'session',
+                'schema': {'type': 'string'},
+              },
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    final param = spec.service.operations.single.parameters.single;
+    expect(param.wireName, 'X-Token');
+    expect(param.dartName, 'xToken');
+    expect(param.location, ParamLocation.header);
+  });
+
+  test('resolves a parameter ref from components/parameters', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': <String, dynamic>{},
+        'parameters': {
+          'Correlation': {
+            'in': 'header',
+            'name': 'X-Correlation-Id',
+            'required': true,
+            'schema': {'type': 'string'},
+          },
+        },
+      },
+      'paths': {
+        '/ping': {
+          'get': {
+            'operationId': 'ping',
+            'parameters': [
+              {r'$ref': '#/components/parameters/Correlation'},
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    final param = spec.service.operations.single.parameters.single;
+    expect(param.wireName, 'X-Correlation-Id');
+    expect(param.location, ParamLocation.header);
+    expect(param.isRequired, isTrue);
+  });
+
+  test('skips an unresolvable parameter ref', () {
+    final spec = _parser().parse({
+      'components': {'schemas': <String, dynamic>{}},
+      'paths': {
+        '/ping': {
+          'get': {
+            'operationId': 'ping',
+            'parameters': [
+              {r'$ref': '#/components/parameters/Missing'},
+            ],
+            'responses': <String, dynamic>{},
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(spec.service.operations.single.parameters, isEmpty);
   });
 
   test('parses query param optionality and defaults', () {

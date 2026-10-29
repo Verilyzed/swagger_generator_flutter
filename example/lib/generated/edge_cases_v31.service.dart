@@ -12,8 +12,7 @@ abstract class EdgeCasesV31Service extends ChopperService {
 
   @GET(path: '/params')
   Future<Response<dynamic>> getParams({
-    @Query('X-Token') String? xToken,
-    @Query('session') String? session,
+    @Header('X-Token') String? xToken,
     @Query('tags') List<String>? tags,
     @Query('filter') Map<String, String>? filter,
   });

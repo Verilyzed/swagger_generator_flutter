@@ -192,4 +192,34 @@ void main() {
     expect(out, contains('  @multipart'));
     expect(out, contains("@PartFile('file') required List<int> file,"));
   });
+
+  test('emits header params as @Header', () {
+    final out = ServiceEmitter().emit(
+      const ServiceDef(
+        name: 'DemoService',
+        operations: [
+          OperationDef(
+            methodName: 'ping',
+            httpMethod: 'GET',
+            path: '/ping',
+            parameters: [
+              ParamDef(
+                dartName: 'xToken',
+                wireName: 'X-Token',
+                type: DartType('String'),
+                location: ParamLocation.header,
+              ),
+            ],
+            responseType: DartType('dynamic'),
+          ),
+        ],
+      ),
+      partFileName: 'demo.service.chopper.dart',
+      modelsImport: 'demo.models.dart',
+      enumsImport: 'demo.enums.dart',
+      enumNames: const {},
+    );
+
+    expect(out, contains("@Header('X-Token') String? xToken,"));
+  });
 }

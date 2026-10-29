@@ -40,10 +40,12 @@ class SpecParser {
        _allOfExceptions = allOfExceptions;
 
   Map<String, dynamic> _schemasCache = const {};
+  Map<String, dynamic> _parametersCache = const {};
 
   ApiSpec parse(Map<String, dynamic> spec, {required String name}) {
     final schemas = _schemas(spec);
     _schemasCache = schemas;
+    _parametersCache = _componentParameters(spec);
     final enums = <EnumDef>[];
     final models = <ModelDef>[];
     final typedefs = <TypedefDef>[];
@@ -95,6 +97,13 @@ class SpecParser {
     if (components is! Map) return {};
     final schemas = components['schemas'];
     return schemas is Map ? schemas.cast<String, dynamic>() : {};
+  }
+
+  Map<String, dynamic> _componentParameters(Map<String, dynamic> spec) {
+    final components = spec['components'];
+    if (components is! Map) return {};
+    final parameters = components['parameters'];
+    return parameters is Map ? parameters.cast<String, dynamic>() : {};
   }
 
   EnumDef _enum(String rawName, Map<String, dynamic> schema) {
@@ -346,6 +355,45 @@ class SpecParser {
     return (properties: properties, required: required);
   }
 
+  /// Resolves parameter refs and merges path-level parameters with operation
+  /// parameters. An operation parameter overrides a path-level one with the
+  /// same `name` and `in`.
+  Iterable<Map<String, dynamic>> _mergedParameters(
+    List<dynamic> pathParameters,
+    List<dynamic> operationParameters,
+  ) {
+    final merged = <String, Map<String, dynamic>>{};
+    for (final raw in [...pathParameters, ...operationParameters]) {
+      final p = _resolveParameter(raw);
+      if (p == null) continue;
+      merged['${p['in']}:${p['name']}'] = p;
+    }
+    return merged.values;
+  }
+
+  Map<String, dynamic>? _resolveParameter(dynamic raw) {
+    if (raw is! Map) return null;
+    final ref = raw[r'$ref'];
+    final p = ref is String
+        ? _parametersCache[ref.split('/').last]
+        : raw.cast<String, dynamic>();
+    if (p is! Map || p['name'] is! String) return null;
+    return p.cast<String, dynamic>();
+  }
+
+  ParamLocation? _paramLocation(dynamic location) {
+    switch (location) {
+      case 'path':
+        return ParamLocation.path;
+      case 'query':
+        return ParamLocation.query;
+      case 'header':
+        return ParamLocation.header;
+      default:
+        return null;
+    }
+  }
+
   // A binary file part: 3.0 uses `format: binary`; 3.1 uses `contentMediaType`
   // or `contentEncoding` on a string schema.
   bool _isFilePart(Map<String, dynamic> schema) =>
@@ -398,6 +446,7 @@ class SpecParser {
             path: pathEntry.key,
             httpMethod: methodEntry.key.toUpperCase(),
             op: op,
+            pathParameters: (methods['parameters'] as List?) ?? const [],
             enumNames: enumNames,
           ),
         );
@@ -415,11 +464,16 @@ class SpecParser {
     required String httpMethod,
     required Map<String, dynamic> op,
     required Set<String> enumNames,
+    List<dynamic> pathParameters = const [],
   }) {
     final params = <ParamDef>[];
-    for (final raw in (op['parameters'] as List?) ?? const []) {
-      final p = (raw as Map).cast<String, dynamic>();
-      final isPath = p['in'] == 'path';
+    for (final p in _mergedParameters(
+      pathParameters,
+      (op['parameters'] as List?) ?? const [],
+    )) {
+      final location = _paramLocation(p['in']);
+      if (location == null) continue;
+      final isPath = location == ParamLocation.path;
       final schema = p['schema'] is Map
           ? (p['schema'] as Map).cast<String, dynamic>()
           : const <String, dynamic>{};
@@ -429,7 +483,7 @@ class SpecParser {
           dartName: _names.memberName(p['name'] as String),
           wireName: p['name'] as String,
           type: type,
-          location: isPath ? ParamLocation.path : ParamLocation.query,
+          location: location,
           isRequired: isPath || p['required'] == true,
           defaultValue: _defaultLiteral(
             schema['default'],

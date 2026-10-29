@@ -51,7 +51,7 @@ class TypedefDef {
   const TypedefDef({required this.name, required this.aliasType});
 }
 
-enum ParamLocation { path, query, body, part, partFile }
+enum ParamLocation { path, query, header, body, part, partFile }
 
 class ParamDef {
   final String dartName;

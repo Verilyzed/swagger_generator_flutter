@@ -110,10 +110,10 @@ void main() {
       expect(m, contains('final String? type;'));
     });
 
-    test('header and cookie params become query params (gap)', () {
+    test('header params become @Header, cookie params are skipped', () {
       final s = sources['.service.dart']!;
-      expect(s, contains("@Query('X-Token') String? xToken,")); // header -> query
-      expect(s, contains("@Query('session') String? session,")); // cookie -> query
+      expect(s, contains("@Header('X-Token') String? xToken,"));
+      expect(s, isNot(contains('session')));
       expect(s, contains("@Query('tags') List<String>? tags,"));
       expect(s, contains("@Query('filter') Map<String, String>? filter,"));
     });
@@ -130,8 +130,8 @@ void main() {
     });
   });
 
-  group('edge_cases crashes', () {
-    test('a parameter \$ref crashes generation (gap)', () {
+  group('edge_cases parameter refs', () {
+    test('a parameter \$ref is resolved', () {
       const spec = '''
 {
   "openapi": "3.1.0",
@@ -143,10 +143,8 @@ void main() {
     {"in": "query", "name": "limit", "schema": {"type": "integer"}}}}
 }
 ''';
-      expect(
-        () => generateSources(spec, path: 'x.json', baseName: 'x'),
-        throwsA(anything),
-      );
+      final s = generateSources(spec, path: 'x.json', baseName: 'x');
+      expect(s['.service.dart'], contains("@Query('limit') int? limit,"));
     });
   });
 

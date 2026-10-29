@@ -230,8 +230,16 @@ class NewapiApi {
         inlineFiles: inlineFiles,
       );
 
-  Future<Response<String>> downloadFileById() =>
-      _service.downloadFileById();
+  Future<Response<String>> downloadFileById({
+    required String vaultUuid,
+    required String itemUuid,
+    required String fileUuid,
+  }) =>
+      _service.downloadFileById(
+        vaultUuid: vaultUuid,
+        itemUuid: itemUuid,
+        fileUuid: fileUuid,
+      );
 
 }
 
