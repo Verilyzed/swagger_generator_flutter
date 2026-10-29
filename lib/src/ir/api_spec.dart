@@ -2,7 +2,9 @@ import 'dart_type.dart';
 
 class EnumValueDef {
   final String dartName;
-  final String jsonValue;
+
+  /// The value on the wire: a `String`, `num`, or `bool`.
+  final Object jsonValue;
 
   const EnumValueDef({required this.dartName, required this.jsonValue});
 }

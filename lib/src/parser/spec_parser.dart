@@ -66,6 +66,13 @@ class SpecParser {
       if (schema is! Map<String, dynamic>) continue;
       if (schema['enum'] is List) {
         enums.add(_enum(entry.key, schema));
+      } else if (DartTypeResolver.isMapOnly(schema)) {
+        typedefs.add(
+          TypedefDef(
+            name: _names.uniqueClassName(entry.key),
+            aliasType: DartType(_resolver.resolve(schema).name),
+          ),
+        );
       } else if (schema['allOf'] is List ||
           schema['type'] == 'object' ||
           schema['properties'] is Map) {
@@ -111,7 +118,7 @@ class SpecParser {
         .map(
           (v) => EnumValueDef(
             dartName: _names.enumValueName(v.toString()),
-            jsonValue: v.toString(),
+            jsonValue: v is num || v is bool ? v as Object : v.toString(),
           ),
         )
         .toList();
@@ -418,12 +425,12 @@ class SpecParser {
     String? typeName,
     Set<String> enumNames = const {},
   }) {
-    if (value is String) {
-      if (typeName != null && enumNames.contains(typeName)) {
-        return '$typeName.${_names.enumValueName(value)}';
-      }
-      return "'$value'";
+    if (typeName != null &&
+        enumNames.contains(typeName) &&
+        (value is String || value is num || value is bool)) {
+      return '$typeName.${_names.enumValueName('$value')}';
     }
+    if (value is String) return "'$value'";
     if (value is num || value is bool) return value.toString();
     return null;
   }

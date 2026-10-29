@@ -39,4 +39,22 @@ void main() {
     expect(out, contains(r"@JsonValue('\$dollar')"));
     expect(out, contains(r"E.dollar: '\$dollar',"));
   });
+
+  test('emits integer and boolean values as typed JsonValues', () {
+    final out = EnumEmitter().emit(const [
+      EnumDef(
+        name: 'IntEnum',
+        values: [EnumValueDef(dartName: r'$1', jsonValue: 1)],
+      ),
+      EnumDef(
+        name: 'BoolEnum',
+        values: [EnumValueDef(dartName: r'$true', jsonValue: true)],
+      ),
+    ]);
+
+    expect(out, contains('@JsonValue(1)'));
+    expect(out, contains('@JsonValue(true)'));
+    expect(out, contains(r"IntEnum.$1: '1',"));
+    expect(out, contains(r"BoolEnum.$true: 'true',"));
+  });
 }

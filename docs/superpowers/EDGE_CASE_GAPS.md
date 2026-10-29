@@ -4,7 +4,7 @@ Gaps surfaced by the edge-case test specs (`example/lib/specs/edge_cases_v3*.jso
 exercised by `test/e2e/edge_cases_test.dart` and by regenerating the example.
 Each entry is a candidate follow-up brainstorm -> TDD cycle.
 
-19 gaps open: 2 high, 9 medium, 8 low. The high-priority ones are #8 `oneOf` and
+17 gaps open: 2 high, 7 medium, 8 low. The high-priority ones are #8 `oneOf` and
 #9 `discriminator`. Everything else degrades to a compiling-but-imprecise type
 (`dynamic`, `Map<String, dynamic>`, or an empty class).
 
@@ -26,6 +26,10 @@ deferred:
   params are skipped.
 - #19 parameter `$ref`: refs to `components/parameters` are resolved; an
   unresolvable ref is skipped instead of crashing.
+- #13 `additionalProperties`-only object: a named one becomes a `Map` typedef
+  (`additionalProperties: false` stays an empty class).
+- #14 integer/boolean enum: values are emitted as typed `@JsonValue(1)`; an
+  enum-typed default of that type maps to the enum member.
 
 ## Gaps (deferred)
 
@@ -43,8 +47,6 @@ deferred:
 | 10 | `allOf` inheritance (base `$ref` + own props) | both | flattened into one class with merged properties; no shared base type | a base class or mixin, or keep flattening by design | medium |
 | 11 | optional property that resolves to `dynamic` | both | emitted as a `required` constructor param (nullable-coercion skips `dynamic`) | optional (omittable), since `dynamic` is nullable | low |
 | 12 | `additionalProperties` + `properties` together | both | treated as a class; the `additionalProperties` map is dropped | a class plus an overflow map, or a `Map` | medium |
-| 13 | `additionalProperties`-only object (no `properties`) | both | becomes an empty class | a `Map<String, V>` type alias | medium |
-| 14 | integer/boolean enum | both | values emitted as string `@JsonValue('1')`, not `@JsonValue(1)` | typed `@JsonValue` matching the enum's wire type | medium |
 | 15 | `format: byte` / `binary` | both | -> `String` (no base64 decode) | `Uint8List` with a converter, or document as raw String | low |
 | 16 | `format: int64` | both | -> `int` (unsafe on dart2js/web) | `BigInt` or `String` option for 64-bit ints | low |
 | 18 | parameter `style` / `explode` (deepObject, form) | both | ignored | honor serialization style for array/object params | medium |

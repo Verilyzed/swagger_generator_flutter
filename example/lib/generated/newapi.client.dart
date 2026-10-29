@@ -34,15 +34,10 @@ class JsonSerializableConverter extends JsonConverter {
     Response response,
   ) async {
     final contentType = response.headers['content-type']
-        ?.split(';')
-        .first
-        .trim()
-        .toLowerCase();
-    final isJson =
-        contentType == 'application/json' ||
+        ?.split(';').first.trim().toLowerCase();
+    final isJson = contentType == 'application/json' ||
         (contentType?.endsWith('+json') ?? false);
-    final isNoContent =
-        response.statusCode == 204 ||
+    final isNoContent = response.statusCode == 204 ||
         response.statusCode == 205 ||
         response.base.request?.method == 'HEAD' ||
         (contentType == null && response.bodyString.isEmpty);
@@ -58,7 +53,11 @@ class JsonSerializableConverter extends JsonConverter {
     final body = isJson && (rawBody.isEmpty || rawBody == 'null')
         ? null
         : _decode<Inner>(decoded.body);
-    return Response<ResultType>(decoded.base, body, error: decoded.error);
+    return Response<ResultType>(
+      decoded.base,
+      body,
+      error: decoded.error,
+    );
   }
 }
 
@@ -107,106 +106,140 @@ class NewapiApi {
     Client? httpClient,
     List<Interceptor>? interceptors,
     Authenticator? authenticator,
-  }) : this.fromClient(
-         createClient(
-           baseUrl: baseUrl,
-           httpClient: httpClient,
-           interceptors: interceptors,
-           authenticator: authenticator,
-         ),
-       );
+  }) : this.fromClient(createClient(
+          baseUrl: baseUrl,
+          httpClient: httpClient,
+          interceptors: interceptors,
+          authenticator: authenticator,
+        ));
 
   NewapiApi.fromClient(ChopperClient client)
-    : _service = NewapiService.create(client);
+      : _service = NewapiService.create(client);
 
   Future<Response<List<ApiRequest>>> getApiActivity({
     int? limit,
     int? offset,
-  }) => _service.getApiActivity(limit: limit ?? 50, offset: offset ?? 0);
+  }) =>
+      _service.getApiActivity(
+        limit: limit ?? 50,
+        offset: offset ?? 0,
+      );
 
   Future<Response<GetServerHealthResponse>> getServerHealth() =>
       _service.getServerHealth();
 
-  Future<Response<String>> getHeartbeat() => _service.getHeartbeat();
+  Future<Response<String>> getHeartbeat() =>
+      _service.getHeartbeat();
 
   Future<Response<String>> getPrometheusMetrics() =>
       _service.getPrometheusMetrics();
 
-  Future<Response<List<Vault>>> getVaults({String? filter}) =>
-      _service.getVaults(filter: filter);
+  Future<Response<List<Vault>>> getVaults({
+    String? filter,
+  }) =>
+      _service.getVaults(
+        filter: filter,
+      );
 
-  Future<Response<Vault>> getVaultById({required String vaultUuid}) =>
-      _service.getVaultById(vaultUuid: vaultUuid);
+  Future<Response<Vault>> getVaultById({
+    required String vaultUuid,
+  }) =>
+      _service.getVaultById(
+        vaultUuid: vaultUuid,
+      );
 
   Future<Response<List<Item>>> getVaultItems({
     required String vaultUuid,
     String? filter,
-  }) => _service.getVaultItems(vaultUuid: vaultUuid, filter: filter);
+  }) =>
+      _service.getVaultItems(
+        vaultUuid: vaultUuid,
+        filter: filter,
+      );
 
   Future<Response<FullItem>> createVaultItem({
     required String vaultUuid,
     FullItem? body,
-  }) => _service.createVaultItem(vaultUuid: vaultUuid, body: body);
+  }) =>
+      _service.createVaultItem(
+        vaultUuid: vaultUuid,
+        body: body,
+      );
 
   Future<Response<dynamic>> deleteVaultItem({
     required String vaultUuid,
     required String itemUuid,
-  }) => _service.deleteVaultItem(vaultUuid: vaultUuid, itemUuid: itemUuid);
+  }) =>
+      _service.deleteVaultItem(
+        vaultUuid: vaultUuid,
+        itemUuid: itemUuid,
+      );
 
   Future<Response<FullItem>> getVaultItemById({
     required String vaultUuid,
     required String itemUuid,
-  }) => _service.getVaultItemById(vaultUuid: vaultUuid, itemUuid: itemUuid);
+  }) =>
+      _service.getVaultItemById(
+        vaultUuid: vaultUuid,
+        itemUuid: itemUuid,
+      );
 
   Future<Response<FullItem>> patchVaultItem({
     required String vaultUuid,
     required String itemUuid,
     PatchModel? body,
-  }) => _service.patchVaultItem(
-    vaultUuid: vaultUuid,
-    itemUuid: itemUuid,
-    body: body,
-  );
+  }) =>
+      _service.patchVaultItem(
+        vaultUuid: vaultUuid,
+        itemUuid: itemUuid,
+        body: body,
+      );
 
   Future<Response<FullItem>> updateVaultItem({
     required String vaultUuid,
     required String itemUuid,
     FullItem? body,
-  }) => _service.updateVaultItem(
-    vaultUuid: vaultUuid,
-    itemUuid: itemUuid,
-    body: body,
-  );
+  }) =>
+      _service.updateVaultItem(
+        vaultUuid: vaultUuid,
+        itemUuid: itemUuid,
+        body: body,
+      );
 
   Future<Response<List<File>>> getItemFiles({
     required String vaultUuid,
     required String itemUuid,
     bool? inlineFiles,
-  }) => _service.getItemFiles(
-    vaultUuid: vaultUuid,
-    itemUuid: itemUuid,
-    inlineFiles: inlineFiles,
-  );
+  }) =>
+      _service.getItemFiles(
+        vaultUuid: vaultUuid,
+        itemUuid: itemUuid,
+        inlineFiles: inlineFiles,
+      );
 
   Future<Response<File>> getDetailsOfFileById({
     required String vaultUuid,
     required String itemUuid,
     required String fileUuid,
     bool? inlineFiles,
-  }) => _service.getDetailsOfFileById(
-    vaultUuid: vaultUuid,
-    itemUuid: itemUuid,
-    fileUuid: fileUuid,
-    inlineFiles: inlineFiles,
-  );
+  }) =>
+      _service.getDetailsOfFileById(
+        vaultUuid: vaultUuid,
+        itemUuid: itemUuid,
+        fileUuid: fileUuid,
+        inlineFiles: inlineFiles,
+      );
 
   Future<Response<String>> downloadFileById({
     required String vaultUuid,
     required String itemUuid,
     required String fileUuid,
-  }) => _service.downloadFileById(
-    vaultUuid: vaultUuid,
-    itemUuid: itemUuid,
-    fileUuid: fileUuid,
-  );
+  }) =>
+      _service.downloadFileById(
+        vaultUuid: vaultUuid,
+        itemUuid: itemUuid,
+        fileUuid: fileUuid,
+      );
+
 }
+

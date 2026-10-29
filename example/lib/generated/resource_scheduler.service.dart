@@ -33,7 +33,9 @@ abstract class ResourceSchedulerService extends ChopperService {
   });
 
   @GET(path: '/assets/{asset_id}')
-  Future<Response<Asset>> getAsset({@Path('asset_id') required String assetId});
+  Future<Response<Asset>> getAsset({
+    @Path('asset_id') required String assetId,
+  });
 
   @GET(path: '/assets/{asset_id}/activity_status')
   Future<Response<ActivityStatus>> getAssetActivityStatus({
@@ -131,3 +133,4 @@ abstract class ResourceSchedulerService extends ChopperService {
   static ResourceSchedulerService create([ChopperClient? client]) =>
       _$ResourceSchedulerService(client);
 }
+

@@ -23,7 +23,9 @@ abstract class NewapiService extends ChopperService {
   Future<Response<String>> getPrometheusMetrics();
 
   @GET(path: '/vaults')
-  Future<Response<List<Vault>>> getVaults({@Query('filter') String? filter});
+  Future<Response<List<Vault>>> getVaults({
+    @Query('filter') String? filter,
+  });
 
   @GET(path: '/vaults/{vaultUuid}')
   Future<Response<Vault>> getVaultById({
@@ -93,3 +95,4 @@ abstract class NewapiService extends ChopperService {
   static NewapiService create([ChopperClient? client]) =>
       _$NewapiService(client);
 }
+

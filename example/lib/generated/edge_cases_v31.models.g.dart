@@ -80,11 +80,13 @@ Map<String, dynamic> _$BaseToJson(Base instance) => <String, dynamic>{
   'id': instance.id,
 };
 
-Derived _$DerivedFromJson(Map<String, dynamic> json) =>
-    Derived(id: json['id'] as String, extra: json['extra'] as String?);
+Derived _$DerivedFromJson(Map<String, dynamic> json) => Derived(
+  base: Base.fromJson(_spreadFromParent(json, 'base') as Map<String, dynamic>),
+  extra: json['extra'] as String?,
+);
 
 Map<String, dynamic> _$DerivedToJson(Derived instance) => <String, dynamic>{
-  'id': instance.id,
+  'base': instance.base.toJson(),
   'extra': instance.extra,
 };
 
@@ -105,11 +107,6 @@ MapAndProps _$MapAndPropsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$MapAndPropsToJson(MapAndProps instance) =>
     <String, dynamic>{'name': instance.name};
-
-FreeMapTrue _$FreeMapTrueFromJson(Map<String, dynamic> json) => FreeMapTrue();
-
-Map<String, dynamic> _$FreeMapTrueToJson(FreeMapTrue instance) =>
-    <String, dynamic>{};
 
 FreeMapFalse _$FreeMapFalseFromJson(Map<String, dynamic> json) =>
     FreeMapFalse();
@@ -214,9 +211,9 @@ Map<String, dynamic> _$EnumHolderToJson(EnumHolder instance) =>
     };
 
 const _$IntEnumEnumMap = {
-  IntEnum.$1: '1',
-  IntEnum.$2: '2',
-  IntEnum.$3: '3',
+  IntEnum.$1: 1,
+  IntEnum.$2: 2,
+  IntEnum.$3: 3,
   IntEnum.$unknown: r'$unknown',
 };
 

@@ -206,6 +206,22 @@ void main() {
     expect(r.resolve({'type': 'string'}).display, 'String');
   });
 
+  test('resolves a ref to an additionalProperties-only schema to its name', () {
+    final r = OpenApi31TypeResolver(
+      NameGiver(),
+      schemas: {
+        'Counts': {
+          'type': 'object',
+          'additionalProperties': {'type': 'integer'},
+        },
+      },
+    );
+    expect(
+      r.resolve({r'$ref': '#/components/schemas/Counts'}).display,
+      'Counts',
+    );
+  });
+
   test('resolves a ref to a named array schema to the typedef name', () {
     final r = OpenApi31TypeResolver(
       NameGiver(),

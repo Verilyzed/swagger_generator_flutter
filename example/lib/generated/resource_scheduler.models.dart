@@ -12,9 +12,15 @@ class AttachmentInput {
   @JsonKey(name: 'content')
   final String content;
 
-  const AttachmentInput({required this.filename, required this.content});
+  const AttachmentInput({
+    required this.filename,
+    required this.content,
+  });
 
-  AttachmentInput copyWith({String? filename, String? content}) {
+  AttachmentInput copyWith({
+    String? filename,
+    String? content,
+  }) {
     return AttachmentInput(
       filename: filename ?? this.filename,
       content: content ?? this.content,
@@ -72,7 +78,10 @@ class BadInputResponse {
     this.errorCode = ErrorCode.badInput,
   });
 
-  BadInputResponse copyWith({String? detail, ErrorCode? errorCode}) {
+  BadInputResponse copyWith({
+    String? detail,
+    ErrorCode? errorCode,
+  }) {
     return BadInputResponse(
       detail: detail ?? this.detail,
       errorCode: errorCode ?? this.errorCode,
@@ -90,10 +99,16 @@ class RunImmediatelyConfig {
   @JsonKey(name: 'max_level')
   final double? maxLevel;
 
-  const RunImmediatelyConfig({this.maxLevel});
+  const RunImmediatelyConfig({
+    this.maxLevel,
+  });
 
-  RunImmediatelyConfig copyWith({double? maxLevel}) {
-    return RunImmediatelyConfig(maxLevel: maxLevel ?? this.maxLevel);
+  RunImmediatelyConfig copyWith({
+    double? maxLevel,
+  }) {
+    return RunImmediatelyConfig(
+      maxLevel: maxLevel ?? this.maxLevel,
+    );
   }
 
   factory RunImmediatelyConfig.fromJson(Map<String, dynamic> json) =>
@@ -257,7 +272,8 @@ class Task {
     );
   }
 
-  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
+  factory Task.fromJson(Map<String, dynamic> json) =>
+      _$TaskFromJson(json);
 
   Map<String, dynamic> toJson() => _$TaskToJson(this);
 }
@@ -344,7 +360,8 @@ class Run {
     );
   }
 
-  factory Run.fromJson(Map<String, dynamic> json) => _$RunFromJson(json);
+  factory Run.fromJson(Map<String, dynamic> json) =>
+      _$RunFromJson(json);
 
   Map<String, dynamic> toJson() => _$RunToJson(this);
 }
@@ -356,9 +373,15 @@ class ActivityStatus {
   @JsonKey(name: 'activity_reason', unknownEnumValue: ActivityReason.$unknown)
   final ActivityReason? activityReason;
 
-  const ActivityStatus({required this.assetId, this.activityReason});
+  const ActivityStatus({
+    required this.assetId,
+    this.activityReason,
+  });
 
-  ActivityStatus copyWith({String? assetId, ActivityReason? activityReason}) {
+  ActivityStatus copyWith({
+    String? assetId,
+    ActivityReason? activityReason,
+  }) {
     return ActivityStatus(
       assetId: assetId ?? this.assetId,
       activityReason: activityReason ?? this.activityReason,
@@ -436,9 +459,15 @@ class DeadlineSlot {
   @JsonKey(name: 'active')
   final bool active;
 
-  const DeadlineSlot({required this.targetTime, this.active = true});
+  const DeadlineSlot({
+    required this.targetTime,
+    this.active = true,
+  });
 
-  DeadlineSlot copyWith({String? targetTime, bool? active}) {
+  DeadlineSlot copyWith({
+    String? targetTime,
+    bool? active,
+  }) {
     return DeadlineSlot(
       targetTime: targetTime ?? this.targetTime,
       active: active ?? this.active,
@@ -457,10 +486,7 @@ class DiscoveredAsset {
   final String assetId;
   @JsonKey(name: 'asset_information')
   final AssetInformation assetInformation;
-  @JsonKey(
-    name: 'capability',
-    unknownEnumValue: DiscoveredAssetCapability.$unknown,
-  )
+  @JsonKey(name: 'capability', unknownEnumValue: DiscoveredAssetCapability.$unknown)
   final DiscoveredAssetCapability capability;
   @JsonKey(name: 'has_interventions')
   final bool hasInterventions;
@@ -499,9 +525,15 @@ class ProviderLinkResponse {
   @JsonKey(name: 'linkToken')
   final String linkToken;
 
-  const ProviderLinkResponse({required this.linkUrl, required this.linkToken});
+  const ProviderLinkResponse({
+    required this.linkUrl,
+    required this.linkToken,
+  });
 
-  ProviderLinkResponse copyWith({String? linkUrl, String? linkToken}) {
+  ProviderLinkResponse copyWith({
+    String? linkUrl,
+    String? linkToken,
+  }) {
     return ProviderLinkResponse(
       linkUrl: linkUrl ?? this.linkUrl,
       linkToken: linkToken ?? this.linkToken,
@@ -554,13 +586,23 @@ class Money {
   @JsonKey(name: 'unit')
   final String unit;
 
-  const Money({this.value, this.unit = 'USD'});
+  const Money({
+    this.value,
+    this.unit = 'USD',
+  });
 
-  Money copyWith({String? value, String? unit}) {
-    return Money(value: value ?? this.value, unit: unit ?? this.unit);
+  Money copyWith({
+    String? value,
+    String? unit,
+  }) {
+    return Money(
+      value: value ?? this.value,
+      unit: unit ?? this.unit,
+    );
   }
 
-  factory Money.fromJson(Map<String, dynamic> json) => _$MoneyFromJson(json);
+  factory Money.fromJson(Map<String, dynamic> json) =>
+      _$MoneyFromJson(json);
 
   Map<String, dynamic> toJson() => _$MoneyToJson(this);
 }
@@ -572,9 +614,15 @@ class FailureReason {
   @JsonKey(name: 'detail')
   final String detail;
 
-  const FailureReason({required this.type, required this.detail});
+  const FailureReason({
+    required this.type,
+    required this.detail,
+  });
 
-  FailureReason copyWith({FailureReasonTypeEnum? type, String? detail}) {
+  FailureReason copyWith({
+    FailureReasonTypeEnum? type,
+    String? detail,
+  }) {
     return FailureReason(
       type: type ?? this.type,
       detail: detail ?? this.detail,
@@ -592,10 +640,16 @@ class FeatureFlagConfig {
   @JsonKey(name: 'scheduling')
   final SchedulingStatus scheduling;
 
-  const FeatureFlagConfig({required this.scheduling});
+  const FeatureFlagConfig({
+    required this.scheduling,
+  });
 
-  FeatureFlagConfig copyWith({SchedulingStatus? scheduling}) {
-    return FeatureFlagConfig(scheduling: scheduling ?? this.scheduling);
+  FeatureFlagConfig copyWith({
+    SchedulingStatus? scheduling,
+  }) {
+    return FeatureFlagConfig(
+      scheduling: scheduling ?? this.scheduling,
+    );
   }
 
   factory FeatureFlagConfig.fromJson(Map<String, dynamic> json) =>
@@ -609,10 +663,16 @@ class HttpValidationError {
   @JsonKey(name: 'detail')
   final List<ValidationError>? detail;
 
-  const HttpValidationError({this.detail});
+  const HttpValidationError({
+    this.detail,
+  });
 
-  HttpValidationError copyWith({List<ValidationError>? detail}) {
-    return HttpValidationError(detail: detail ?? this.detail);
+  HttpValidationError copyWith({
+    List<ValidationError>? detail,
+  }) {
+    return HttpValidationError(
+      detail: detail ?? this.detail,
+    );
   }
 
   factory HttpValidationError.fromJson(Map<String, dynamic> json) =>
@@ -681,10 +741,19 @@ class Quantity {
   @JsonKey(name: 'unit')
   final String unit;
 
-  const Quantity({this.value, this.unit = 'units'});
+  const Quantity({
+    this.value,
+    this.unit = 'units',
+  });
 
-  Quantity copyWith({double? value, String? unit}) {
-    return Quantity(value: value ?? this.value, unit: unit ?? this.unit);
+  Quantity copyWith({
+    double? value,
+    String? unit,
+  }) {
+    return Quantity(
+      value: value ?? this.value,
+      unit: unit ?? this.unit,
+    );
   }
 
   factory Quantity.fromJson(Map<String, dynamic> json) =>
@@ -746,7 +815,11 @@ class MetricValue {
     required this.trend,
   });
 
-  MetricValue copyWith({int? value, int? previousValue, Percent? trend}) {
+  MetricValue copyWith({
+    int? value,
+    int? previousValue,
+    Percent? trend,
+  }) {
     return MetricValue(
       value: value ?? this.value,
       previousValue: previousValue ?? this.previousValue,
@@ -772,7 +845,10 @@ class NotAllowedResponse {
     this.errorCode = ErrorCode.notAllowed,
   });
 
-  NotAllowedResponse copyWith({String? detail, ErrorCode? errorCode}) {
+  NotAllowedResponse copyWith({
+    String? detail,
+    ErrorCode? errorCode,
+  }) {
     return NotAllowedResponse(
       detail: detail ?? this.detail,
       errorCode: errorCode ?? this.errorCode,
@@ -830,9 +906,15 @@ class UsageCounter {
   @JsonKey(name: 'last_updated')
   final DateTime? lastUpdated;
 
-  const UsageCounter({this.reading, this.lastUpdated});
+  const UsageCounter({
+    this.reading,
+    this.lastUpdated,
+  });
 
-  UsageCounter copyWith({double? reading, DateTime? lastUpdated}) {
+  UsageCounter copyWith({
+    double? reading,
+    DateTime? lastUpdated,
+  }) {
     return UsageCounter(
       reading: reading ?? this.reading,
       lastUpdated: lastUpdated ?? this.lastUpdated,
@@ -852,10 +934,19 @@ class Percent {
   @JsonKey(name: 'unit')
   final String unit;
 
-  const Percent({this.value, this.unit = '%'});
+  const Percent({
+    this.value,
+    this.unit = '%',
+  });
 
-  Percent copyWith({double? value, String? unit}) {
-    return Percent(value: value ?? this.value, unit: unit ?? this.unit);
+  Percent copyWith({
+    double? value,
+    String? unit,
+  }) {
+    return Percent(
+      value: value ?? this.value,
+      unit: unit ?? this.unit,
+    );
   }
 
   factory Percent.fromJson(Map<String, dynamic> json) =>
@@ -907,10 +998,16 @@ class SelectAssetRequest {
   @JsonKey(name: 'asset_id')
   final String assetId;
 
-  const SelectAssetRequest({required this.assetId});
+  const SelectAssetRequest({
+    required this.assetId,
+  });
 
-  SelectAssetRequest copyWith({String? assetId}) {
-    return SelectAssetRequest(assetId: assetId ?? this.assetId);
+  SelectAssetRequest copyWith({
+    String? assetId,
+  }) {
+    return SelectAssetRequest(
+      assetId: assetId ?? this.assetId,
+    );
   }
 
   factory SelectAssetRequest.fromJson(Map<String, dynamic> json) =>
@@ -962,8 +1059,7 @@ class RunMetrics {
       actualCosts: actualCosts ?? this.actualCosts,
       baselineCosts: baselineCosts ?? this.baselineCosts,
       savings: savings ?? this.savings,
-      weightedAvgPricePerUnit:
-          weightedAvgPricePerUnit ?? this.weightedAvgPricePerUnit,
+      weightedAvgPricePerUnit: weightedAvgPricePerUnit ?? this.weightedAvgPricePerUnit,
     );
   }
 
@@ -978,10 +1074,16 @@ class SchedulingStatus {
   @JsonKey(name: 'enabled')
   final bool enabled;
 
-  const SchedulingStatus({required this.enabled});
+  const SchedulingStatus({
+    required this.enabled,
+  });
 
-  SchedulingStatus copyWith({bool? enabled}) {
-    return SchedulingStatus(enabled: enabled ?? this.enabled);
+  SchedulingStatus copyWith({
+    bool? enabled,
+  }) {
+    return SchedulingStatus(
+      enabled: enabled ?? this.enabled,
+    );
   }
 
   factory SchedulingStatus.fromJson(Map<String, dynamic> json) =>
@@ -1119,7 +1221,9 @@ class ScheduleCreateRequest {
   @JsonKey(name: 'deadline_schedule')
   final Map<Weekday, List<DeadlineSlot>> deadlineSchedule;
 
-  const ScheduleCreateRequest({required this.deadlineSchedule});
+  const ScheduleCreateRequest({
+    required this.deadlineSchedule,
+  });
 
   ScheduleCreateRequest copyWith({
     Map<Weekday, List<DeadlineSlot>>? deadlineSchedule,
@@ -1140,7 +1244,9 @@ class ScheduleUpdateRequest {
   @JsonKey(name: 'deadline_schedule')
   final Map<Weekday, List<DeadlineSlot>> deadlineSchedule;
 
-  const ScheduleUpdateRequest({required this.deadlineSchedule});
+  const ScheduleUpdateRequest({
+    required this.deadlineSchedule,
+  });
 
   ScheduleUpdateRequest copyWith({
     Map<Weekday, List<DeadlineSlot>>? deadlineSchedule,
@@ -1251,7 +1357,8 @@ class Asset {
     );
   }
 
-  factory Asset.fromJson(Map<String, dynamic> json) => _$AssetFromJson(json);
+  factory Asset.fromJson(Map<String, dynamic> json) =>
+      _$AssetFromJson(json);
 
   Map<String, dynamic> toJson() => _$AssetToJson(this);
 }
@@ -1307,10 +1414,7 @@ class AssetPolicy {
   final bool schedulingActive;
   @JsonKey(name: 'activity_state', unknownEnumValue: ActivityState.$unknown)
   final ActivityState activityState;
-  @JsonKey(
-    name: 'activity_state_reason',
-    unknownEnumValue: ActivityStateReason.$unknown,
-  )
+  @JsonKey(name: 'activity_state_reason', unknownEnumValue: ActivityStateReason.$unknown)
   final ActivityStateReason? activityStateReason;
   @JsonKey(name: 'min_level')
   final double minLevel;
@@ -1388,10 +1492,16 @@ class StreamTokenResponse {
   @JsonKey(name: 'token')
   final String token;
 
-  const StreamTokenResponse({required this.token});
+  const StreamTokenResponse({
+    required this.token,
+  });
 
-  StreamTokenResponse copyWith({String? token}) {
-    return StreamTokenResponse(token: token ?? this.token);
+  StreamTokenResponse copyWith({
+    String? token,
+  }) {
+    return StreamTokenResponse(
+      token: token ?? this.token,
+    );
   }
 
   factory StreamTokenResponse.fromJson(Map<String, dynamic> json) =>
@@ -1399,3 +1509,4 @@ class StreamTokenResponse {
 
   Map<String, dynamic> toJson() => _$StreamTokenResponseToJson(this);
 }
+

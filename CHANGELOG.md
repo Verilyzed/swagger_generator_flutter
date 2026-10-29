@@ -9,6 +9,12 @@
   generation. An unresolvable ref is skipped.
 * Path-level `parameters` are applied to every operation of the path. An
   operation parameter with the same `name` and `in` takes precedence.
+* Integer and boolean enums are emitted with typed `@JsonValue`s (`@JsonValue(1)`
+  instead of `@JsonValue('1')`), so their values decode instead of falling back
+  to `$unknown`. An integer default on an enum-typed field maps to the enum
+  member.
+* A named schema with only `additionalProperties` is generated as a `Map`
+  typedef instead of an empty class that dropped its contents.
 
 ## 0.0.4
 

@@ -46,6 +46,15 @@ abstract class DartTypeResolver {
     return nonNull.length == 1 ? nonNull.single : const <String, dynamic>{};
   }
 
+  /// An object with `additionalProperties` and no `properties` is a map. A
+  /// named one is emitted as a `Map` typedef instead of an empty class.
+  static bool isMapOnly(Map<String, dynamic> schema) =>
+      schema['type'] == 'object' &&
+      schema['properties'] is! Map &&
+      schema['allOf'] is! List &&
+      (schema['additionalProperties'] is Map ||
+          schema['additionalProperties'] == true);
+
   static bool anyOfHasNull(Map<String, dynamic> schema) {
     final anyOf = schema['anyOf'];
     if (anyOf is! List) return false;
@@ -61,9 +70,9 @@ abstract class DartTypeResolver {
       if (_overrides.contains(name)) return DartType(_names.className(name));
       final target = _schemas[name];
       if (target is Map<String, dynamic>) {
-        // A named array schema is emitted as a typedef, so reference it by name
-        // instead of inlining the `List<...>`.
-        if (target['type'] == 'array') {
+        // A named array or map schema is emitted as a typedef, so reference it
+        // by name instead of inlining the `List<...>` or `Map<...>`.
+        if (target['type'] == 'array' || isMapOnly(target)) {
           return DartType(
             _names.uniqueClassName(name),
             isNullable: isNullable(target),

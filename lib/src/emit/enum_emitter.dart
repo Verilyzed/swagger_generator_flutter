@@ -15,7 +15,7 @@ class EnumEmitter {
       buffer.writeln('enum ${e.name} {');
       for (final v in e.values) {
         buffer
-          ..writeln('  @JsonValue(${SourceWriter.dartString(v.jsonValue)})')
+          ..writeln('  @JsonValue(${_literal(v.jsonValue)})')
           ..writeln('  ${v.dartName},');
       }
       buffer
@@ -26,7 +26,7 @@ class EnumEmitter {
         ..writeln('  String toString() => const {');
       for (final v in e.values) {
         buffer.writeln(
-          '        ${e.name}.${v.dartName}: ${SourceWriter.dartString(v.jsonValue)},',
+          '        ${e.name}.${v.dartName}: ${SourceWriter.dartString('${v.jsonValue}')},',
         );
       }
       buffer
@@ -37,4 +37,8 @@ class EnumEmitter {
 
     return buffer.toString();
   }
+
+  String _literal(Object value) => value is num || value is bool
+      ? '$value'
+      : SourceWriter.dartString('$value');
 }

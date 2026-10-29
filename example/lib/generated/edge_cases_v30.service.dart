@@ -13,3 +13,4 @@ abstract class EdgeCasesV30Service extends ChopperService {
   static EdgeCasesV30Service create([ChopperClient? client]) =>
       _$EdgeCasesV30Service(client);
 }
+

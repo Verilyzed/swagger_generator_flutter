@@ -34,15 +34,10 @@ class JsonSerializableConverter extends JsonConverter {
     Response response,
   ) async {
     final contentType = response.headers['content-type']
-        ?.split(';')
-        .first
-        .trim()
-        .toLowerCase();
-    final isJson =
-        contentType == 'application/json' ||
+        ?.split(';').first.trim().toLowerCase();
+    final isJson = contentType == 'application/json' ||
         (contentType?.endsWith('+json') ?? false);
-    final isNoContent =
-        response.statusCode == 204 ||
+    final isNoContent = response.statusCode == 204 ||
         response.statusCode == 205 ||
         response.base.request?.method == 'HEAD' ||
         (contentType == null && response.bodyString.isEmpty);
@@ -58,7 +53,11 @@ class JsonSerializableConverter extends JsonConverter {
     final body = isJson && (rawBody.isEmpty || rawBody == 'null')
         ? null
         : _decode<Inner>(decoded.body);
-    return Response<ResultType>(decoded.base, body, error: decoded.error);
+    return Response<ResultType>(
+      decoded.base,
+      body,
+      error: decoded.error,
+    );
   }
 }
 
@@ -93,17 +92,18 @@ class EdgeCasesV30Api {
     Client? httpClient,
     List<Interceptor>? interceptors,
     Authenticator? authenticator,
-  }) : this.fromClient(
-         createClient(
-           baseUrl: baseUrl,
-           httpClient: httpClient,
-           interceptors: interceptors,
-           authenticator: authenticator,
-         ),
-       );
+  }) : this.fromClient(createClient(
+          baseUrl: baseUrl,
+          httpClient: httpClient,
+          interceptors: interceptors,
+          authenticator: authenticator,
+        ));
 
   EdgeCasesV30Api.fromClient(ChopperClient client)
-    : _service = EdgeCasesV30Service.create(client);
+      : _service = EdgeCasesV30Service.create(client);
 
-  Future<Response<Ping>> getPing() => _service.getPing();
+  Future<Response<Ping>> getPing() =>
+      _service.getPing();
+
 }
+

@@ -61,11 +61,13 @@ Map<String, dynamic> _$BaseToJson(Base instance) => <String, dynamic>{
   'id': instance.id,
 };
 
-Derived _$DerivedFromJson(Map<String, dynamic> json) =>
-    Derived(id: json['id'] as String, extra: json['extra'] as String?);
+Derived _$DerivedFromJson(Map<String, dynamic> json) => Derived(
+  base: Base.fromJson(_spreadFromParent(json, 'base') as Map<String, dynamic>),
+  extra: json['extra'] as String?,
+);
 
 Map<String, dynamic> _$DerivedToJson(Derived instance) => <String, dynamic>{
-  'id': instance.id,
+  'base': instance.base.toJson(),
   'extra': instance.extra,
 };
 

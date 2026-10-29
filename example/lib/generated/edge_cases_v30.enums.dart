@@ -11,6 +11,9 @@ enum Status {
   $unknown;
 
   @override
-  String toString() =>
-      const {Status.active: 'ACTIVE', Status.inactive: 'INACTIVE'}[this] ?? '';
+  String toString() => const {
+        Status.active: 'ACTIVE',
+        Status.inactive: 'INACTIVE',
+      }[this] ?? '';
 }
+

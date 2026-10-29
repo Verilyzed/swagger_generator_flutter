@@ -72,9 +72,11 @@ void main() {
       // additionalProperties + properties: kept as a class, map part dropped
       expect(m, contains('class MapAndProps {'));
       expect(m, contains('final String? name;'));
-      // additionalProperties-only object becomes an empty class
-      expect(m, contains('class FreeMapTrue {'));
-      expect(m, contains('const FreeMapTrue();'));
+      // additionalProperties-only object becomes a Map typedef
+      expect(m, contains('typedef FreeMapTrue = Map<String, dynamic>;'));
+      expect(m, isNot(contains('class FreeMapTrue {')));
+      // additionalProperties: false allows no keys, so it stays a class
+      expect(m, contains('class FreeMapFalse {'));
       // recursion and circular refs compile
       expect(m, contains('final List<Tree>? children;'));
       expect(m, contains('final NodeB? b;'));
@@ -99,10 +101,11 @@ void main() {
       expect(e, contains(r"@JsonValue('\$dollar')")); // $ escaped in the value
     });
 
-    test('integer enum uses string JsonValues (gap)', () {
+    test('integer enum uses integer JsonValues', () {
       final e = sources['.enums.dart']!;
       expect(e, contains('enum IntEnum'));
-      expect(e, contains(r"@JsonValue('1')")); // string, not the integer 1
+      expect(e, contains('@JsonValue(1)'));
+      expect(e, isNot(contains("@JsonValue('1')")));
     });
 
     test('nasty property names sanitize to valid identifiers', () {

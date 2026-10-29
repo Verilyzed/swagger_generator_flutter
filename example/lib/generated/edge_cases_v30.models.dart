@@ -5,6 +5,8 @@ import 'edge_cases_v30.enums.dart';
 
 part 'edge_cases_v30.models.g.dart';
 
+Object? _spreadFromParent(Map<dynamic, dynamic> json, String _) => json;
+
 @JsonSerializable()
 class Ping {
   @JsonKey(name: 'id')
@@ -12,13 +14,23 @@ class Ping {
   @JsonKey(name: 'status', unknownEnumValue: Status.$unknown)
   final Status? status;
 
-  const Ping({required this.id, this.status});
+  const Ping({
+    required this.id,
+    this.status,
+  });
 
-  Ping copyWith({String? id, Status? status}) {
-    return Ping(id: id ?? this.id, status: status ?? this.status);
+  Ping copyWith({
+    String? id,
+    Status? status,
+  }) {
+    return Ping(
+      id: id ?? this.id,
+      status: status ?? this.status,
+    );
   }
 
-  factory Ping.fromJson(Map<String, dynamic> json) => _$PingFromJson(json);
+  factory Ping.fromJson(Map<String, dynamic> json) =>
+      _$PingFromJson(json);
 
   Map<String, dynamic> toJson() => _$PingToJson(this);
 }
@@ -28,13 +40,20 @@ class Cat {
   @JsonKey(name: 'meow')
   final bool? meow;
 
-  const Cat({this.meow});
+  const Cat({
+    this.meow,
+  });
 
-  Cat copyWith({bool? meow}) {
-    return Cat(meow: meow ?? this.meow);
+  Cat copyWith({
+    bool? meow,
+  }) {
+    return Cat(
+      meow: meow ?? this.meow,
+    );
   }
 
-  factory Cat.fromJson(Map<String, dynamic> json) => _$CatFromJson(json);
+  factory Cat.fromJson(Map<String, dynamic> json) =>
+      _$CatFromJson(json);
 
   Map<String, dynamic> toJson() => _$CatToJson(this);
 }
@@ -50,7 +69,12 @@ class Nullable30 {
   @JsonKey(name: 'anyOfNull')
   final Cat? anyOfNull;
 
-  const Nullable30({this.plain, this.refSibling, this.wrapped, this.anyOfNull});
+  const Nullable30({
+    this.plain,
+    this.refSibling,
+    this.wrapped,
+    this.anyOfNull,
+  });
 
   Nullable30 copyWith({
     String? plain,
@@ -77,34 +101,57 @@ class Base {
   @JsonKey(name: 'id')
   final String id;
 
-  const Base({required this.id});
+  const Base({
+    required this.id,
+  });
 
-  Base copyWith({String? id}) {
-    return Base(id: id ?? this.id);
+  Base copyWith({
+    String? id,
+  }) {
+    return Base(
+      id: id ?? this.id,
+    );
   }
 
-  factory Base.fromJson(Map<String, dynamic> json) => _$BaseFromJson(json);
+  factory Base.fromJson(Map<String, dynamic> json) =>
+      _$BaseFromJson(json);
 
   Map<String, dynamic> toJson() => _$BaseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Derived {
-  @JsonKey(name: 'id')
-  final String id;
+  @JsonKey(name: 'base', readValue: _spreadFromParent)
+  final Base base;
   @JsonKey(name: 'extra')
   final String? extra;
 
-  const Derived({required this.id, this.extra});
+  const Derived({
+    required this.base,
+    this.extra,
+  });
 
-  Derived copyWith({String? id, String? extra}) {
-    return Derived(id: id ?? this.id, extra: extra ?? this.extra);
+  Derived copyWith({
+    Base? base,
+    String? extra,
+  }) {
+    return Derived(
+      base: base ?? this.base,
+      extra: extra ?? this.extra,
+    );
   }
 
   factory Derived.fromJson(Map<String, dynamic> json) =>
       _$DerivedFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DerivedToJson(this);
+  Map<String, dynamic> toJson() {
+    final json = _$DerivedToJson(this);
+    for (final key in const ['base']) {
+      final nested = json.remove(key);
+      if (nested is Map<String, dynamic>) json.addAll(nested);
+    }
+    return json;
+  }
 }
 
 @JsonSerializable()
@@ -112,13 +159,21 @@ class Tree {
   @JsonKey(name: 'children')
   final List<Tree>? children;
 
-  const Tree({this.children});
+  const Tree({
+    this.children,
+  });
 
-  Tree copyWith({List<Tree>? children}) {
-    return Tree(children: children ?? this.children);
+  Tree copyWith({
+    List<Tree>? children,
+  }) {
+    return Tree(
+      children: children ?? this.children,
+    );
   }
 
-  factory Tree.fromJson(Map<String, dynamic> json) => _$TreeFromJson(json);
+  factory Tree.fromJson(Map<String, dynamic> json) =>
+      _$TreeFromJson(json);
 
   Map<String, dynamic> toJson() => _$TreeToJson(this);
 }
+
