@@ -16,7 +16,14 @@ class ResponseDecoderEmitter {
        _enums = enums,
        _typedefs = typedefs;
 
-  static const _passThrough = {'dynamic', 'Object', 'String', 'int', 'bool'};
+  static const _passThrough = {
+    'dynamic',
+    'Object',
+    'String',
+    'int',
+    'bool',
+    'Stream<List<int>>',
+  };
 
   /// Top-level decoder functions plus a `_responseDecoders` map, or an empty
   /// string when no response type needs one.

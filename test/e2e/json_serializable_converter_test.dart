@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_relative_lib_imports
 
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:chopper/chopper.dart';
@@ -291,6 +293,34 @@ void main() {
 
       expect(result.body, isNull);
       expect(result.statusCode, 200);
+    });
+
+    test('streams a text/event-stream body before it completes', () async {
+      final events = StreamController<List<int>>();
+      addTearDown(events.close);
+      final client = ChopperClient(
+        baseUrl: Uri.parse('https://example.test'),
+        client: MockClient.streaming(
+          (request, _) async => http.StreamedResponse(
+            events.stream,
+            200,
+            headers: {'content-type': 'text/event-stream'},
+            request: request,
+          ),
+        ),
+        converter: converter,
+      );
+      addTearDown(client.dispose);
+
+      final result = await client.send<Stream<List<int>>, Stream<List<int>>>(
+        Request('POST', Uri.parse('/chat'), client.baseUrl),
+      );
+      final lines = result.body!
+          .transform(utf8.decoder)
+          .transform(const LineSplitter());
+      events.add(utf8.encode('data: first\n\n'));
+
+      expect(await lines.first, 'data: first');
     });
 
     for (final status in [400, 500]) {

@@ -1,3 +1,15 @@
+## 0.1.0
+
+### Added
+
+* Success responses with a `text/event-stream` media type (Server-Sent Events)
+  now generate `Future<Response<Stream<List<int>>>>`, whatever schema the spec
+  declares for them. Chopper hands the body over unbuffered, so events arrive
+  while the connection is still open. Parsing the event lines is left to the
+  caller. Previously the response type came from the schema, so the body was
+  buffered until the stream closed, and a model schema failed with a cast
+  error.
+
 ## 0.0.6+1
 
 ### Fixed

@@ -19,6 +19,10 @@ void main() {
     );
   });
 
+  test('emits nothing for a byte stream response', () {
+    expect(emit(['Stream<List<int>>']), isEmpty);
+  });
+
   test('decodes a list of primitives', () {
     final out = emit(['List<String>']);
     expect(out, contains('const _responseDecoders'));
