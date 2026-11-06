@@ -1,3 +1,17 @@
+## 0.0.6+1
+
+### Fixed
+
+* Nullable model fields listed as `required` in the spec now require an explicit
+  constructor argument when they have no default value. Previously they were
+  always optional. Null-serialization options do not affect this requirement.
+
+### Changed
+
+* After regenerating clients, callers that omitted required nullable fields must
+  now pass a value explicitly, including `null` where appropriate. Fields with
+  default values keep their existing optional constructor parameters.
+
 ## 0.0.6
 
 ### Added

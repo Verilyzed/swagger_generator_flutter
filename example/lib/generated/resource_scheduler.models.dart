@@ -145,17 +145,17 @@ class AssetState {
   final ConnectionState connectionState;
 
   const AssetState({
-    this.level,
-    this.range,
-    this.isConnected,
-    this.isActive,
-    this.isComplete,
-    this.capacity,
-    this.levelLimit,
-    this.throughput,
-    this.timeRemaining,
-    this.lastUpdated,
-    this.maxRate,
+    required this.level,
+    required this.range,
+    required this.isConnected,
+    required this.isActive,
+    required this.isComplete,
+    required this.capacity,
+    required this.levelLimit,
+    required this.throughput,
+    required this.timeRemaining,
+    required this.lastUpdated,
+    required this.maxRate,
     required this.connectionState,
   });
 
@@ -557,7 +557,7 @@ class ErrorResponse {
 
   const ErrorResponse({
     required this.detail,
-    this.errorId,
+    required this.errorId,
     this.errorCode = ErrorCode.internalServerError,
   });
 
@@ -774,9 +774,9 @@ class Location {
   final bool atBase;
 
   const Location({
-    this.longitude,
-    this.latitude,
-    this.lastUpdated,
+    required this.longitude,
+    required this.latitude,
+    required this.lastUpdated,
     required this.atBase,
   });
 
@@ -907,8 +907,8 @@ class UsageCounter {
   final DateTime? lastUpdated;
 
   const UsageCounter({
-    this.reading,
-    this.lastUpdated,
+    required this.reading,
+    required this.lastUpdated,
   });
 
   UsageCounter copyWith({
@@ -1327,7 +1327,7 @@ class Asset {
   const Asset({
     required this.assetId,
     required this.lastSeen,
-    this.isReachable,
+    required this.isReachable,
     required this.assetInformation,
     required this.resourceState,
     required this.odometer,
@@ -1377,11 +1377,11 @@ class AssetInformation {
   final String? displayName;
 
   const AssetInformation({
-    this.serialNumber,
-    this.manufacturer,
-    this.model,
-    this.year,
-    this.displayName,
+    required this.serialNumber,
+    required this.manufacturer,
+    required this.model,
+    required this.year,
+    required this.displayName,
   });
 
   AssetInformation copyWith({
@@ -1427,7 +1427,7 @@ class AssetPolicy {
     required this.activityState,
     this.activityStateReason,
     required this.minLevel,
-    this.runImmediatelyConfig,
+    required this.runImmediatelyConfig,
   });
 
   AssetPolicy copyWith({

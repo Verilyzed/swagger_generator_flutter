@@ -304,30 +304,32 @@ void main() {
     },
   );
 
-  test('a required field that is nullable is not emitted as required', () {
-    final out = ModelEmitter().emit(
-      const [
-        ModelDef(
-          name: 'Thing',
-          fields: [
-            FieldDef(
-              dartName: 'anrede',
-              jsonKey: 'anrede',
-              type: DartType('KundeAnrede', isNullable: true),
-              isRequired: true,
-            ),
-          ],
-        ),
-      ],
-      partFileName: 'demo.models.g.dart',
-      enumsImport: 'demo.enums.dart',
-      enumNames: const {},
-    );
+  test(
+    'a required nullable field requires an explicit constructor argument',
+    () {
+      final out = ModelEmitter().emit(
+        const [
+          ModelDef(
+            name: 'Thing',
+            fields: [
+              FieldDef(
+                dartName: 'anrede',
+                jsonKey: 'anrede',
+                type: DartType('KundeAnrede', isNullable: true),
+                isRequired: true,
+              ),
+            ],
+          ),
+        ],
+        partFileName: 'demo.models.g.dart',
+        enumsImport: 'demo.enums.dart',
+        enumNames: const {},
+      );
 
-    expect(out, contains('final KundeAnrede? anrede;'));
-    expect(out, contains('this.anrede,'));
-    expect(out, isNot(contains('required this.anrede')));
-  });
+      expect(out, contains('final KundeAnrede? anrede;'));
+      expect(out, contains('required this.anrede,'));
+    },
+  );
 
   test('emits an explicit JsonKey name on every field', () {
     final out = ModelEmitter().emit(

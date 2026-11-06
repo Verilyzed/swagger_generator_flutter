@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:swagger_generator_flutter/src/builder/swagger_builder.dart';
@@ -264,10 +265,8 @@ void main() {
     expect(models, isNot(contains('dynamic bar')));
   });
 
-  test(
-    'a required ref to a nullable enum becomes an optional nullable field',
-    () {
-      const spec = '''
+  test('a required ref to a nullable enum requires a constructor argument', () {
+    const spec = '''
 {
   "openapi": "3.0.0",
   "info": {"title": "t", "version": "1"},
@@ -281,17 +280,57 @@ void main() {
 }
 ''';
 
-      final models = generateSources(
-        spec,
-        path: 'c.json',
-        baseName: 'c',
-      )['.models.dart'];
+    final models = generateSources(
+      spec,
+      path: 'c.json',
+      baseName: 'c',
+    )['.models.dart'];
 
-      expect(models, contains('final Salutation? salutation;'));
-      expect(models, contains('this.salutation,'));
-      expect(models, isNot(contains('required this.salutation')));
-    },
-  );
+    expect(models, contains('final Salutation? salutation;'));
+    expect(models, contains('required this.salutation,'));
+  });
+
+  for (final version in ['3.0.3', '3.1.0']) {
+    for (final includeRequiredNulls in [true, false]) {
+      test('OpenAPI $version keeps nullable constructor arguments required '
+          '(include required nulls: $includeRequiredNulls)', () {
+        final nullableString = version == '3.0.3'
+            ? <String, Object>{'type': 'string', 'nullable': true}
+            : <String, Object>{
+                'type': ['string', 'null'],
+              };
+        final spec = jsonEncode({
+          'openapi': version,
+          'info': {'title': 'Customer', 'version': '1'},
+          'paths': <String, Object>{},
+          'components': {
+            'schemas': {
+              'Customer': {
+                'type': 'object',
+                'required': ['name'],
+                'properties': {
+                  'name': nullableString,
+                  'nickname': nullableString,
+                },
+              },
+            },
+          },
+        });
+        final models = generateSources(
+          spec,
+          path: 'customer.json',
+          baseName: 'customer',
+          includeIfNull: false,
+          includeIfNullIfRequired: includeRequiredNulls,
+        )['.models.dart'];
+
+        expect(models, contains('final String? name;'));
+        expect(models, contains('required this.name,'));
+        expect(models, contains('final String? nickname;'));
+        expect(models, isNot(contains('required this.nickname')));
+      });
+    }
+  }
 
   test('creates a named enum for an inline enum parameter', () {
     const spec = '''

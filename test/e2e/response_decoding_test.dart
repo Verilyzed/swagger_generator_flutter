@@ -5,6 +5,8 @@ import 'package:http/testing.dart';
 import 'package:test/test.dart';
 
 import '../../example/lib/generated/edge_cases_v31.api.dart';
+import '../../example/lib/generated/resource_scheduler.models.dart'
+    as scheduler;
 
 EdgeCasesV31Api _api(String body) => EdgeCasesV31Api(
   baseUrl: Uri.parse('https://example.test'),
@@ -15,6 +17,21 @@ EdgeCasesV31Api _api(String body) => EdgeCasesV31Api(
 );
 
 void main() {
+  test('serializes an explicit null for a required nullable model field', () {
+    const model = scheduler.ErrorResponse(detail: 'failed', errorId: null);
+
+    expect(model.toJson(), containsPair('error_id', null));
+  });
+
+  test('decodes an explicit null for a required nullable model field', () {
+    final model = scheduler.ErrorResponse.fromJson({
+      'detail': 'failed',
+      'error_id': null,
+    });
+
+    expect(model.errorId, isNull);
+  });
+
   test('decodes a list of strings', () async {
     final response = await _api('["a","b"]').getStrings();
     expect(response.body, ['a', 'b']);
