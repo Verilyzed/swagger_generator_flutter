@@ -12,6 +12,7 @@ class ModelEmitter {
     String? overridesImport,
     List<TypedefDef> typedefs = const [],
     bool includeIfNull = true,
+    bool includeIfNullIfRequired = true,
   }) {
     final buffer = StringBuffer()
       ..write(SourceWriter.header())
@@ -49,7 +50,13 @@ class ModelEmitter {
     }
 
     for (final model in models) {
-      _emitClass(buffer, model, enumNames, includeIfNull);
+      _emitClass(
+        buffer,
+        model,
+        enumNames,
+        includeIfNull,
+        includeIfNullIfRequired,
+      );
     }
 
     return buffer.toString();
@@ -60,6 +67,7 @@ class ModelEmitter {
     ModelDef model,
     Set<String> enumNames,
     bool includeIfNull,
+    bool includeIfNullIfRequired,
   ) {
     final spreadKeys = model.fields
         .where((f) => f.spreadFromParent)
@@ -86,7 +94,7 @@ class ModelEmitter {
       if (enumName != null) {
         keyArgs.add('unknownEnumValue: $enumName.\$unknown');
       }
-      if (!includeIfNull) {
+      if (!includeIfNull && !(field.isRequired && includeIfNullIfRequired)) {
         keyArgs.add('includeIfNull: false');
       }
       if (keyArgs.isNotEmpty) {

@@ -10,10 +10,14 @@ code from OpenAPI (Swagger) specifications (`.json`, `.yaml`, `.yml`).
 ## Style and conventions
 
 - Keep it simple. Prefer the smallest, clearest solution over a clever one.
-- No emojis. Not in code, comments, documentation, commit messages, or READMEs.
+- No emojis. Not in code, comments, documentation, commit messages, or the
+  CHANGELOG. Exception: `README.md`, see below.
 - Write plain, direct descriptions. Avoid marketing language and filler.
 - Match the existing style of surrounding code (naming, formatting, structure).
 - Don't add badges, decorative separators, or hype to documentation.
+- `README.md` is the package's pub.dev landing page. It may use emojis in
+  headings and feature lists and a confident, promotional tone. Every claim must
+  still be true for the current code.
 - Comments only when necessary. Write self-explanatory code; add a comment only to
   explain *why* something is done when it isn't obvious. Don't narrate what the code
   already says, and don't leave redundant or commented-out code.

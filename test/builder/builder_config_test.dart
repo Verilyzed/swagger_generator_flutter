@@ -21,6 +21,18 @@ void main() {
     expect(config.includeIfNull, isFalse);
   });
 
+  test('include_if_null_if_required defaults to true', () {
+    final config = BuilderConfig.fromOptions(const BuilderOptions({}));
+    expect(config.includeIfNullIfRequired, isTrue);
+  });
+
+  test('reads include_if_null_if_required when set to false', () {
+    final config = BuilderConfig.fromOptions(
+      const BuilderOptions({'include_if_null_if_required': false}),
+    );
+    expect(config.includeIfNullIfRequired, isFalse);
+  });
+
   test('allof defaults to flatten with no exceptions', () {
     final config = BuilderConfig.fromOptions(const BuilderOptions({}));
     expect(config.allOfNested, isFalse);

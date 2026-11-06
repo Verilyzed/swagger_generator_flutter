@@ -23,10 +23,16 @@ class BuilderConfig {
   final String? overridesImport;
   final Set<String> overrideSchemas;
 
-  /// Whether generated models serialize null fields. When false, every field's
+  /// Whether generated models serialize null fields. When false, a field's
   /// `@JsonKey` carries `includeIfNull: false` so null values are omitted from
-  /// the JSON output. Defaults to true, matching json_serializable.
+  /// the JSON output (see [includeIfNullIfRequired] for required fields).
+  /// Defaults to true, matching json_serializable.
   final bool includeIfNull;
+
+  /// Whether fields the spec lists as required keep serializing null when
+  /// [includeIfNull] is false. OpenAPI requires the key of a required property
+  /// to be present, even when its value is null. Defaults to true.
+  final bool includeIfNullIfRequired;
 
   final MultipartFileType multipartFileType;
 
@@ -47,6 +53,7 @@ class BuilderConfig {
     this.overridesImport,
     this.overrideSchemas = const {},
     this.includeIfNull = true,
+    this.includeIfNullIfRequired = true,
     this.multipartFileType = MultipartFileType.multipartFile,
     this.allOfNested = false,
     this.allOfExceptions = const {},
@@ -79,6 +86,11 @@ class BuilderConfig {
         : <String>{};
     final rawIncludeIfNull = options.config['include_if_null'];
     final includeIfNull = rawIncludeIfNull is bool ? rawIncludeIfNull : true;
+    final rawIncludeIfNullIfRequired =
+        options.config['include_if_null_if_required'];
+    final includeIfNullIfRequired = rawIncludeIfNullIfRequired is bool
+        ? rawIncludeIfNullIfRequired
+        : true;
     final rawAllOfMode = options.config['allof_mode'];
     final allOfNested = switch (rawAllOfMode) {
       null || 'flatten' => false,
@@ -119,6 +131,7 @@ class BuilderConfig {
       overridesImport: overridesImport,
       overrideSchemas: overrideSchemas,
       includeIfNull: includeIfNull,
+      includeIfNullIfRequired: includeIfNullIfRequired,
       multipartFileType: multipartFileType,
       allOfNested: allOfNested,
       allOfExceptions: allOfExceptions,

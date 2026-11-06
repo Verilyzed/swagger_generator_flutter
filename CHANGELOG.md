@@ -1,3 +1,19 @@
+## 0.0.6
+
+### Added
+
+* `include_if_null_if_required` build option (default `true`). With
+  `include_if_null: false`, fields listed as `required` in the spec keep
+  serializing `null` instead of being omitted, because OpenAPI requires the key
+  of a required property to be present. Set it to `false` to omit null values
+  from required fields as well.
+
+### Changed
+
+* With `include_if_null: false`, required fields no longer get
+  `includeIfNull: false` by default. Set `include_if_null_if_required: false`
+  to restore the previous behavior.
+
 ## 0.0.5
 
 ### Fixed
