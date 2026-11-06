@@ -53,6 +53,8 @@ one is built around the details:
 - 📭 JSON `null`, empty bodies, `204`, `205`, and `HEAD` responses yield a null
   body instead of a failed cast
 - 📎 Multipart file uploads with a configurable file type
+- 📡 `text/event-stream` (Server-Sent Events) responses stream as
+  `Stream<List<int>>`, so events arrive while the connection is open
 
 ### OpenAPI 3.0 and 3.1
 
@@ -73,7 +75,7 @@ Add the package and its runtime dependencies to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  swagger_generator_flutter: ^0.0.6
+  swagger_generator_flutter: ^0.1.0
   json_annotation: ^4.12.0
   chopper: ^8.0.0
   http: ^1.0.0

@@ -282,6 +282,42 @@ void main() {
     expect(spec.service.operations.single.responseType.name, 'Ok');
   });
 
+  test('resolves a text/event-stream response to a byte stream', () {
+    final spec = _parser().parse({
+      'components': {
+        'schemas': {
+          'ChatEvent': {
+            'type': 'object',
+            'properties': {
+              'text': {'type': 'string'},
+            },
+          },
+        },
+      },
+      'paths': {
+        '/chat': {
+          'post': {
+            'operationId': 'chat',
+            'responses': {
+              '200': {
+                'content': {
+                  'text/event-stream': {
+                    'schema': {r'$ref': '#/components/schemas/ChatEvent'},
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }, name: 'demo');
+
+    expect(
+      spec.service.operations.single.responseType.name,
+      'Stream<List<int>>',
+    );
+  });
+
   test('resolves a 204 response with no content to dynamic', () {
     final spec = _parser().parse({
       'components': {'schemas': <String, dynamic>{}},

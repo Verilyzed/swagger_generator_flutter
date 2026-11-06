@@ -541,12 +541,9 @@ class SpecParser {
       }
     }
 
-    final responseSchema = _responseSchema(
+    final responseType = _responseType(
       (op['responses'] as Map?)?.cast<String, dynamic>(),
     );
-    final responseType = responseSchema == null
-        ? const DartType('dynamic')
-        : _resolver.resolve(responseSchema);
 
     return OperationDef(
       methodName: _names.memberName(
@@ -565,24 +562,35 @@ class SpecParser {
     );
   }
 
-  /// The schema of the response the client returns: the first success (2xx)
-  /// response that carries a content schema, preferring numeric codes in
-  /// ascending order (so `200` wins over `201`), then a `2XX` range, then
-  /// `default`.
-  Map<String, dynamic>? _responseSchema(Map<String, dynamic>? responses) {
-    if (responses == null) return null;
+  /// The type of the response the client returns: the first success (2xx)
+  /// response that carries content, preferring numeric codes in ascending
+  /// order (so `200` wins over `201`), then a `2XX` range, then `default`.
+  /// A `text/event-stream` response is returned unbuffered as raw bytes,
+  /// whatever its schema says, since Chopper only streams `Stream<List<int>>`.
+  DartType _responseType(Map<String, dynamic>? responses) {
+    if (responses == null) return const DartType('dynamic');
     final successCodes =
         responses.keys
             .where((k) => k.startsWith('2') && int.tryParse(k) != null)
             .toList()
           ..sort((a, b) => int.parse(a).compareTo(int.parse(b)));
     for (final code in [...successCodes, '2XX', '2xx', 'default']) {
-      final schema = _contentSchema(
-        (responses[code] as Map?)?.cast<String, dynamic>(),
-      );
-      if (schema != null) return schema;
+      final response = (responses[code] as Map?)?.cast<String, dynamic>();
+      if (_mediaType(response) == 'text/event-stream') {
+        return const DartType('Stream<List<int>>');
+      }
+      final schema = _contentSchema(response);
+      if (schema != null) return _resolver.resolve(schema);
     }
-    return null;
+    return const DartType('dynamic');
+  }
+
+  String? _mediaType(Map<String, dynamic>? container) {
+    final content = (container?['content'] as Map?)?.cast<String, dynamic>();
+    if (content == null || content.isEmpty) return null;
+    return content.containsKey('application/json')
+        ? 'application/json'
+        : content.keys.first;
   }
 
   Map<String, dynamic>? _contentSchema(Map<String, dynamic>? container) {
