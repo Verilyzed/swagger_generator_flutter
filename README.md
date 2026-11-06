@@ -169,6 +169,11 @@ fields the spec lists as `required`: OpenAPI requires their key to be present,
 so they are still sent as `null`. Set `include_if_null_if_required: false` to
 leave those out as well.
 
+Required and nullable are independent: a nullable property listed in the spec's
+`required` array still needs an explicit constructor argument, such as
+`errorId: null`, unless it has a default value. Null-serialization options do not
+change constructor requirements.
+
 ```yaml
 options:
   include_if_null: false
