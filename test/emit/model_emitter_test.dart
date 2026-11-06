@@ -78,29 +78,30 @@ void main() {
     expect(out, isNot(contains('includeIfNull')));
   });
 
-  test(
-    'adds includeIfNull false to every field key when the option is off',
-    () {
-      final out = ModelEmitter().emit(
-        const [
-          ModelDef(
-            name: 'Item',
-            fields: [
-              FieldDef(
-                dartName: 'files',
-                jsonKey: 'files',
-                type: DartType('List<File>', isNullable: true),
-                isRequired: false,
-              ),
-              FieldDef(
-                dartName: 'title',
-                jsonKey: 'title',
-                type: DartType('String'),
-                isRequired: true,
-              ),
-            ],
+  group('when includeIfNull is off', () {
+    const models = [
+      ModelDef(
+        name: 'Item',
+        fields: [
+          FieldDef(
+            dartName: 'files',
+            jsonKey: 'files',
+            type: DartType('List<File>', isNullable: true),
+            isRequired: false,
+          ),
+          FieldDef(
+            dartName: 'title',
+            jsonKey: 'title',
+            type: DartType('String', isNullable: true),
+            isRequired: true,
           ),
         ],
+      ),
+    ];
+
+    test('adds includeIfNull false to optional fields only by default', () {
+      final out = ModelEmitter().emit(
+        models,
         partFileName: 'demo.models.g.dart',
         enumsImport: 'demo.enums.dart',
         enumNames: const {},
@@ -109,9 +110,24 @@ void main() {
 
       expect(out, contains('@JsonSerializable()'));
       expect(out, contains(r"@JsonKey(name: 'files', includeIfNull: false)"));
+      expect(out, contains(r"@JsonKey(name: 'title')"));
+    });
+
+    test('adds includeIfNull false to every field when required fields are '
+        'not exempt', () {
+      final out = ModelEmitter().emit(
+        models,
+        partFileName: 'demo.models.g.dart',
+        enumsImport: 'demo.enums.dart',
+        enumNames: const {},
+        includeIfNull: false,
+        includeIfNullIfRequired: false,
+      );
+
+      expect(out, contains(r"@JsonKey(name: 'files', includeIfNull: false)"));
       expect(out, contains(r"@JsonKey(name: 'title', includeIfNull: false)"));
-    },
-  );
+    });
+  });
 
   test('emits typedefs above the classes', () {
     final out = ModelEmitter().emit(

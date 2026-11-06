@@ -38,6 +38,7 @@ class SwaggerBuilder implements Builder {
       overridesImport: config.overridesImport,
       overrideSchemas: config.overrideSchemas,
       includeIfNull: config.includeIfNull,
+      includeIfNullIfRequired: config.includeIfNullIfRequired,
       multipartFileType: config.multipartFileType,
       allOfNested: config.allOfNested,
       allOfExceptions: config.allOfExceptions,
@@ -61,6 +62,7 @@ Map<String, String> generateSources(
   String? overridesImport,
   Set<String> overrideSchemas = const {},
   bool includeIfNull = true,
+  bool includeIfNullIfRequired = true,
   MultipartFileType multipartFileType = MultipartFileType.multipartFile,
   bool allOfNested = false,
   Set<String> allOfExceptions = const {},
@@ -125,6 +127,7 @@ Map<String, String> generateSources(
       overridesImport: overridesImport,
       typedefs: spec.typedefs,
       includeIfNull: includeIfNull,
+      includeIfNullIfRequired: includeIfNullIfRequired,
     ),
     '.service.dart': ServiceEmitter().emit(
       spec.service,
